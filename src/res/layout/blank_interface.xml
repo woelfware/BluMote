@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:layout_gravity="center">
+	<!-- android:background="@drawable/background"  -->   	
+	<ViewFlipper 
+	    android:id="@+id/flipper"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" >
+	    <include android:id="@+id/activitiesView" layout="@layout/activities_screen" />
+	    <include android:id="@+id/mainView"  layout="@layout/blank_screen" />    
+	</ViewFlipper>	
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_gravity="center"
+		android:layout_alignParentBottom="true" >	
+		<ImageView android:src="@drawable/right_circle_two" android:layout_width="33dip"
+			android:layout_height="20dip" android:layout_marginTop="5dp"
+			android:id="@+id/pager" android:scaleType="fitXY" android:layout_gravity="center_horizontal"
+		></ImageView>  	
+	</LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+	 <CheckBoxPreference 
+	 	android:title="Haptic Feedback" 
+	 	android:key="hapticPREF" 
+	 	android:defaultValue="true" 
+	 	android:summary="When checked the buttons will give haptic feedback when pushed"/>	 
+</PreferenceScreen>

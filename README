@@ -1,0 +1,16 @@
+BluMote: An application for interfacing with a Woelfware BluMote pod.
+
+Introduction
+------------
+Woelfware BluMote client software 
+
+Installation
+------------
+Please see INSTALL for installation instructions for python scripts.
+Please see ANDROID_INSTALL for installation instructions for android
+software.
+
+License
+-------
+Woelfware BluMote client is free software.  See the file `COPYING' for the terms and
+conditions for copying, distribution and modification.

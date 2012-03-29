@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background_bl_scaled"
+    >
+    <TextView android:id="@+id/devices_textview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_devices_list"
+        android:background="#666"
+        android:textColor="#fff"
+        android:paddingLeft="5dp"
+        android:textSize="18sp"
+    />
+    <ListView android:id="@+id/devices_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:divider="#555"
+        android:dividerHeight="1dp"
+    />
+    <Button
+      	android:id="@+id/add_config_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"        
+        android:text="Add new configuration"       
+    />
+</LinearLayout>

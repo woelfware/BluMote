@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="app_name">BluMote</string>
+
+    <!--  BluetoothChat -->
+    <string name="send">Send</string>
+    <string name="not_connected">You are not connected to a pod</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving BluMote.</string>
+    <string name="title_connecting">connecting...</string>
+    <string name="title_connected_to">connected: </string>
+    <string name="title_not_connected">not connected</string>
+
+    <!--  DeviceListActivity -->
+    <string name="scanning">scanning for pods...</string>
+    <string name="select_device">select a pod to connect</string>
+    <string name="none_paired">No known pods</string>
+    <string name="none_found">No pods found</string>
+    <string name="title_paired_devices">Known Pods</string>
+    <string name="title_other_devices">BluMote pods found</string>
+    <string name="button_scan">Scan for pods</string>
+
+    <!-- Options Menu -->
+    <string name="connect">Connect pod</string>
+    <string name="disconnect">Disconnect pod</string>
+    <string name="discoverable">Make discoverable</string>
+    <string name="about_license">Copyright 2011 Woelfware\n\nBluMote is free software: 
+    				you can redistribute it and/or modify it under the terms of the 
+					GNU General Public License as published by the Free Software Foundation,	
+					BluMote is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+					See the GNU General Public License at http://www.gnu.org/licenses/.\n</string>
+    
+	<string name="spinner_prompt">Choose</string>
+	<string name="title_devices_list">List of Button Configurations</string>
+	<string name="menu_add">New Button Config</string>
+	<string name="add_device_text">Enter device name:</string>
+	<string name="enter_device_title">Enter name</string>
+	<string name="manage_devices">Manage Devices</string>
+	<string name="rename_pod">Rename Pod</string>
+	<string name="get_pod_info">Pod Information</string>
+	<string name="learn_button">Button Learn</string>
+	
+	<string name="delete_devices">Clear known pods</string>
+	<string name="layout_spinner">Choose a button configuration</string>
+	<string name="blank_screen">You have no devices or activities.  Please create a new device by selecting the menu button of your phone and selecting \&quot;Manage Devices\&quot;</string>
+	<string name="confirm_fw">Are you sure you want to load the firmware?  You should not remove power to the pod until this operation completes.</string>
+	<string name="confirmation">Are you sure?</string>
+	<string name="OK">OK</string>
+	<string name="cancel">Cancel</string>
+	<string name="error">Error</string>
+	<string name="error_fw_download">There was an error downloading the file, please try again.</string>
+	<string name="success">Operation Succeeded!</string>
+</resources>

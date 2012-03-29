@@ -1,0 +1,23 @@
+Installation Instructions for Android Software Development
+==========================================================
+
+Preferred development environment is Eclipse and the Google ADT. 
+
+Follow the installation guide here:
+	http://developer.android.com/sdk/eclipse-adt.html
+	
+It is highly recommended that development be performed on an actual 
+device due to the inability for the emulator to simulate bluetooth.
+	
+Once all the software is setup and the source code has been been cloned 
+then the following process will setup the project:
+- Create a new project
+- Select 'create project from existing source'. Next.
+- Navigate to the 'src' directory which contains source code and
+manifest file. Next.
+- Select build target, 2.3.3 or above is recommended. Next.
+- Minimum SDK = 5 or higher
+- Finish
+
+If all goes well the project should be created and the source should
+be compile with no errors.

@@ -1,0 +1,933 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ABORT_LEARN	Codes.java	/^        ABORT_LEARN, \/\/ aborting the learn mode$/;"	e	enum:Codes.BT_STATE	file:	access:public
+ABORT_LEARN	Codes.java	/^        public static final byte ABORT_LEARN = (byte)0xFD; \/\/ currently matt does not use this $/;"	f	class:Codes.Pod	access:public
+ACK	Codes.java	/^        public static final byte ACK = (byte)0x06;$/;"	f	class:Codes.Pod	access:public
+ACTIVITIES	BluMote.java	/^		MAIN, NUMBERS, ACTIVITIES$/;"	e	enum:BluMote.Pages	file:	access:public
+ACTIVITY	Codes.java	/^    	ACTIVITY, \/\/ when we are in a normal activity mode$/;"	e	enum:Codes.INTERFACE_STATE	file:	access:public
+ACTIVITY_ADD	BluMote.java	/^	static final int ACTIVITY_ADD = 5;	$/;"	f	class:BluMote	access:default
+ACTIVITY_ADD	ManageDevices.java	/^    private static final int ACTIVITY_ADD=0;$/;"	f	class:ManageDevices	file:	access:private
+ACTIVITY_EDIT	Codes.java	/^    	ACTIVITY_EDIT, \/\/ when editing an activity (associating buttons\/etc)$/;"	e	enum:Codes.INTERFACE_STATE	file:	access:public
+ACTIVITY_INIT	Codes.java	/^    	ACTIVITY_INIT, \/\/ when setting up the initialization of an activity$/;"	e	enum:Codes.INTERFACE_STATE	file:	access:public
+ACTIVITY_INIT_EDIT	BluMote.java	/^	static final int ACTIVITY_INIT_EDIT = 8;$/;"	f	class:BluMote	access:default
+ACTIVITY_NAME	ActivityInitEdit.java	/^	public static final String ACTIVITY_NAME = "ACTIVITY";$/;"	f	class:ActivityInitEdit	access:public
+ACTIVITY_PREFIX	Activities.java	/^	static final String ACTIVITY_PREFIX = "(A)_";$/;"	f	class:Activities	access:default
+ACTIVITY_PREFIX	MainInterface.java	/^	static final String ACTIVITY_PREFIX = "(A)_";$/;"	f	class:MainInterface	access:default
+ACTIVITY_PREFIX_SPACE	MainInterface.java	/^	static final String ACTIVITY_PREFIX_SPACE = "(A) ";$/;"	f	class:MainInterface	access:default
+ACTIVITY_RENAME	BluMote.java	/^	private static final int ACTIVITY_RENAME = 6;$/;"	f	class:BluMote	file:	access:private
+ACTIVITY_RENAME	ManageDevices.java	/^    private static final int ACTIVITY_RENAME=1;$/;"	f	class:ManageDevices	file:	access:private
+APPEND	ActivityInitEdit.java	/^	public static final String APPEND = "append";$/;"	f	class:ActivityInitEdit	access:public
+Activities	Activities.java	/^	public Activities(BluMote blumote, MainInterface mainint) {$/;"	m	class:Activities	access:public	signature:(BluMote blumote, MainInterface mainint)
+Activities	Activities.java	/^public class Activities {$/;"	c
+Activities.ACTIVITY_PREFIX	Activities.java	/^	static final String ACTIVITY_PREFIX = "(A)_";$/;"	f	class:Activities	access:default
+Activities.Activities	Activities.java	/^	public Activities(BluMote blumote, MainInterface mainint) {$/;"	m	class:Activities	access:public	signature:(BluMote blumote, MainInterface mainint)
+Activities.ActivityButton	Activities.java	/^	private class ActivityButton {$/;"	c	class:Activities	access:private
+Activities.ActivityButton.ActivityButton	Activities.java	/^		ActivityButton(String activityName, String record) {$/;"	m	class:Activities.ActivityButton	access:default	signature:(String activityName, String record)
+Activities.ActivityButton.activityButton	Activities.java	/^		private String activityButton;$/;"	f	class:Activities.ActivityButton	file:	access:private
+Activities.ActivityButton.activityName	Activities.java	/^		private String activityName;$/;"	f	class:Activities.ActivityButton	file:	access:private
+Activities.ActivityButton.deviceButton	Activities.java	/^		private String deviceButton;$/;"	f	class:Activities.ActivityButton	file:	access:private
+Activities.ActivityButton.deviceName	Activities.java	/^		private String deviceName;$/;"	f	class:Activities.ActivityButton	file:	access:private
+Activities.ActivityButton.getActivityButton	Activities.java	/^		String getActivityButton() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+Activities.ActivityButton.getActivityName	Activities.java	/^		String getActivityName() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+Activities.ActivityButton.getDeviceButton	Activities.java	/^		String getDeviceButton() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+Activities.ActivityButton.getDeviceName	Activities.java	/^		String getDeviceName() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+Activities.DeviceButton	Activities.java	/^	private class DeviceButton {$/;"	c	class:Activities	access:private
+Activities.DeviceButton.DeviceButton	Activities.java	/^		DeviceButton(String activityName, String activityButton) {$/;"	m	class:Activities.DeviceButton	access:default	signature:(String activityName, String activityButton)
+Activities.DeviceButton.deviceButton	Activities.java	/^		private String deviceButton;$/;"	f	class:Activities.DeviceButton	file:	access:private
+Activities.DeviceButton.deviceName	Activities.java	/^		private String deviceName;$/;"	f	class:Activities.DeviceButton	file:	access:private
+Activities.DeviceButton.getButton	Activities.java	/^		String getButton() {$/;"	m	class:Activities.DeviceButton	access:default	signature:()
+Activities.DeviceButton.getDevice	Activities.java	/^		String getDevice() {$/;"	m	class:Activities.DeviceButton	access:default	signature:()
+Activities.INIT	Activities.java	/^	private static final String INIT = "INIT";$/;"	f	class:Activities	file:	access:private
+Activities.OFF	Activities.java	/^	private static final String OFF = "_OFF";$/;"	f	class:Activities	file:	access:private
+Activities.TAG	Activities.java	/^	private final String TAG = "Activities";$/;"	f	class:Activities	file:	access:private
+Activities.addActivity	Activities.java	/^	public void addActivity(String s) {$/;"	m	class:Activities	access:public	signature:(String s)
+Activities.addActivityInitSequence	Activities.java	/^	static void addActivityInitSequence(String activityName, List<String> init, SharedPreferences prefs, $/;"	m	class:Activities	access:default	signature:(String activityName, List<String> init, SharedPreferences prefs, InterfaceLookup lookup)
+Activities.addActivityInitSequence	Activities.java	/^	void addActivityInitSequence(List<String> init) {$/;"	m	class:Activities	access:default	signature:(List<String> init)
+Activities.addActivityInitSequence	Activities.java	/^	void addActivityInitSequence(String activityName, List<String> init) {$/;"	m	class:Activities	access:default	signature:(String activityName, List<String> init)
+Activities.addActivityKeyBinding	Activities.java	/^	void addActivityKeyBinding(String activityName, String btnID, String device, String deviceBtn) {$/;"	m	class:Activities	access:default	signature:(String activityName, String btnID, String device, String deviceBtn)
+Activities.addActivityKeyBinding	Activities.java	/^	void addActivityKeyBinding(String btnID, String device, String deviceBtn) {$/;"	m	class:Activities	access:default	signature:(String btnID, String device, String deviceBtn)
+Activities.addActivityPrefix	Activities.java	/^	private static String addActivityPrefix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+Activities.blumote	Activities.java	/^	private BluMote blumote = null;$/;"	f	class:Activities	file:	access:private
+Activities.deleteActivity	Activities.java	/^	public void deleteActivity(int position) {$/;"	m	class:Activities	access:public	signature:(int position)
+Activities.formatActivityInitSuffix	Activities.java	/^	private static String formatActivityInitSuffix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+Activities.formatActivityOffSuffix	Activities.java	/^	private static String formatActivityOffSuffix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+Activities.getActivityButtons	Activities.java	/^	ButtonData[] getActivityButtons() {$/;"	m	class:Activities	access:default	signature:()
+Activities.getActivityButtons	Activities.java	/^	ButtonData[] getActivityButtons(String activityName) {$/;"	m	class:Activities	access:default	signature:(String activityName)
+Activities.getActivityInitSequence	Activities.java	/^	private String[] getActivityInitSequence() {$/;"	m	class:Activities	file:	access:private	signature:()
+Activities.getActivityInitSequence	Activities.java	/^	static String[] getActivityInitSequence(String activityName, SharedPreferences prefs) {$/;"	m	class:Activities	access:default	signature:(String activityName, SharedPreferences prefs)
+Activities.getPowerOffButtonData	Activities.java	/^	ButtonData[] getPowerOffButtonData(String activityName) {$/;"	m	class:Activities	access:default	signature:(String activityName)
+Activities.getWorkingActivity	Activities.java	/^	public String getWorkingActivity() {$/;"	m	class:Activities	access:public	signature:()
+Activities.initItems	Activities.java	/^	private String[] initItems = null;$/;"	f	class:Activities	file:	access:private
+Activities.initItemsIndex	Activities.java	/^	private int initItemsIndex = 0;	$/;"	f	class:Activities	file:	access:private
+Activities.isValidActivityButton	Activities.java	/^	static boolean isValidActivityButton(int buttonId) {		 $/;"	m	class:Activities	access:default	signature:(int buttonId)
+Activities.mActivitiesArrayAdapter	Activities.java	/^	ArrayAdapter<String> mActivitiesArrayAdapter = null;$/;"	f	class:Activities	access:default
+Activities.mainint	Activities.java	/^	private MainInterface mainint = null;$/;"	f	class:Activities	file:	access:private
+Activities.nextActivityInitSequence	Activities.java	/^	void nextActivityInitSequence() {$/;"	m	class:Activities	access:default	signature:()
+Activities.nextPowerOffData	Activities.java	/^	public void nextPowerOffData() {$/;"	m	class:Activities	access:public	signature:()
+Activities.populateActivites	Activities.java	/^	void populateActivites(boolean suppressPrefix, ArrayAdapter<String> adapter) { $/;"	m	class:Activities	access:default	signature:(boolean suppressPrefix, ArrayAdapter<String> adapter)
+Activities.populateActivities	Activities.java	/^	static void populateActivities(boolean suppressPrefix, ArrayAdapter<String> adapter, $/;"	m	class:Activities	access:default	signature:(boolean suppressPrefix, ArrayAdapter<String> adapter, SharedPreferences prefs)
+Activities.powerOffData	Activities.java	/^	private ButtonData[] powerOffData = null;$/;"	f	class:Activities	file:	access:private
+Activities.powerOffDataIndex	Activities.java	/^	private int powerOffDataIndex = 0;$/;"	f	class:Activities	file:	access:private
+Activities.removeActivityKeyBinding	Activities.java	/^	void removeActivityKeyBinding(String activityName, String buttonID) {$/;"	m	class:Activities	access:default	signature:(String activityName, String buttonID)
+Activities.removeActivityKeyBinding	Activities.java	/^	void removeActivityKeyBinding(String binding) {$/;"	m	class:Activities	access:default	signature:(String binding)
+Activities.removeActivityPrefix	Activities.java	/^	private static String removeActivityPrefix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+Activities.renameActivity	Activities.java	/^	public void renameActivity(String newName, int position) { $/;"	m	class:Activities	access:public	signature:(String newName, int position)
+Activities.savePowerOffButton	Activities.java	/^	static void savePowerOffButton(String activityName, ArrayList<String> powerOnDevices, SharedPreferences prefs) {$/;"	m	class:Activities	access:default	signature:(String activityName, ArrayList<String> powerOnDevices, SharedPreferences prefs)
+Activities.savePowerOffButton	Activities.java	/^	void savePowerOffButton(ArrayList<String> powerOnDevices) {$/;"	m	class:Activities	access:default	signature:(ArrayList<String> powerOnDevices)
+Activities.sendPowerOffData	Activities.java	/^	public void sendPowerOffData(ButtonData[] powerOff) {$/;"	m	class:Activities	access:public	signature:(ButtonData[] powerOff)
+Activities.setWorkingActivity	Activities.java	/^	public void setWorkingActivity(String key) 	{$/;"	m	class:Activities	access:public	signature:(String key)
+Activities.setWorkingActivity	Activities.java	/^	void setWorkingActivity(int position) {$/;"	m	class:Activities	access:default	signature:(int position)
+Activities.startActivityInitSequence	Activities.java	/^	void startActivityInitSequence() {$/;"	m	class:Activities	access:default	signature:()
+Activities.startActivityInitSequence	Activities.java	/^	void startActivityInitSequence(String activityName) {$/;"	m	class:Activities	access:default	signature:(String activityName)
+Activities.timerReady	Activities.java	/^	protected static boolean timerReady = true;$/;"	f	class:Activities	access:protected
+Activities.workingActivity	Activities.java	/^	private String workingActivity = null;$/;"	f	class:Activities	file:	access:private
+ActivityButton	Activities.java	/^		ActivityButton(String activityName, String record) {$/;"	m	class:Activities.ActivityButton	access:default	signature:(String activityName, String record)
+ActivityButton	Activities.java	/^	private class ActivityButton {$/;"	c	class:Activities	access:private
+ActivityInitEdit	ActivityInitEdit.java	/^public class ActivityInitEdit extends Activity {	$/;"	c	inherits:Activity
+ActivityInitEdit.ACTIVITY_NAME	ActivityInitEdit.java	/^	public static final String ACTIVITY_NAME = "ACTIVITY";$/;"	f	class:ActivityInitEdit	access:public
+ActivityInitEdit.APPEND	ActivityInitEdit.java	/^	public static final String APPEND = "append";$/;"	f	class:ActivityInitEdit	access:public
+ActivityInitEdit.DIALOG_INIT_DELAY	ActivityInitEdit.java	/^	private static final int DIALOG_INIT_DELAY = 0;$/;"	f	class:ActivityInitEdit	file:	access:private
+ActivityInitEdit.ID_CHANGE	ActivityInitEdit.java	/^    private static final int ID_CHANGE = 1;$/;"	f	class:ActivityInitEdit	file:	access:private
+ActivityInitEdit.ID_DELETE	ActivityInitEdit.java	/^    private static final int ID_DELETE = 0;$/;"	f	class:ActivityInitEdit	file:	access:private
+ActivityInitEdit.REDO	ActivityInitEdit.java	/^	public static final String REDO = "redo";$/;"	f	class:ActivityInitEdit	access:public
+ActivityInitEdit.activitiesListView	ActivityInitEdit.java	/^    ListView activitiesListView;$/;"	f	class:ActivityInitEdit	access:default
+ActivityInitEdit.activityArrayAdapter	ActivityInitEdit.java	/^	private ArrayAdapter<String> activityArrayAdapter;$/;"	f	class:ActivityInitEdit	file:	access:private
+ActivityInitEdit.activityName	ActivityInitEdit.java	/^    String activityName;$/;"	f	class:ActivityInitEdit	access:default
+ActivityInitEdit.append_init_btn	ActivityInitEdit.java	/^	private Button append_init_btn;$/;"	f	class:ActivityInitEdit	file:	access:private
+ActivityInitEdit.itemSelected	ActivityInitEdit.java	/^	private int itemSelected; \/\/ index of init item that context menu was created on$/;"	f	class:ActivityInitEdit	file:	access:private
+ActivityInitEdit.lookup	ActivityInitEdit.java	/^	InterfaceLookup lookup;$/;"	f	class:ActivityInitEdit	access:default
+ActivityInitEdit.onContextItemSelected	ActivityInitEdit.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:ActivityInitEdit	access:public	signature:(MenuItem item)
+ActivityInitEdit.onCreate	ActivityInitEdit.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:ActivityInitEdit	access:protected	signature:(Bundle savedInstanceState)
+ActivityInitEdit.onCreateContextMenu	ActivityInitEdit.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:ActivityInitEdit	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+ActivityInitEdit.onCreateDialog	ActivityInitEdit.java	/^	protected Dialog onCreateDialog(int id) {$/;"	m	class:ActivityInitEdit	access:protected	signature:(int id)
+ActivityInitEdit.populateDisplay	ActivityInitEdit.java	/^	private void populateDisplay() {$/;"	m	class:ActivityInitEdit	file:	access:private	signature:()
+ActivityInitEdit.prefs	ActivityInitEdit.java	/^    SharedPreferences prefs; $/;"	f	class:ActivityInitEdit	access:default
+ActivityInitEdit.redo_init_btn	ActivityInitEdit.java	/^	private Button redo_init_btn;$/;"	f	class:ActivityInitEdit	file:	access:private
+ActivityInitEdit.updateInitDelay	ActivityInitEdit.java	/^	private void updateInitDelay(int newDelay) {			$/;"	m	class:ActivityInitEdit	file:	access:private	signature:(int newDelay)
+BACKUP_DB_NAME	ExportDatabaseFileTask.java	/^    public static final String BACKUP_DB_NAME = "device_data.bak";$/;"	f	class:ExportDatabaseFileTask	access:public
+BTN_MISC	MainInterface.java	/^	static final String BTN_MISC = "btn_misc";$/;"	f	class:MainInterface	access:default
+BT_STATE	BluMote.java	/^	Codes.BT_STATE BT_STATE = Codes.BT_STATE.IDLE;$/;"	f	class:BluMote	access:default
+BT_STATE	Codes.java	/^    enum BT_STATE {$/;"	g	class:Codes	access:default
+BUTTON_ID	BluMote.java	/^	private int BUTTON_ID = 0;$/;"	f	class:BluMote	file:	access:private
+BUTTON_LOOPING	BluMote.java	/^	private static boolean BUTTON_LOOPING = false;$/;"	f	class:BluMote	file:	access:private
+BYTE0	Codes.java	/^    	IDLE, BYTE0, BYTE1, BYTE2, BYTE3$/;"	e	enum:Codes.INFO_STATE	file:	access:public
+BYTE1	Codes.java	/^    	IDLE, BYTE0, BYTE1, BYTE2, BYTE3$/;"	e	enum:Codes.INFO_STATE	file:	access:public
+BYTE1	Codes.java	/^    	IDLE, STARTED, BYTE1, INITIALIZED, COLLECTING$/;"	e	enum:Codes.LEARN_STATE	file:	access:public
+BYTE2	Codes.java	/^    	IDLE, BYTE0, BYTE1, BYTE2, BYTE3$/;"	e	enum:Codes.INFO_STATE	file:	access:public
+BYTE3	Codes.java	/^    	IDLE, BYTE0, BYTE1, BYTE2, BYTE3$/;"	e	enum:Codes.INFO_STATE	file:	access:public
+BluMote	BluMote.java	/^public class BluMote extends Activity implements OnClickListener,OnItemClickListener,OnItemSelectedListener$/;"	c	inherits:Activity,OnClickListener,OnItemClickListener,OnItemSelectedListener
+BluMote.ACTIVITY_ADD	BluMote.java	/^	static final int ACTIVITY_ADD = 5;	$/;"	f	class:BluMote	access:default
+BluMote.ACTIVITY_INIT_EDIT	BluMote.java	/^	static final int ACTIVITY_INIT_EDIT = 8;$/;"	f	class:BluMote	access:default
+BluMote.ACTIVITY_RENAME	BluMote.java	/^	private static final int ACTIVITY_RENAME = 6;$/;"	f	class:BluMote	file:	access:private
+BluMote.BT_STATE	BluMote.java	/^	Codes.BT_STATE BT_STATE = Codes.BT_STATE.IDLE;$/;"	f	class:BluMote	access:default
+BluMote.BUTTON_ID	BluMote.java	/^	private int BUTTON_ID = 0;$/;"	f	class:BluMote	file:	access:private
+BluMote.BUTTON_LOOPING	BluMote.java	/^	private static boolean BUTTON_LOOPING = false;$/;"	f	class:BluMote	file:	access:private
+BluMote.ButtonCountDown	BluMote.java	/^	abstract class ButtonCountDown extends CountDownTimer{$/;"	c	class:BluMote	inherits:CountDownTimer	access:default
+BluMote.ButtonCountDown.ButtonCountDown	BluMote.java	/^        public ButtonCountDown(long millisInFuture, int buttonID) {$/;"	m	class:BluMote.ButtonCountDown	access:public	signature:(long millisInFuture, int buttonID)
+BluMote.ButtonCountDown.buttonID	BluMote.java	/^		int buttonID = 0;$/;"	f	class:BluMote.ButtonCountDown	access:default
+BluMote.ButtonCountDown.getButtonID	BluMote.java	/^        int getButtonID() {$/;"	m	class:BluMote.ButtonCountDown	access:default	signature:()
+BluMote.ButtonCountDown.onFinish	BluMote.java	/^		public abstract void onFinish();$/;"	m	class:BluMote.ButtonCountDown	access:public	signature:()
+BluMote.ButtonCountDown.onTick	BluMote.java	/^        public void onTick(long millisUntilFinished) {$/;"	m	class:BluMote.ButtonCountDown	access:public	signature:(long millisUntilFinished)
+BluMote.D	BluMote.java	/^	static final boolean D = true;$/;"	f	class:BluMote	access:default
+BluMote.DELAY_TIME	BluMote.java	/^	private static int DELAY_TIME = 300; \/\/ minimum time pod needs before receiving a new button press$/;"	f	class:BluMote	file:	access:private
+BluMote.DEVICE_NAME	BluMote.java	/^	static final String DEVICE_NAME = "device_name";$/;"	f	class:BluMote	access:default
+BluMote.DIALOG_ABOUT	BluMote.java	/^	private static final int DIALOG_ABOUT = 3;$/;"	f	class:BluMote	file:	access:private
+BluMote.DIALOG_INIT_DELAY	BluMote.java	/^	private static final int DIALOG_INIT_DELAY = 1;$/;"	f	class:BluMote	file:	access:private
+BluMote.DIALOG_INIT_PROGRESS	BluMote.java	/^	static final int DIALOG_INIT_PROGRESS = 2; $/;"	f	class:BluMote	access:default
+BluMote.DIALOG_LEARN_WAIT	BluMote.java	/^	private static final int DIALOG_LEARN_WAIT = 4;$/;"	f	class:BluMote	file:	access:private
+BluMote.DIALOG_SHOW_INFO	BluMote.java	/^	private static final int DIALOG_SHOW_INFO = 0;$/;"	f	class:BluMote	file:	access:private
+BluMote.ENABLE_BT	BluMote.java	/^	static final boolean ENABLE_BT = true;$/;"	f	class:BluMote	access:default
+BluMote.ID_DELETE	BluMote.java	/^	private static final int ID_DELETE = 0;$/;"	f	class:BluMote	file:	access:private
+BluMote.ID_MANAGE	BluMote.java	/^	private static final int ID_MANAGE = 2;$/;"	f	class:BluMote	file:	access:private
+BluMote.ID_RENAME	BluMote.java	/^	private static final int ID_RENAME = 1;$/;"	f	class:BluMote	file:	access:private
+BluMote.INTERFACE_STATE	BluMote.java	/^	Codes.INTERFACE_STATE INTERFACE_STATE = Codes.INTERFACE_STATE.MAIN;$/;"	f	class:BluMote	access:default
+BluMote.LONG_DELAY_TIME	BluMote.java	/^	private static int LONG_DELAY_TIME = 1500; \/\/ starts repeated button clicks$/;"	f	class:BluMote	file:	access:private
+BluMote.MEDIUM_DELAY_TIME	BluMote.java	/^	static int MEDIUM_DELAY_TIME = 750; \/\/ repeat button click delay$/;"	f	class:BluMote	access:default
+BluMote.MESSAGE_DEVICE_NAME	BluMote.java	/^	static final int MESSAGE_DEVICE_NAME = 4;$/;"	f	class:BluMote	access:default
+BluMote.MESSAGE_KEY_PRESSED	BluMote.java	/^	static final int MESSAGE_KEY_PRESSED = 6;$/;"	f	class:BluMote	access:default
+BluMote.MESSAGE_READ	BluMote.java	/^	static final int MESSAGE_READ = 2;$/;"	f	class:BluMote	access:default
+BluMote.MESSAGE_STATE_CHANGE	BluMote.java	/^	static final int MESSAGE_STATE_CHANGE = 1;$/;"	f	class:BluMote	access:default
+BluMote.MESSAGE_TOAST	BluMote.java	/^	static final int MESSAGE_TOAST = 5;$/;"	f	class:BluMote	access:default
+BluMote.MESSAGE_WRITE	BluMote.java	/^	static final int MESSAGE_WRITE = 3;$/;"	f	class:BluMote	access:default
+BluMote.MISC_RENAME	BluMote.java	/^	private static final int MISC_RENAME = 7;$/;"	f	class:BluMote	file:	access:private
+BluMote.MyGestureDetector	BluMote.java	/^	class MyGestureDetector extends SimpleOnGestureListener {$/;"	c	class:BluMote	inherits:SimpleOnGestureListener	access:default
+BluMote.MyGestureDetector.onFling	BluMote.java	/^        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {$/;"	m	class:BluMote.MyGestureDetector	access:public	signature:(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+BluMote.PKTS_SENT	BluMote.java	/^	static int PKTS_SENT = 0;$/;"	f	class:BluMote	access:default
+BluMote.PREFERENCES	BluMote.java	/^	private static final int PREFERENCES = 9;$/;"	f	class:BluMote	file:	access:private
+BluMote.PREFS_FILE	BluMote.java	/^	static final String PREFS_FILE = "BluMoteSettings";$/;"	f	class:BluMote	access:default
+BluMote.Pages	BluMote.java	/^	enum Pages {$/;"	g	class:BluMote	access:default
+BluMote.REQUEST_CONNECT_DEVICE	BluMote.java	/^	private static final int REQUEST_CONNECT_DEVICE = 1;$/;"	f	class:BluMote	file:	access:private
+BluMote.REQUEST_ENABLE_BT	BluMote.java	/^	private static final int REQUEST_ENABLE_BT = 2;$/;"	f	class:BluMote	file:	access:private
+BluMote.REQUEST_MANAGE_DEVICE	BluMote.java	/^	private static final int REQUEST_MANAGE_DEVICE = 3;$/;"	f	class:BluMote	file:	access:private
+BluMote.SWIPE_MAX_OFF_PATH	BluMote.java	/^    private static final int SWIPE_MAX_OFF_PATH = 250;$/;"	f	class:BluMote	file:	access:private
+BluMote.SWIPE_MIN_DISTANCE	BluMote.java	/^	private static final int SWIPE_MIN_DISTANCE = 120;$/;"	f	class:BluMote	file:	access:private
+BluMote.SWIPE_THRESHOLD_VELOCITY	BluMote.java	/^    private static final int SWIPE_THRESHOLD_VELOCITY = 200;$/;"	f	class:BluMote	file:	access:private
+BluMote.TOAST	BluMote.java	/^	static final String TOAST = "toast";$/;"	f	class:BluMote	access:default
+BluMote.activities	BluMote.java	/^	private Activities activities = null;$/;"	f	class:BluMote	file:	access:private
+BluMote.activitiesListView	BluMote.java	/^	ListView activitiesListView;$/;"	f	class:BluMote	access:default
+BluMote.activityButton	BluMote.java	/^    private String activityButton = "";$/;"	f	class:BluMote	file:	access:private
+BluMote.activityInit	BluMote.java	/^	ArrayList<String> activityInit = new ArrayList<String>();$/;"	f	class:BluMote	access:default
+BluMote.activityPowerOffData	BluMote.java	/^	ButtonData[] activityPowerOffData = null;$/;"	f	class:BluMote	access:default
+BluMote.activity_rename	BluMote.java	/^	private static int activity_rename;$/;"	f	class:BluMote	file:	access:private
+BluMote.buttonLock	BluMote.java	/^	private boolean buttonLock = false;   $/;"	f	class:BluMote	file:	access:private
+BluMote.buttonPushID	BluMote.java	/^	private static int buttonPushID = 0;$/;"	f	class:BluMote	file:	access:private
+BluMote.buttonSend	BluMote.java	/^	protected void buttonSend(int buttonID) {		$/;"	m	class:BluMote	access:protected	signature:(int buttonID)
+BluMote.button_map	BluMote.java	/^	HashMap<Integer, String> button_map;	$/;"	f	class:BluMote	access:default
+BluMote.buttons	BluMote.java	/^	ButtonData[] buttons;$/;"	f	class:BluMote	access:default
+BluMote.captureButton	BluMote.java	/^    private boolean captureButton = false;$/;"	f	class:BluMote	file:	access:private
+BluMote.checkPodDataBounds	BluMote.java	/^	protected boolean checkPodDataBounds(int bytes) {$/;"	m	class:BluMote	access:protected	signature:(int bytes)
+BluMote.connectingDevice	BluMote.java	/^	private String connectingDevice;$/;"	f	class:BluMote	file:	access:private
+BluMote.connectingMAC	BluMote.java	/^	private String connectingMAC;$/;"	f	class:BluMote	file:	access:private
+BluMote.cur_context	BluMote.java	/^	private String cur_context = CATEGORIES.TV_DVD.getValue();$/;"	f	class:BluMote	file:	access:private
+BluMote.cur_device	BluMote.java	/^	String cur_device;$/;"	f	class:BluMote	access:default
+BluMote.device_data	BluMote.java	/^	DeviceDB device_data;$/;"	f	class:BluMote	access:default
+BluMote.ensureDiscoverable	BluMote.java	/^	private void ensureDiscoverable() {$/;"	m	class:BluMote	file:	access:private	signature:()
+BluMote.executeButtonLongDown	BluMote.java	/^	protected void executeButtonLongDown() {		$/;"	m	class:BluMote	access:protected	signature:()
+BluMote.executeNavigationButton	BluMote.java	/^	public void executeNavigationButton(int buttonID) {$/;"	m	class:BluMote	access:public	signature:(int buttonID)
+BluMote.exportPreferences	BluMote.java	/^	private boolean exportPreferences() {$/;"	m	class:BluMote	file:	access:private	signature:()
+BluMote.flip	BluMote.java	/^	private ViewFlipper flip;$/;"	f	class:BluMote	file:	access:private
+BluMote.gestureDetector	BluMote.java	/^	GestureDetector gestureDetector;$/;"	f	class:BluMote	access:default
+BluMote.gestureListener	BluMote.java	/^	View.OnTouchListener gestureListener;$/;"	f	class:BluMote	access:default
+BluMote.getDataDir	BluMote.java	/^	private String getDataDir() { $/;"	m	class:BluMote	file:	access:private	signature:()
+BluMote.hapticFeedback	BluMote.java	/^    private boolean hapticFeedback = true;$/;"	f	class:BluMote	file:	access:private
+BluMote.importPreferences	BluMote.java	/^	private boolean importPreferences() {   $/;"	m	class:BluMote	file:	access:private	signature:()
+BluMote.interpretResponse	BluMote.java	/^	protected void interpretResponse(byte[] response, int bytes, int index) {$/;"	m	class:BluMote	access:protected	signature:(byte[] response, int bytes, int index)
+BluMote.isButtonPushed	BluMote.java	/^    private static boolean isButtonPushed;$/;"	f	class:BluMote	file:	access:private
+BluMote.isButtonTimerStarted	BluMote.java	/^	private static boolean isButtonTimerStarted = false;$/;"	f	class:BluMote	file:	access:private
+BluMote.lastView	BluMote.java	/^    private static View lastView;$/;"	f	class:BluMote	file:	access:private
+BluMote.lookup	BluMote.java	/^	InterfaceLookup lookup;$/;"	f	class:BluMote	access:default
+BluMote.mBluetoothAdapter	BluMote.java	/^	private BluetoothAdapter mBluetoothAdapter = null;$/;"	f	class:BluMote	file:	access:private
+BluMote.mChatService	BluMote.java	/^	private BluetoothChatService mChatService = null;	$/;"	f	class:BluMote	file:	access:private
+BluMote.mConnectedDeviceName	BluMote.java	/^	private String mConnectedDeviceName = null;$/;"	f	class:BluMote	file:	access:private
+BluMote.mHandler	BluMote.java	/^	private final Handler mHandler = new Handler() {$/;"	f	class:BluMote	file:	access:private
+BluMote.mTitle	BluMote.java	/^	private TextView mTitle;$/;"	f	class:BluMote	file:	access:private
+BluMote.mainScreen	BluMote.java	/^	private MainInterface mainScreen = null;$/;"	f	class:BluMote	file:	access:private
+BluMote.misc_button	BluMote.java	/^	private static String misc_button;$/;"	f	class:BluMote	file:	access:private
+BluMote.moveLeft	BluMote.java	/^	private void moveLeft() {$/;"	m	class:BluMote	file:	access:private	signature:()
+BluMote.moveRight	BluMote.java	/^	private void moveRight() {$/;"	m	class:BluMote	file:	access:private	signature:()
+BluMote.myMenu	BluMote.java	/^	Menu myMenu;$/;"	f	class:BluMote	access:default
+BluMote.onActivityResult	BluMote.java	/^	protected void onActivityResult(int requestCode, int resultCode, Intent data) {$/;"	m	class:BluMote	access:protected	signature:(int requestCode, int resultCode, Intent data)
+BluMote.onClick	BluMote.java	/^	public void onClick(View v) {$/;"	m	class:BluMote	access:public	signature:(View v)
+BluMote.onContextItemSelected	BluMote.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:BluMote	access:public	signature:(MenuItem item)
+BluMote.onCreate	BluMote.java	/^	protected void onCreate(Bundle savedInstanceState) {	$/;"	m	class:BluMote	access:protected	signature:(Bundle savedInstanceState)
+BluMote.onCreateContextMenu	BluMote.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:BluMote	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+BluMote.onCreateDialog	BluMote.java	/^	protected Dialog onCreateDialog(int id) {$/;"	m	class:BluMote	access:protected	signature:(int id)
+BluMote.onCreateOptionsMenu	BluMote.java	/^	public boolean onCreateOptionsMenu(Menu menu) {$/;"	m	class:BluMote	access:public	signature:(Menu menu)
+BluMote.onDestroy	BluMote.java	/^	protected void onDestroy() {$/;"	m	class:BluMote	access:protected	signature:()
+BluMote.onItemClick	BluMote.java	/^	public void onItemClick(AdapterView<?> av, View v, int position, long id) {		$/;"	m	class:BluMote	access:public	signature:(AdapterView<?> av, View v, int position, long id)
+BluMote.onItemSelected	BluMote.java	/^	public void onItemSelected(AdapterView<?> parent, View view, int pos,$/;"	m	class:BluMote	access:public	signature:(AdapterView<?> parent, View view, int pos, long id)
+BluMote.onNothingSelected	BluMote.java	/^	public void onNothingSelected(AdapterView<?> parent) {$/;"	m	class:BluMote	access:public	signature:(AdapterView<?> parent)
+BluMote.onOptionsItemSelected	BluMote.java	/^	public boolean onOptionsItemSelected(MenuItem item) {$/;"	m	class:BluMote	access:public	signature:(MenuItem item)
+BluMote.onPause	BluMote.java	/^	protected synchronized void onPause() {$/;"	m	class:BluMote	access:protected	signature:()
+BluMote.onPrepareOptionsMenu	BluMote.java	/^	public boolean onPrepareOptionsMenu(Menu menu) {$/;"	m	class:BluMote	access:public	signature:(Menu menu)
+BluMote.onRestart	BluMote.java	/^	protected void onRestart() {$/;"	m	class:BluMote	access:protected	signature:()
+BluMote.onResume	BluMote.java	/^	protected synchronized void onResume() {$/;"	m	class:BluMote	access:protected	signature:()
+BluMote.onStart	BluMote.java	/^	protected void onStart() {$/;"	m	class:BluMote	access:protected	signature:()
+BluMote.onStop	BluMote.java	/^	protected void onStop() {$/;"	m	class:BluMote	access:protected	signature:()
+BluMote.onTouchEvent	BluMote.java	/^	public boolean onTouchEvent(MotionEvent event) {$/;"	m	class:BluMote	access:public	signature:(MotionEvent event)
+BluMote.page	BluMote.java	/^	private Pages page = Pages.MAIN;$/;"	f	class:BluMote	file:	access:private
+BluMote.pager	BluMote.java	/^	ImageView pager;$/;"	f	class:BluMote	access:default
+BluMote.prefs	BluMote.java	/^	SharedPreferences prefs;$/;"	f	class:BluMote	access:default
+BluMote.sendButton	BluMote.java	/^	protected void sendButton(byte[] code) {$/;"	m	class:BluMote	access:protected	signature:(byte[] code)
+BluMote.sendCode	BluMote.java	/^	protected void sendCode(int code) {$/;"	m	class:BluMote	access:protected	signature:(int code)
+BluMote.sendMessage	BluMote.java	/^	private void sendMessage(byte[] message) {$/;"	m	class:BluMote	file:	access:private	signature:(byte[] message)
+BluMote.setButtonMap	BluMote.java	/^	protected void setButtonMap(HashMap<Integer, String> map) {$/;"	m	class:BluMote	access:protected	signature:(HashMap<Integer, String> map)
+BluMote.signalError	BluMote.java	/^	protected void signalError(int code) {$/;"	m	class:BluMote	access:protected	signature:(int code)
+BluMote.slide_left_anim	BluMote.java	/^	private Animation slide_left_anim;$/;"	f	class:BluMote	file:	access:private
+BluMote.slide_left_out_anim	BluMote.java	/^	private Animation slide_left_out_anim;$/;"	f	class:BluMote	file:	access:private
+BluMote.slide_right_anim	BluMote.java	/^	private Animation slide_right_anim;$/;"	f	class:BluMote	file:	access:private
+BluMote.slide_right_out_anim	BluMote.java	/^	private Animation slide_right_out_anim;$/;"	f	class:BluMote	file:	access:private
+BluMote.startActivityEdit	BluMote.java	/^	void startActivityEdit() {$/;"	m	class:BluMote	access:default	signature:()
+BluMote.storeButton	BluMote.java	/^	protected void storeButton() {$/;"	m	class:BluMote	access:protected	signature:()
+BluetoothChatService	BluetoothChatService.java	/^    BluetoothChatService(Context context, Handler handler) {$/;"	m	class:BluetoothChatService	access:default	signature:(Context context, Handler handler)
+BluetoothChatService	BluetoothChatService.java	/^class BluetoothChatService {$/;"	c
+BluetoothChatService.BluetoothChatService	BluetoothChatService.java	/^    BluetoothChatService(Context context, Handler handler) {$/;"	m	class:BluetoothChatService	access:default	signature:(Context context, Handler handler)
+BluetoothChatService.ConnectThread	BluetoothChatService.java	/^    private class ConnectThread extends Thread {$/;"	c	class:BluetoothChatService	inherits:Thread	access:private
+BluetoothChatService.ConnectThread.ConnectThread	BluetoothChatService.java	/^        public ConnectThread(BluetoothDevice device) {$/;"	m	class:BluetoothChatService.ConnectThread	access:public	signature:(BluetoothDevice device)
+BluetoothChatService.ConnectThread.cancel	BluetoothChatService.java	/^        public void cancel() {$/;"	m	class:BluetoothChatService.ConnectThread	access:public	signature:()
+BluetoothChatService.ConnectThread.mmDevice	BluetoothChatService.java	/^        private BluetoothDevice mmDevice;$/;"	f	class:BluetoothChatService.ConnectThread	file:	access:private
+BluetoothChatService.ConnectThread.mmSocket	BluetoothChatService.java	/^        private BluetoothSocket mmSocket;$/;"	f	class:BluetoothChatService.ConnectThread	file:	access:private
+BluetoothChatService.ConnectThread.run	BluetoothChatService.java	/^        public void run() {$/;"	m	class:BluetoothChatService.ConnectThread	access:public	signature:()
+BluetoothChatService.ConnectedThread	BluetoothChatService.java	/^    private class ConnectedThread extends Thread {$/;"	c	class:BluetoothChatService	inherits:Thread	access:private
+BluetoothChatService.ConnectedThread.ConnectedThread	BluetoothChatService.java	/^        public ConnectedThread(BluetoothSocket socket) {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:(BluetoothSocket socket)
+BluetoothChatService.ConnectedThread.cancel	BluetoothChatService.java	/^        public void cancel() {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:()
+BluetoothChatService.ConnectedThread.mmInStream	BluetoothChatService.java	/^        private final InputStream mmInStream;$/;"	f	class:BluetoothChatService.ConnectedThread	file:	access:private
+BluetoothChatService.ConnectedThread.mmOutStream	BluetoothChatService.java	/^        private final OutputStream mmOutStream;$/;"	f	class:BluetoothChatService.ConnectedThread	file:	access:private
+BluetoothChatService.ConnectedThread.mmSocket	BluetoothChatService.java	/^        private final BluetoothSocket mmSocket;$/;"	f	class:BluetoothChatService.ConnectedThread	file:	access:private
+BluetoothChatService.ConnectedThread.run	BluetoothChatService.java	/^        public void run() {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:()
+BluetoothChatService.ConnectedThread.write	BluetoothChatService.java	/^        public void write(byte[] buffer) {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:(byte[] buffer)
+BluetoothChatService.D	BluetoothChatService.java	/^    private static final boolean D = true;$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.MY_UUID	BluetoothChatService.java	/^    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.STATE_CONNECTED	BluetoothChatService.java	/^    static final int STATE_CONNECTED = 3;  \/\/ now connected to a remote device$/;"	f	class:BluetoothChatService	access:default
+BluetoothChatService.STATE_CONNECTING	BluetoothChatService.java	/^    static final int STATE_CONNECTING = 2; \/\/ now initiating an outgoing connection$/;"	f	class:BluetoothChatService	access:default
+BluetoothChatService.STATE_NONE	BluetoothChatService.java	/^    static final int STATE_NONE = 0;       \/\/ we're doing nothing$/;"	f	class:BluetoothChatService	access:default
+BluetoothChatService.TAG	BluetoothChatService.java	/^    private static final String TAG = "BluetoothChatService";$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.buffer_size	BluetoothChatService.java	/^    static final int buffer_size = 256;  \/\/ size of BT buffer$/;"	f	class:BluetoothChatService	access:default
+BluetoothChatService.connect	BluetoothChatService.java	/^    synchronized void connect(BluetoothDevice device) {$/;"	m	class:BluetoothChatService	access:default	signature:(BluetoothDevice device)
+BluetoothChatService.connected	BluetoothChatService.java	/^    synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {$/;"	m	class:BluetoothChatService	access:default	signature:(BluetoothSocket socket, BluetoothDevice device)
+BluetoothChatService.connectionFailed	BluetoothChatService.java	/^    private void connectionFailed() {$/;"	m	class:BluetoothChatService	file:	access:private	signature:()
+BluetoothChatService.connectionLost	BluetoothChatService.java	/^    private void connectionLost() {$/;"	m	class:BluetoothChatService	file:	access:private	signature:()
+BluetoothChatService.getState	BluetoothChatService.java	/^    synchronized int getState() {$/;"	m	class:BluetoothChatService	access:default	signature:()
+BluetoothChatService.mAdapter	BluetoothChatService.java	/^    private final BluetoothAdapter mAdapter;$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.mConnectThread	BluetoothChatService.java	/^    private ConnectThread mConnectThread;$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.mConnectedThread	BluetoothChatService.java	/^    private ConnectedThread mConnectedThread;$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.mHandler	BluetoothChatService.java	/^    private final Handler mHandler;$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.mState	BluetoothChatService.java	/^    private int mState;$/;"	f	class:BluetoothChatService	file:	access:private
+BluetoothChatService.setState	BluetoothChatService.java	/^    private synchronized void setState(int state) {$/;"	m	class:BluetoothChatService	file:	access:private	signature:(int state)
+BluetoothChatService.start	BluetoothChatService.java	/^    synchronized void start() {$/;"	m	class:BluetoothChatService	access:default	signature:()
+BluetoothChatService.stop	BluetoothChatService.java	/^    synchronized void stop() {$/;"	m	class:BluetoothChatService	access:default	signature:()
+BluetoothChatService.write	BluetoothChatService.java	/^    void write(byte[] out) {$/;"	m	class:BluetoothChatService	access:default	signature:(byte[] out)
+ButtonCountDown	BluMote.java	/^	abstract class ButtonCountDown extends CountDownTimer{$/;"	c	class:BluMote	inherits:CountDownTimer	access:default
+ButtonCountDown	BluMote.java	/^        public ButtonCountDown(long millisInFuture, int buttonID) {$/;"	m	class:BluMote.ButtonCountDown	access:public	signature:(long millisInFuture, int buttonID)
+ButtonData	ButtonData.java	/^	public ButtonData(int buttonId, String buttonName, byte[] buttonData, String buttonCategory) {$/;"	m	class:ButtonData	access:public	signature:(int buttonId, String buttonName, byte[] buttonData, String buttonCategory)
+ButtonData	ButtonData.java	/^public class ButtonData {$/;"	c
+ButtonData.ButtonData	ButtonData.java	/^	public ButtonData(int buttonId, String buttonName, byte[] buttonData, String buttonCategory) {$/;"	m	class:ButtonData	access:public	signature:(int buttonId, String buttonName, byte[] buttonData, String buttonCategory)
+ButtonData.buttonCategory	ButtonData.java	/^	private String buttonCategory;$/;"	f	class:ButtonData	file:	access:private
+ButtonData.buttonData	ButtonData.java	/^	private byte[] buttonData;$/;"	f	class:ButtonData	file:	access:private
+ButtonData.buttonId	ButtonData.java	/^	private int buttonId;$/;"	f	class:ButtonData	file:	access:private
+ButtonData.buttonName	ButtonData.java	/^	private String buttonName;$/;"	f	class:ButtonData	file:	access:private
+ButtonData.getButtonCategory	ButtonData.java	/^	String getButtonCategory() {$/;"	m	class:ButtonData	access:default	signature:()
+ButtonData.getButtonData	ButtonData.java	/^	byte[] getButtonData() {$/;"	m	class:ButtonData	access:default	signature:()
+ButtonData.getButtonId	ButtonData.java	/^	int getButtonId() {$/;"	m	class:ButtonData	access:default	signature:()
+ButtonData.getButtonName	ButtonData.java	/^	String getButtonName() {$/;"	m	class:ButtonData	access:default	signature:()
+ButtonData.setButtonData	ButtonData.java	/^	void setButtonData(byte[] buttonData) {$/;"	m	class:ButtonData	access:default	signature:(byte[] buttonData)
+COLLECTING	Codes.java	/^    	IDLE, STARTED, BYTE1, INITIALIZED, COLLECTING$/;"	e	enum:Codes.LEARN_STATE	file:	access:public
+Codes	Codes.java	/^	private Codes() { }$/;"	m	class:Codes	file:	access:private	signature:()
+Codes	Codes.java	/^class Codes {$/;"	c
+Codes.BT_STATE	Codes.java	/^    enum BT_STATE {$/;"	g	class:Codes	access:default
+Codes.Codes	Codes.java	/^	private Codes() { }$/;"	m	class:Codes	file:	access:private	signature:()
+Codes.INFO_STATE	Codes.java	/^    enum INFO_STATE {$/;"	g	class:Codes	access:default
+Codes.INTERFACE_STATE	Codes.java	/^    enum INTERFACE_STATE {$/;"	g	class:Codes	access:default
+Codes.LEARN_STATE	Codes.java	/^    enum LEARN_STATE {$/;"	g	class:Codes	access:default
+Codes.Pod	Codes.java	/^    class Pod {$/;"	c	class:Codes	access:default
+Codes.Pod.ABORT_LEARN	Codes.java	/^        public static final byte ABORT_LEARN = (byte)0xFD; \/\/ currently matt does not use this $/;"	f	class:Codes.Pod	access:public
+Codes.Pod.ACK	Codes.java	/^        public static final byte ACK = (byte)0x06;$/;"	f	class:Codes.Pod	access:public
+Codes.Pod.DEBUG	Codes.java	/^        public static final byte DEBUG = (byte)0xFF;  \/\/ testing purpose only$/;"	f	class:Codes.Pod	access:public
+Codes.Pod.GET_VERSION	Codes.java	/^        public static final byte GET_VERSION = 0x00;  \/\/ Pod command$/;"	f	class:Codes.Pod	access:public
+Codes.Pod.IDLE	Codes.java	/^    	public static final byte IDLE = (byte)0xFE; \/\/ Default state - nothing going on$/;"	f	class:Codes.Pod	access:public
+Codes.Pod.IR_TRANSMIT	Codes.java	/^        public static final byte IR_TRANSMIT = 0x02;  \/\/ Pod command$/;"	f	class:Codes.Pod	access:public
+Codes.Pod.LEARN	Codes.java	/^        public static final byte LEARN = 0x01; \/\/ Pod Command$/;"	f	class:Codes.Pod	access:public
+Codes.Pod.NACK	Codes.java	/^        public static final byte NACK = (byte)0x15;$/;"	f	class:Codes.Pod	access:public
+Codes.Pod.RENAME_DEVICE	Codes.java	/^        public static final byte RENAME_DEVICE = 0x01; \/\/ Unused pod command$/;"	f	class:Codes.Pod	access:public
+Codes.data_index	Codes.java	/^    static int data_index = 0;$/;"	f	class:Codes	access:default
+Codes.debug_send	Codes.java	/^    static int debug_send = 0;$/;"	f	class:Codes	access:default
+Codes.info_state	Codes.java	/^    static INFO_STATE info_state = INFO_STATE.IDLE;$/;"	f	class:Codes	access:default
+Codes.learn_state	Codes.java	/^    static LEARN_STATE learn_state = LEARN_STATE.IDLE;$/;"	f	class:Codes	access:default
+Codes.new_name	Codes.java	/^	static String new_name;$/;"	f	class:Codes	access:default
+Codes.pod_data	Codes.java	/^	static byte[] pod_data;$/;"	f	class:Codes	access:default
+ConnectThread	BluetoothChatService.java	/^        public ConnectThread(BluetoothDevice device) {$/;"	m	class:BluetoothChatService.ConnectThread	access:public	signature:(BluetoothDevice device)
+ConnectThread	BluetoothChatService.java	/^    private class ConnectThread extends Thread {$/;"	c	class:BluetoothChatService	inherits:Thread	access:private
+ConnectedThread	BluetoothChatService.java	/^        public ConnectedThread(BluetoothSocket socket) {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:(BluetoothSocket socket)
+ConnectedThread	BluetoothChatService.java	/^    private class ConnectedThread extends Thread {$/;"	c	class:BluetoothChatService	inherits:Thread	access:private
+D	BluMote.java	/^	static final boolean D = true;$/;"	f	class:BluMote	access:default
+D	BluetoothChatService.java	/^    private static final boolean D = true;$/;"	f	class:BluetoothChatService	file:	access:private
+D	PodListActivity.java	/^    private static final boolean D = true;$/;"	f	class:PodListActivity	file:	access:private
+DEBUG	Codes.java	/^        DEBUG, \/\/ debug mode for testing$/;"	e	enum:Codes.BT_STATE	file:	access:public
+DEBUG	Codes.java	/^        public static final byte DEBUG = (byte)0xFF;  \/\/ testing purpose only$/;"	f	class:Codes.Pod	access:public
+DELAY_TIME	BluMote.java	/^	private static int DELAY_TIME = 300; \/\/ minimum time pod needs before receiving a new button press$/;"	f	class:BluMote	file:	access:private
+DEVICE_NAME	BluMote.java	/^	static final String DEVICE_NAME = "device_name";$/;"	f	class:BluMote	access:default
+DIALOG_ABOUT	BluMote.java	/^	private static final int DIALOG_ABOUT = 3;$/;"	f	class:BluMote	file:	access:private
+DIALOG_INIT_DELAY	ActivityInitEdit.java	/^	private static final int DIALOG_INIT_DELAY = 0;$/;"	f	class:ActivityInitEdit	file:	access:private
+DIALOG_INIT_DELAY	BluMote.java	/^	private static final int DIALOG_INIT_DELAY = 1;$/;"	f	class:BluMote	file:	access:private
+DIALOG_INIT_PROGRESS	BluMote.java	/^	static final int DIALOG_INIT_PROGRESS = 2; $/;"	f	class:BluMote	access:default
+DIALOG_LEARN_WAIT	BluMote.java	/^	private static final int DIALOG_LEARN_WAIT = 4;$/;"	f	class:BluMote	file:	access:private
+DIALOG_SHOW_INFO	BluMote.java	/^	private static final int DIALOG_SHOW_INFO = 0;$/;"	f	class:BluMote	file:	access:private
+DeviceButton	Activities.java	/^		DeviceButton(String activityName, String activityButton) {$/;"	m	class:Activities.DeviceButton	access:default	signature:(String activityName, String activityButton)
+DeviceButton	Activities.java	/^	private class DeviceButton {$/;"	c	class:Activities	access:private
+ENABLE_BT	BluMote.java	/^	static final boolean ENABLE_BT = true;$/;"	f	class:BluMote	access:default
+EXTRA_DEVICE_ADDRESS	PodListActivity.java	/^    public static String EXTRA_DEVICE_ADDRESS = "device_address";$/;"	f	class:PodListActivity	access:public
+EXTRA_DEVICE_NAME	PodListActivity.java	/^    public static String EXTRA_DEVICE_NAME = "device_name";$/;"	f	class:PodListActivity	access:public
+EnterDevice	EnterDevice.java	/^public class EnterDevice extends Activity {$/;"	c	inherits:Activity
+EnterDevice.closeButton	EnterDevice.java	/^	private Button closeButton;$/;"	f	class:EnterDevice	file:	access:private
+EnterDevice.device_string	EnterDevice.java	/^	CharSequence device_string;$/;"	f	class:EnterDevice	access:default
+EnterDevice.entered_device	EnterDevice.java	/^	private EditText entered_device;$/;"	f	class:EnterDevice	file:	access:private
+EnterDevice.onCreate	EnterDevice.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:EnterDevice	access:protected	signature:(Bundle savedInstanceState)
+ExportDatabaseFileTask	ExportDatabaseFileTask.java	/^    protected ExportDatabaseFileTask(Context ctx) {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:(Context ctx)
+ExportDatabaseFileTask	ExportDatabaseFileTask.java	/^class ExportDatabaseFileTask extends AsyncTask<String, Void, Boolean> {$/;"	c	inherits:AsyncTask
+ExportDatabaseFileTask.BACKUP_DB_NAME	ExportDatabaseFileTask.java	/^    public static final String BACKUP_DB_NAME = "device_data.bak";$/;"	f	class:ExportDatabaseFileTask	access:public
+ExportDatabaseFileTask.ExportDatabaseFileTask	ExportDatabaseFileTask.java	/^    protected ExportDatabaseFileTask(Context ctx) {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:(Context ctx)
+ExportDatabaseFileTask.ctx	ExportDatabaseFileTask.java	/^    private Context ctx;$/;"	f	class:ExportDatabaseFileTask	file:	access:private
+ExportDatabaseFileTask.dialog	ExportDatabaseFileTask.java	/^    private ProgressDialog dialog;$/;"	f	class:ExportDatabaseFileTask	file:	access:private
+ExportDatabaseFileTask.doInBackground	ExportDatabaseFileTask.java	/^    protected Boolean doInBackground(final String... args) {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:(final String... args)
+ExportDatabaseFileTask.onPostExecute	ExportDatabaseFileTask.java	/^    protected void onPostExecute(final Boolean success) {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:(final Boolean success)
+ExportDatabaseFileTask.onPreExecute	ExportDatabaseFileTask.java	/^    protected void onPreExecute() {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:()
+FileUtils	Utilities.java	/^	public static class FileUtils {$/;"	c	class:Utilities	access:public
+GET_VERSION	Codes.java	/^        GET_VERSION, \/\/ getting pod information$/;"	e	enum:Codes.BT_STATE	file:	access:public
+GET_VERSION	Codes.java	/^        public static final byte GET_VERSION = 0x00;  \/\/ Pod command$/;"	f	class:Codes.Pod	access:public
+IDLE	Codes.java	/^    	IDLE, BYTE0, BYTE1, BYTE2, BYTE3$/;"	e	enum:Codes.INFO_STATE	file:	access:public
+IDLE	Codes.java	/^    	IDLE, STARTED, BYTE1, INITIALIZED, COLLECTING$/;"	e	enum:Codes.LEARN_STATE	file:	access:public
+IDLE	Codes.java	/^    	public static final byte IDLE = (byte)0xFE; \/\/ Default state - nothing going on$/;"	f	class:Codes.Pod	access:public
+IDLE	Codes.java	/^        IDLE, \/\/ not doing anything$/;"	e	enum:Codes.BT_STATE	file:	access:public
+ID_CHANGE	ActivityInitEdit.java	/^    private static final int ID_CHANGE = 1;$/;"	f	class:ActivityInitEdit	file:	access:private
+ID_DELETE	ActivityInitEdit.java	/^    private static final int ID_DELETE = 0;$/;"	f	class:ActivityInitEdit	file:	access:private
+ID_DELETE	BluMote.java	/^	private static final int ID_DELETE = 0;$/;"	f	class:BluMote	file:	access:private
+ID_DELETE	ManageDevices.java	/^    private static final int ID_DELETE = 0;$/;"	f	class:ManageDevices	file:	access:private
+ID_INDEX	InterfaceLookup.java	/^	private static String ID_INDEX = "ID_INDEX";$/;"	f	class:InterfaceLookup	file:	access:private
+ID_MANAGE	BluMote.java	/^	private static final int ID_MANAGE = 2;$/;"	f	class:BluMote	file:	access:private
+ID_PREFIX	InterfaceLookup.java	/^	private static String ID_PREFIX = "INTEGERID_";$/;"	f	class:InterfaceLookup	file:	access:private
+ID_RENAME	BluMote.java	/^	private static final int ID_RENAME = 1;$/;"	f	class:BluMote	file:	access:private
+ID_RENAME	ManageDevices.java	/^    private static final int ID_RENAME = 1;$/;"	f	class:ManageDevices	file:	access:private
+ID_RENAME	PodListActivity.java	/^    private static final int ID_RENAME = 0;$/;"	f	class:PodListActivity	file:	access:private
+INFO_STATE	Codes.java	/^    enum INFO_STATE {$/;"	g	class:Codes	access:default
+INIT	Activities.java	/^	private static final String INIT = "INIT";$/;"	f	class:Activities	file:	access:private
+INITIALIZED	Codes.java	/^    	IDLE, STARTED, BYTE1, INITIALIZED, COLLECTING$/;"	e	enum:Codes.LEARN_STATE	file:	access:public
+INTERFACE_STATE	BluMote.java	/^	Codes.INTERFACE_STATE INTERFACE_STATE = Codes.INTERFACE_STATE.MAIN;$/;"	f	class:BluMote	access:default
+INTERFACE_STATE	Codes.java	/^    enum INTERFACE_STATE {$/;"	g	class:Codes	access:default
+INVALID_ID	InterfaceLookup.java	/^	private static int INVALID_ID = -1;$/;"	f	class:InterfaceLookup	file:	access:private
+IR_TRANSMIT	Codes.java	/^        IR_TRANSMIT, \/\/ transmit an ir code$/;"	e	enum:Codes.BT_STATE	file:	access:public
+IR_TRANSMIT	Codes.java	/^        public static final byte IR_TRANSMIT = 0x02;  \/\/ Pod command$/;"	f	class:Codes.Pod	access:public
+InterfaceLookup	InterfaceLookup.java	/^	InterfaceLookup(SharedPreferences prefs) {$/;"	m	class:InterfaceLookup	access:default	signature:(SharedPreferences prefs)
+InterfaceLookup	InterfaceLookup.java	/^class InterfaceLookup {$/;"	c
+InterfaceLookup.ID_INDEX	InterfaceLookup.java	/^	private static String ID_INDEX = "ID_INDEX";$/;"	f	class:InterfaceLookup	file:	access:private
+InterfaceLookup.ID_PREFIX	InterfaceLookup.java	/^	private static String ID_PREFIX = "INTEGERID_";$/;"	f	class:InterfaceLookup	file:	access:private
+InterfaceLookup.INVALID_ID	InterfaceLookup.java	/^	private static int INVALID_ID = -1;$/;"	f	class:InterfaceLookup	file:	access:private
+InterfaceLookup.InterfaceLookup	InterfaceLookup.java	/^	InterfaceLookup(SharedPreferences prefs) {$/;"	m	class:InterfaceLookup	access:default	signature:(SharedPreferences prefs)
+InterfaceLookup.addLookupId	InterfaceLookup.java	/^	int addLookupId(String name) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name)
+InterfaceLookup.deleteLookupId	InterfaceLookup.java	/^	void deleteLookupId(String name) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name)
+InterfaceLookup.formatNameForLookup	InterfaceLookup.java	/^	private String formatNameForLookup(String name) {$/;"	m	class:InterfaceLookup	file:	access:private	signature:(String name)
+InterfaceLookup.formatNameForPrefsFile	InterfaceLookup.java	/^	private String formatNameForPrefsFile(String name) {$/;"	m	class:InterfaceLookup	file:	access:private	signature:(String name)
+InterfaceLookup.getID	InterfaceLookup.java	/^	String getID(String name) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name)
+InterfaceLookup.getIDNumber	InterfaceLookup.java	/^	private int getIDNumber(String name) {$/;"	m	class:InterfaceLookup	file:	access:private	signature:(String name)
+InterfaceLookup.getName	InterfaceLookup.java	/^	String getName(String id) {$/;"	m	class:InterfaceLookup	access:default	signature:(String id)
+InterfaceLookup.getName	InterfaceLookup.java	/^	String getName(int id) {$/;"	m	class:InterfaceLookup	access:default	signature:(int id)
+InterfaceLookup.getNewID	InterfaceLookup.java	/^	private int getNewID() {$/;"	m	class:InterfaceLookup	file:	access:private	signature:()
+InterfaceLookup.highestId	InterfaceLookup.java	/^	int highestId;$/;"	f	class:InterfaceLookup	access:default
+InterfaceLookup.lookup	InterfaceLookup.java	/^	HashMap<Integer, String> lookup = new HashMap<Integer, String>();$/;"	f	class:InterfaceLookup	access:default
+InterfaceLookup.mEditor	InterfaceLookup.java	/^	Editor mEditor;$/;"	f	class:InterfaceLookup	access:default
+InterfaceLookup.prefs	InterfaceLookup.java	/^	SharedPreferences prefs;$/;"	f	class:InterfaceLookup	access:default
+InterfaceLookup.refreshLookup	InterfaceLookup.java	/^	void refreshLookup() {$/;"	m	class:InterfaceLookup	access:default	signature:()
+InterfaceLookup.updateLookupID	InterfaceLookup.java	/^	void updateLookupID(String name, int id) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name, int id)
+InterfaceLookup.updateLookupName	InterfaceLookup.java	/^	void updateLookupName(String newName, String oldName) {$/;"	m	class:InterfaceLookup	access:default	signature:(String newName, String oldName)
+LEARN	Codes.java	/^    	LEARN, \/\/ when learning a new button code$/;"	e	enum:Codes.INTERFACE_STATE	file:	access:public
+LEARN	Codes.java	/^        LEARN, \/\/ in button learn mode$/;"	e	enum:Codes.BT_STATE	file:	access:public
+LEARN	Codes.java	/^        public static final byte LEARN = 0x01; \/\/ Pod Command$/;"	f	class:Codes.Pod	access:public
+LEARN_STATE	Codes.java	/^    enum LEARN_STATE {$/;"	g	class:Codes	access:default
+LONG_DELAY_TIME	BluMote.java	/^	private static int LONG_DELAY_TIME = 1500; \/\/ starts repeated button clicks$/;"	f	class:BluMote	file:	access:private
+MAIN	BluMote.java	/^		MAIN, NUMBERS, ACTIVITIES$/;"	e	enum:BluMote.Pages	file:	access:public
+MAIN	Codes.java	/^    	MAIN, \/\/ default program state, when we are in a device mode$/;"	e	enum:Codes.INTERFACE_STATE	file:	access:public
+MEDIUM_DELAY_TIME	BluMote.java	/^	static int MEDIUM_DELAY_TIME = 750; \/\/ repeat button click delay$/;"	f	class:BluMote	access:default
+MESSAGE_DEVICE_NAME	BluMote.java	/^	static final int MESSAGE_DEVICE_NAME = 4;$/;"	f	class:BluMote	access:default
+MESSAGE_KEY_PRESSED	BluMote.java	/^	static final int MESSAGE_KEY_PRESSED = 6;$/;"	f	class:BluMote	access:default
+MESSAGE_READ	BluMote.java	/^	static final int MESSAGE_READ = 2;$/;"	f	class:BluMote	access:default
+MESSAGE_STATE_CHANGE	BluMote.java	/^	static final int MESSAGE_STATE_CHANGE = 1;$/;"	f	class:BluMote	access:default
+MESSAGE_TOAST	BluMote.java	/^	static final int MESSAGE_TOAST = 5;$/;"	f	class:BluMote	access:default
+MESSAGE_WRITE	BluMote.java	/^	static final int MESSAGE_WRITE = 3;$/;"	f	class:BluMote	access:default
+MISC_RENAME	BluMote.java	/^	private static final int MISC_RENAME = 7;$/;"	f	class:BluMote	file:	access:private
+MY_UUID	BluetoothChatService.java	/^    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");$/;"	f	class:BluetoothChatService	file:	access:private
+MainInterface	MainInterface.java	/^	public MainInterface(BluMote d) {$/;"	m	class:MainInterface	access:public	signature:(BluMote d)
+MainInterface	MainInterface.java	/^public class MainInterface {$/;"	c
+MainInterface.ACTIVITY_PREFIX	MainInterface.java	/^	static final String ACTIVITY_PREFIX = "(A)_";$/;"	f	class:MainInterface	access:default
+MainInterface.ACTIVITY_PREFIX_SPACE	MainInterface.java	/^	static final String ACTIVITY_PREFIX_SPACE = "(A) ";$/;"	f	class:MainInterface	access:default
+MainInterface.BTN_MISC	MainInterface.java	/^	static final String BTN_MISC = "btn_misc";$/;"	f	class:MainInterface	access:default
+MainInterface.MainInterface	MainInterface.java	/^	public MainInterface(BluMote d) {$/;"	m	class:MainInterface	access:public	signature:(BluMote d)
+MainInterface.NUM_MISC_BTNS	MainInterface.java	/^    static final int NUM_MISC_BTNS = 8;$/;"	f	class:MainInterface	access:default
+MainInterface.activities	MainInterface.java	/^    private Activities activities;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.activitiesListView	MainInterface.java	/^    ListView activitiesListView; $/;"	f	class:MainInterface	access:default
+MainInterface.add_activity_btn	MainInterface.java	/^	private Button add_activity_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.back_btn	MainInterface.java	/^    private  ImageButton back_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.back_skip_btn	MainInterface.java	/^    private  ImageButton back_skip_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.blue_btn	MainInterface.java	/^	private ImageButton blue_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.blumote	MainInterface.java	/^    private  BluMote blumote;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_channel_down	MainInterface.java	/^    private  ImageButton btn_channel_down;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_channel_up	MainInterface.java	/^    private  ImageButton btn_channel_up;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_dash	MainInterface.java	/^	private Button btn_dash;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_enter	MainInterface.java	/^	private Button btn_enter;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_exit	MainInterface.java	/^	private Button btn_exit;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_home	MainInterface.java	/^	private ImageButton btn_home;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_input	MainInterface.java	/^    private  Button btn_input;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_last	MainInterface.java	/^    private  Button btn_last;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc1	MainInterface.java	/^	private Button btn_misc1;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc2	MainInterface.java	/^	private Button btn_misc2;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc3	MainInterface.java	/^	private Button btn_misc3;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc4	MainInterface.java	/^	private Button btn_misc4;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc5	MainInterface.java	/^	private Button btn_misc5;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc6	MainInterface.java	/^	private Button btn_misc6;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc7	MainInterface.java	/^	private Button btn_misc7;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_misc8	MainInterface.java	/^	private Button btn_misc8;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n0	MainInterface.java	/^	private Button btn_n0;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n1	MainInterface.java	/^	private Button btn_n1;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n2	MainInterface.java	/^	private Button btn_n2;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n3	MainInterface.java	/^	private Button btn_n3;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n4	MainInterface.java	/^	private Button btn_n4;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n5	MainInterface.java	/^	private Button btn_n5;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n6	MainInterface.java	/^	private Button btn_n6;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n7	MainInterface.java	/^	private Button btn_n7;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n8	MainInterface.java	/^	private Button btn_n8;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_n9	MainInterface.java	/^	private Button btn_n9;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_up	MainInterface.java	/^	private ImageButton btn_up;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_volume_down	MainInterface.java	/^    private  ImageButton btn_volume_down;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.btn_volume_up	MainInterface.java	/^    private  ImageButton btn_volume_up;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.button_map	MainInterface.java	/^    HashMap<Integer,String> button_map = null;$/;"	f	class:MainInterface	access:default
+MainInterface.device_spinner	MainInterface.java	/^	private Spinner device_spinner;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.disc_btn	MainInterface.java	/^    private  Button disc_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.down_btn	MainInterface.java	/^	private ImageButton down_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.eject_btn	MainInterface.java	/^    private  ImageButton eject_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.exit_btn	MainInterface.java	/^    private  Button exit_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.fav_btn	MainInterface.java	/^	private  ImageButton fav_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.fetchButtons	MainInterface.java	/^	void fetchButtons() {$/;"	m	class:MainInterface	access:default	signature:()
+MainInterface.forward_btn	MainInterface.java	/^    private  ImageButton forward_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.getButtonMap	MainInterface.java	/^	public HashMap<Integer,String> getButtonMap() {$/;"	m	class:MainInterface	access:public	signature:()
+MainInterface.getCurrentDropDown	MainInterface.java	/^	String getCurrentDropDown() {$/;"	m	class:MainInterface	access:default	signature:()
+MainInterface.getDropDownDevices	MainInterface.java	/^	public CharSequence[] getDropDownDevices() {$/;"	m	class:MainInterface	access:public	signature:()
+MainInterface.getResourceFromString	MainInterface.java	/^	int getResourceFromString(String name) {$/;"	m	class:MainInterface	access:default	signature:(String name)
+MainInterface.green_btn	MainInterface.java	/^	private ImageButton green_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.guide_btn	MainInterface.java	/^    private  Button guide_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.info_btn	MainInterface.java	/^    private  Button info_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.initialize	MainInterface.java	/^	public void initialize(Activities a) {$/;"	m	class:MainInterface	access:public	signature:(Activities a)
+MainInterface.isNavigationButton	MainInterface.java	/^	boolean isNavigationButton(int buttonID) {$/;"	m	class:MainInterface	access:default	signature:(int buttonID)
+MainInterface.left_btn	MainInterface.java	/^	private ImageButton left_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.mute_btn	MainInterface.java	/^    private  ImageButton mute_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.pause_btn	MainInterface.java	/^    private  ImageButton pause_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.pgdn_btn	MainInterface.java	/^    private  ImageButton pgdn_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.pgup_btn	MainInterface.java	/^    private  ImageButton pgup_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.play_btn	MainInterface.java	/^    private  ImageButton play_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.populateDropDown	MainInterface.java	/^	void populateDropDown() {$/;"	m	class:MainInterface	access:default	signature:()
+MainInterface.power_off_btn	MainInterface.java	/^    private  ImageButton power_off_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.power_on_btn	MainInterface.java	/^    private  ImageButton power_on_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.record_btn	MainInterface.java	/^    private  ImageButton record_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.red_btn	MainInterface.java	/^	private ImageButton red_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.refreshMiscBtns	MainInterface.java	/^	void refreshMiscBtns() {$/;"	m	class:MainInterface	access:default	signature:()
+MainInterface.renameMisc	MainInterface.java	/^	void renameMisc(String return_string, String misc_button) {$/;"	m	class:MainInterface	access:default	signature:(String return_string, String misc_button)
+MainInterface.renameMiscButtons	MainInterface.java	/^	static void renameMiscButtons(String oldName, String newName, SharedPreferences prefs) {$/;"	m	class:MainInterface	access:default	signature:(String oldName, String newName, SharedPreferences prefs)
+MainInterface.restoreSpinner	MainInterface.java	/^	private void restoreSpinner() {$/;"	m	class:MainInterface	file:	access:private	signature:()
+MainInterface.return_btn	MainInterface.java	/^    private  ImageButton return_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.right_btn	MainInterface.java	/^	private ImageButton right_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.setDropDown	MainInterface.java	/^	void setDropDown(String s) {		$/;"	m	class:MainInterface	access:default	signature:(String s)
+MainInterface.setSpinnerErrorState	MainInterface.java	/^	void setSpinnerErrorState() {$/;"	m	class:MainInterface	access:default	signature:()
+MainInterface.skip_forward_btn	MainInterface.java	/^    private  ImageButton skip_forward_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.spinnerAdapter	MainInterface.java	/^	private ArrayAdapter<String> spinnerAdapter;   $/;"	f	class:MainInterface	file:	access:private
+MainInterface.stop_btn	MainInterface.java	/^    private  ImageButton stop_btn;$/;"	f	class:MainInterface	file:	access:private
+MainInterface.toggleDropDownVis	MainInterface.java	/^	void toggleDropDownVis() {$/;"	m	class:MainInterface	access:default	signature:()
+MainInterface.yellow_btn	MainInterface.java	/^	private ImageButton yellow_btn;$/;"	f	class:MainInterface	file:	access:private
+ManageDevices	ManageDevices.java	/^public class ManageDevices extends Activity {$/;"	c	inherits:Activity
+ManageDevices.ACTIVITY_ADD	ManageDevices.java	/^    private static final int ACTIVITY_ADD=0;$/;"	f	class:ManageDevices	file:	access:private
+ManageDevices.ACTIVITY_RENAME	ManageDevices.java	/^    private static final int ACTIVITY_RENAME=1;$/;"	f	class:ManageDevices	file:	access:private
+ManageDevices.ID_DELETE	ManageDevices.java	/^    private static final int ID_DELETE = 0;$/;"	f	class:ManageDevices	file:	access:private
+ManageDevices.ID_RENAME	ManageDevices.java	/^    private static final int ID_RENAME = 1;$/;"	f	class:ManageDevices	file:	access:private
+ManageDevices.add_config_btn	ManageDevices.java	/^    private Button add_config_btn;$/;"	f	class:ManageDevices	file:	access:private
+ManageDevices.deviceName	ManageDevices.java	/^	String deviceName; \/\/ holds table that we were working on (like when rename is called)$/;"	f	class:ManageDevices	access:default
+ManageDevices.device_data	ManageDevices.java	/^	private DeviceDB device_data;$/;"	f	class:ManageDevices	file:	access:private
+ManageDevices.devicesListView	ManageDevices.java	/^    ListView devicesListView;$/;"	f	class:ManageDevices	access:default
+ManageDevices.lookup	ManageDevices.java	/^	InterfaceLookup lookup;$/;"	f	class:ManageDevices	access:default
+ManageDevices.mDevicesArrayAdapter	ManageDevices.java	/^	private ArrayAdapter<String> mDevicesArrayAdapter;$/;"	f	class:ManageDevices	file:	access:private
+ManageDevices.onActivityResult	ManageDevices.java	/^    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {$/;"	m	class:ManageDevices	access:protected	signature:(int requestCode, int resultCode, Intent intent)
+ManageDevices.onContextItemSelected	ManageDevices.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:ManageDevices	access:public	signature:(MenuItem item)
+ManageDevices.onCreate	ManageDevices.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:ManageDevices	access:protected	signature:(Bundle savedInstanceState)
+ManageDevices.onCreateContextMenu	ManageDevices.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:ManageDevices	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+ManageDevices.onPause	ManageDevices.java	/^	protected void onPause() {$/;"	m	class:ManageDevices	access:protected	signature:()
+ManageDevices.onResume	ManageDevices.java	/^	protected void onResume() {$/;"	m	class:ManageDevices	access:protected	signature:()
+ManageDevices.populateDisplay	ManageDevices.java	/^	private void populateDisplay() {$/;"	m	class:ManageDevices	file:	access:private	signature:()
+ManageDevices.prefs	ManageDevices.java	/^	SharedPreferences prefs;$/;"	f	class:ManageDevices	access:default
+MyGestureDetector	BluMote.java	/^	class MyGestureDetector extends SimpleOnGestureListener {$/;"	c	class:BluMote	inherits:SimpleOnGestureListener	access:default
+MyPreferences	MyPreferences.java	/^public class MyPreferences extends PreferenceActivity {$/;"	c	inherits:PreferenceActivity
+MyPreferences.onCreate	MyPreferences.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:MyPreferences	access:protected	signature:(Bundle savedInstanceState)
+NACK	Codes.java	/^        public static final byte NACK = (byte)0x15;$/;"	f	class:Codes.Pod	access:public
+NUMBERS	BluMote.java	/^		MAIN, NUMBERS, ACTIVITIES$/;"	e	enum:BluMote.Pages	file:	access:public
+NUM_MISC_BTNS	MainInterface.java	/^    static final int NUM_MISC_BTNS = 8;$/;"	f	class:MainInterface	access:default
+OFF	Activities.java	/^	private static final String OFF = "_OFF";$/;"	f	class:Activities	file:	access:private
+PKTS_SENT	BluMote.java	/^	static int PKTS_SENT = 0;$/;"	f	class:BluMote	access:default
+POD_NAME	PodListActivity.java	/^	private static final int POD_NAME = 0;$/;"	f	class:PodListActivity	file:	access:private
+POD_PREFIX	PodListActivity.java	/^	private static final String POD_PREFIX = "P0D_";$/;"	f	class:PodListActivity	file:	access:private
+PREFERENCES	BluMote.java	/^	private static final int PREFERENCES = 9;$/;"	f	class:BluMote	file:	access:private
+PREFS_FILE	BluMote.java	/^	static final String PREFS_FILE = "BluMoteSettings";$/;"	f	class:BluMote	access:default
+Pages	BluMote.java	/^	enum Pages {$/;"	g	class:BluMote	access:default
+Pod	Codes.java	/^    class Pod {$/;"	c	class:Codes	access:default
+PodListActivity	PodListActivity.java	/^public class PodListActivity extends Activity {$/;"	c	inherits:Activity
+PodListActivity.D	PodListActivity.java	/^    private static final boolean D = true;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.EXTRA_DEVICE_ADDRESS	PodListActivity.java	/^    public static String EXTRA_DEVICE_ADDRESS = "device_address";$/;"	f	class:PodListActivity	access:public
+PodListActivity.EXTRA_DEVICE_NAME	PodListActivity.java	/^    public static String EXTRA_DEVICE_NAME = "device_name";$/;"	f	class:PodListActivity	access:public
+PodListActivity.ID_RENAME	PodListActivity.java	/^    private static final int ID_RENAME = 0;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.POD_NAME	PodListActivity.java	/^	private static final int POD_NAME = 0;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.POD_PREFIX	PodListActivity.java	/^	private static final String POD_PREFIX = "P0D_";$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.TAG	PodListActivity.java	/^    private static final String TAG = "DeviceListActivity";$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.addNewPodMapping	PodListActivity.java	/^    private void addNewPodMapping(String oldName, String newName) {$/;"	m	class:PodListActivity	file:	access:private	signature:(String oldName, String newName)
+PodListActivity.addToNewDevices	PodListActivity.java	/^    private void addToNewDevices(String name) {$/;"	m	class:PodListActivity	file:	access:private	signature:(String name)
+PodListActivity.convertToPodKey	PodListActivity.java	/^    private static String convertToPodKey(String podName) {$/;"	m	class:PodListActivity	file:	access:private	signature:(String podName)
+PodListActivity.displayPodNames	PodListActivity.java	/^    private void displayPodNames() {$/;"	m	class:PodListActivity	file:	access:private	signature:()
+PodListActivity.doDiscovery	PodListActivity.java	/^    private void doDiscovery() {$/;"	m	class:PodListActivity	file:	access:private	signature:()
+PodListActivity.mBtAdapter	PodListActivity.java	/^    private BluetoothAdapter mBtAdapter;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.mDeviceClickListener	PodListActivity.java	/^    private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.mNewDevicesArrayAdapter	PodListActivity.java	/^    private ArrayAdapter<String> mNewDevicesArrayAdapter;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.mPairedDevicesArrayAdapter	PodListActivity.java	/^    private ArrayAdapter<String> mPairedDevicesArrayAdapter;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.mReceiver	PodListActivity.java	/^    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.onActivityResult	PodListActivity.java	/^	protected void onActivityResult(int requestCode, int resultCode, Intent data) {$/;"	m	class:PodListActivity	access:protected	signature:(int requestCode, int resultCode, Intent data)
+PodListActivity.onContextItemSelected	PodListActivity.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:PodListActivity	access:public	signature:(MenuItem item)
+PodListActivity.onCreate	PodListActivity.java	/^    protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:PodListActivity	access:protected	signature:(Bundle savedInstanceState)
+PodListActivity.onCreateContextMenu	PodListActivity.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:PodListActivity	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+PodListActivity.onCreateOptionsMenu	PodListActivity.java	/^    public boolean onCreateOptionsMenu(Menu menu) {$/;"	m	class:PodListActivity	access:public	signature:(Menu menu)
+PodListActivity.onDestroy	PodListActivity.java	/^    protected void onDestroy() {$/;"	m	class:PodListActivity	access:protected	signature:()
+PodListActivity.onOptionsItemSelected	PodListActivity.java	/^    public boolean onOptionsItemSelected(MenuItem item) {$/;"	m	class:PodListActivity	access:public	signature:(MenuItem item)
+PodListActivity.pod_rename	PodListActivity.java	/^    private static String pod_rename;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.prefs	PodListActivity.java	/^    private SharedPreferences prefs;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.scanButton	PodListActivity.java	/^    private Button scanButton;$/;"	f	class:PodListActivity	file:	access:private
+PodListActivity.translatePodName	PodListActivity.java	/^    static String translatePodName(String podName, SharedPreferences prefs) {$/;"	m	class:PodListActivity	access:default	signature:(String podName, SharedPreferences prefs)
+REDO	ActivityInitEdit.java	/^	public static final String REDO = "redo";$/;"	f	class:ActivityInitEdit	access:public
+RENAME_DEVICE	Codes.java	/^        public static final byte RENAME_DEVICE = 0x01; \/\/ Unused pod command$/;"	f	class:Codes.Pod	access:public
+RENAME_STATE	Codes.java	/^        RENAME_STATE \/\/ renaming misc button$/;"	e	enum:Codes.INTERFACE_STATE	file:	access:public
+REQUEST_CONNECT_DEVICE	BluMote.java	/^	private static final int REQUEST_CONNECT_DEVICE = 1;$/;"	f	class:BluMote	file:	access:private
+REQUEST_ENABLE_BT	BluMote.java	/^	private static final int REQUEST_ENABLE_BT = 2;$/;"	f	class:BluMote	file:	access:private
+REQUEST_MANAGE_DEVICE	BluMote.java	/^	private static final int REQUEST_MANAGE_DEVICE = 3;$/;"	f	class:BluMote	file:	access:private
+STARTED	Codes.java	/^    	IDLE, STARTED, BYTE1, INITIALIZED, COLLECTING$/;"	e	enum:Codes.LEARN_STATE	file:	access:public
+STATE_CONNECTED	BluetoothChatService.java	/^    static final int STATE_CONNECTED = 3;  \/\/ now connected to a remote device$/;"	f	class:BluetoothChatService	access:default
+STATE_CONNECTING	BluetoothChatService.java	/^    static final int STATE_CONNECTING = 2; \/\/ now initiating an outgoing connection$/;"	f	class:BluetoothChatService	access:default
+STATE_NONE	BluetoothChatService.java	/^    static final int STATE_NONE = 0;       \/\/ we're doing nothing$/;"	f	class:BluetoothChatService	access:default
+SWIPE_MAX_OFF_PATH	BluMote.java	/^    private static final int SWIPE_MAX_OFF_PATH = 250;$/;"	f	class:BluMote	file:	access:private
+SWIPE_MIN_DISTANCE	BluMote.java	/^	private static final int SWIPE_MIN_DISTANCE = 120;$/;"	f	class:BluMote	file:	access:private
+SWIPE_THRESHOLD_VELOCITY	BluMote.java	/^    private static final int SWIPE_THRESHOLD_VELOCITY = 200;$/;"	f	class:BluMote	file:	access:private
+TAG	Activities.java	/^	private final String TAG = "Activities";$/;"	f	class:Activities	file:	access:private
+TAG	BluetoothChatService.java	/^    private static final String TAG = "BluetoothChatService";$/;"	f	class:BluetoothChatService	file:	access:private
+TAG	PodListActivity.java	/^    private static final String TAG = "DeviceListActivity";$/;"	f	class:PodListActivity	file:	access:private
+TOAST	BluMote.java	/^	static final String TOAST = "toast";$/;"	f	class:BluMote	access:default
+Utilities	Utilities.java	/^public class Utilities {$/;"	c
+Utilities.FileUtils	Utilities.java	/^	public static class FileUtils {$/;"	c	class:Utilities	access:public
+Utilities.FileUtils.copyFile	Utilities.java	/^	    public static void copyFile(File fromFile, File toFile) throws IOException {$/;"	m	class:Utilities.FileUtils	access:public	signature:(File fromFile, File toFile)
+Utilities.bytesToInt	Utilities.java	/^	public static int bytesToInt(byte a, byte b) {  $/;"	m	class:Utilities	access:public	signature:(byte a, byte b)
+Utilities.isGreaterThanUnsignedByte	Utilities.java	/^    public static boolean isGreaterThanUnsignedByte(int x, int y) {$/;"	m	class:Utilities	access:public	signature:(int x, int y)
+activities	BluMote.java	/^	private Activities activities = null;$/;"	f	class:BluMote	file:	access:private
+activities	MainInterface.java	/^    private Activities activities;$/;"	f	class:MainInterface	file:	access:private
+activitiesListView	ActivityInitEdit.java	/^    ListView activitiesListView;$/;"	f	class:ActivityInitEdit	access:default
+activitiesListView	BluMote.java	/^	ListView activitiesListView;$/;"	f	class:BluMote	access:default
+activitiesListView	MainInterface.java	/^    ListView activitiesListView; $/;"	f	class:MainInterface	access:default
+activityArrayAdapter	ActivityInitEdit.java	/^	private ArrayAdapter<String> activityArrayAdapter;$/;"	f	class:ActivityInitEdit	file:	access:private
+activityButton	Activities.java	/^		private String activityButton;$/;"	f	class:Activities.ActivityButton	file:	access:private
+activityButton	BluMote.java	/^    private String activityButton = "";$/;"	f	class:BluMote	file:	access:private
+activityInit	BluMote.java	/^	ArrayList<String> activityInit = new ArrayList<String>();$/;"	f	class:BluMote	access:default
+activityName	Activities.java	/^		private String activityName;$/;"	f	class:Activities.ActivityButton	file:	access:private
+activityName	ActivityInitEdit.java	/^    String activityName;$/;"	f	class:ActivityInitEdit	access:default
+activityPowerOffData	BluMote.java	/^	ButtonData[] activityPowerOffData = null;$/;"	f	class:BluMote	access:default
+activity_rename	BluMote.java	/^	private static int activity_rename;$/;"	f	class:BluMote	file:	access:private
+addActivity	Activities.java	/^	public void addActivity(String s) {$/;"	m	class:Activities	access:public	signature:(String s)
+addActivityInitSequence	Activities.java	/^	static void addActivityInitSequence(String activityName, List<String> init, SharedPreferences prefs, $/;"	m	class:Activities	access:default	signature:(String activityName, List<String> init, SharedPreferences prefs, InterfaceLookup lookup)
+addActivityInitSequence	Activities.java	/^	void addActivityInitSequence(List<String> init) {$/;"	m	class:Activities	access:default	signature:(List<String> init)
+addActivityInitSequence	Activities.java	/^	void addActivityInitSequence(String activityName, List<String> init) {$/;"	m	class:Activities	access:default	signature:(String activityName, List<String> init)
+addActivityKeyBinding	Activities.java	/^	void addActivityKeyBinding(String activityName, String btnID, String device, String deviceBtn) {$/;"	m	class:Activities	access:default	signature:(String activityName, String btnID, String device, String deviceBtn)
+addActivityKeyBinding	Activities.java	/^	void addActivityKeyBinding(String btnID, String device, String deviceBtn) {$/;"	m	class:Activities	access:default	signature:(String btnID, String device, String deviceBtn)
+addActivityPrefix	Activities.java	/^	private static String addActivityPrefix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+addLookupId	InterfaceLookup.java	/^	int addLookupId(String name) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name)
+addNewPodMapping	PodListActivity.java	/^    private void addNewPodMapping(String oldName, String newName) {$/;"	m	class:PodListActivity	file:	access:private	signature:(String oldName, String newName)
+addToNewDevices	PodListActivity.java	/^    private void addToNewDevices(String name) {$/;"	m	class:PodListActivity	file:	access:private	signature:(String name)
+add_activity_btn	MainInterface.java	/^	private Button add_activity_btn;$/;"	f	class:MainInterface	file:	access:private
+add_config_btn	ManageDevices.java	/^    private Button add_config_btn;$/;"	f	class:ManageDevices	file:	access:private
+append_init_btn	ActivityInitEdit.java	/^	private Button append_init_btn;$/;"	f	class:ActivityInitEdit	file:	access:private
+back_btn	MainInterface.java	/^    private  ImageButton back_btn;$/;"	f	class:MainInterface	file:	access:private
+back_skip_btn	MainInterface.java	/^    private  ImageButton back_skip_btn;$/;"	f	class:MainInterface	file:	access:private
+blue_btn	MainInterface.java	/^	private ImageButton blue_btn;$/;"	f	class:MainInterface	file:	access:private
+blumote	Activities.java	/^	private BluMote blumote = null;$/;"	f	class:Activities	file:	access:private
+blumote	MainInterface.java	/^    private  BluMote blumote;$/;"	f	class:MainInterface	file:	access:private
+btn_channel_down	MainInterface.java	/^    private  ImageButton btn_channel_down;$/;"	f	class:MainInterface	file:	access:private
+btn_channel_up	MainInterface.java	/^    private  ImageButton btn_channel_up;$/;"	f	class:MainInterface	file:	access:private
+btn_dash	MainInterface.java	/^	private Button btn_dash;$/;"	f	class:MainInterface	file:	access:private
+btn_enter	MainInterface.java	/^	private Button btn_enter;$/;"	f	class:MainInterface	file:	access:private
+btn_exit	MainInterface.java	/^	private Button btn_exit;$/;"	f	class:MainInterface	file:	access:private
+btn_home	MainInterface.java	/^	private ImageButton btn_home;$/;"	f	class:MainInterface	file:	access:private
+btn_input	MainInterface.java	/^    private  Button btn_input;$/;"	f	class:MainInterface	file:	access:private
+btn_last	MainInterface.java	/^    private  Button btn_last;$/;"	f	class:MainInterface	file:	access:private
+btn_misc1	MainInterface.java	/^	private Button btn_misc1;$/;"	f	class:MainInterface	file:	access:private
+btn_misc2	MainInterface.java	/^	private Button btn_misc2;$/;"	f	class:MainInterface	file:	access:private
+btn_misc3	MainInterface.java	/^	private Button btn_misc3;$/;"	f	class:MainInterface	file:	access:private
+btn_misc4	MainInterface.java	/^	private Button btn_misc4;$/;"	f	class:MainInterface	file:	access:private
+btn_misc5	MainInterface.java	/^	private Button btn_misc5;$/;"	f	class:MainInterface	file:	access:private
+btn_misc6	MainInterface.java	/^	private Button btn_misc6;$/;"	f	class:MainInterface	file:	access:private
+btn_misc7	MainInterface.java	/^	private Button btn_misc7;$/;"	f	class:MainInterface	file:	access:private
+btn_misc8	MainInterface.java	/^	private Button btn_misc8;$/;"	f	class:MainInterface	file:	access:private
+btn_n0	MainInterface.java	/^	private Button btn_n0;$/;"	f	class:MainInterface	file:	access:private
+btn_n1	MainInterface.java	/^	private Button btn_n1;$/;"	f	class:MainInterface	file:	access:private
+btn_n2	MainInterface.java	/^	private Button btn_n2;$/;"	f	class:MainInterface	file:	access:private
+btn_n3	MainInterface.java	/^	private Button btn_n3;$/;"	f	class:MainInterface	file:	access:private
+btn_n4	MainInterface.java	/^	private Button btn_n4;$/;"	f	class:MainInterface	file:	access:private
+btn_n5	MainInterface.java	/^	private Button btn_n5;$/;"	f	class:MainInterface	file:	access:private
+btn_n6	MainInterface.java	/^	private Button btn_n6;$/;"	f	class:MainInterface	file:	access:private
+btn_n7	MainInterface.java	/^	private Button btn_n7;$/;"	f	class:MainInterface	file:	access:private
+btn_n8	MainInterface.java	/^	private Button btn_n8;$/;"	f	class:MainInterface	file:	access:private
+btn_n9	MainInterface.java	/^	private Button btn_n9;$/;"	f	class:MainInterface	file:	access:private
+btn_up	MainInterface.java	/^	private ImageButton btn_up;$/;"	f	class:MainInterface	file:	access:private
+btn_volume_down	MainInterface.java	/^    private  ImageButton btn_volume_down;$/;"	f	class:MainInterface	file:	access:private
+btn_volume_up	MainInterface.java	/^    private  ImageButton btn_volume_up;$/;"	f	class:MainInterface	file:	access:private
+buffer_size	BluetoothChatService.java	/^    static final int buffer_size = 256;  \/\/ size of BT buffer$/;"	f	class:BluetoothChatService	access:default
+buttonCategory	ButtonData.java	/^	private String buttonCategory;$/;"	f	class:ButtonData	file:	access:private
+buttonData	ButtonData.java	/^	private byte[] buttonData;$/;"	f	class:ButtonData	file:	access:private
+buttonID	BluMote.java	/^		int buttonID = 0;$/;"	f	class:BluMote.ButtonCountDown	access:default
+buttonId	ButtonData.java	/^	private int buttonId;$/;"	f	class:ButtonData	file:	access:private
+buttonLock	BluMote.java	/^	private boolean buttonLock = false;   $/;"	f	class:BluMote	file:	access:private
+buttonName	ButtonData.java	/^	private String buttonName;$/;"	f	class:ButtonData	file:	access:private
+buttonPushID	BluMote.java	/^	private static int buttonPushID = 0;$/;"	f	class:BluMote	file:	access:private
+buttonSend	BluMote.java	/^	protected void buttonSend(int buttonID) {		$/;"	m	class:BluMote	access:protected	signature:(int buttonID)
+button_map	BluMote.java	/^	HashMap<Integer, String> button_map;	$/;"	f	class:BluMote	access:default
+button_map	MainInterface.java	/^    HashMap<Integer,String> button_map = null;$/;"	f	class:MainInterface	access:default
+buttons	BluMote.java	/^	ButtonData[] buttons;$/;"	f	class:BluMote	access:default
+bytesToInt	Utilities.java	/^	public static int bytesToInt(byte a, byte b) {  $/;"	m	class:Utilities	access:public	signature:(byte a, byte b)
+cancel	BluetoothChatService.java	/^        public void cancel() {$/;"	m	class:BluetoothChatService.ConnectThread	access:public	signature:()
+cancel	BluetoothChatService.java	/^        public void cancel() {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:()
+captureButton	BluMote.java	/^    private boolean captureButton = false;$/;"	f	class:BluMote	file:	access:private
+checkPodDataBounds	BluMote.java	/^	protected boolean checkPodDataBounds(int bytes) {$/;"	m	class:BluMote	access:protected	signature:(int bytes)
+closeButton	EnterDevice.java	/^	private Button closeButton;$/;"	f	class:EnterDevice	file:	access:private
+com.woelfware.blumote	Activities.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	ActivityInitEdit.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	BluMote.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	BluetoothChatService.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	ButtonData.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	Codes.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	EnterDevice.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	ExportDatabaseFileTask.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	InterfaceLookup.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	MainInterface.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	ManageDevices.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	MyPreferences.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	PodListActivity.java	/^package com.woelfware.blumote;$/;"	p
+com.woelfware.blumote	Utilities.java	/^package com.woelfware.blumote;$/;"	p
+connect	BluetoothChatService.java	/^    synchronized void connect(BluetoothDevice device) {$/;"	m	class:BluetoothChatService	access:default	signature:(BluetoothDevice device)
+connected	BluetoothChatService.java	/^    synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {$/;"	m	class:BluetoothChatService	access:default	signature:(BluetoothSocket socket, BluetoothDevice device)
+connectingDevice	BluMote.java	/^	private String connectingDevice;$/;"	f	class:BluMote	file:	access:private
+connectingMAC	BluMote.java	/^	private String connectingMAC;$/;"	f	class:BluMote	file:	access:private
+connectionFailed	BluetoothChatService.java	/^    private void connectionFailed() {$/;"	m	class:BluetoothChatService	file:	access:private	signature:()
+connectionLost	BluetoothChatService.java	/^    private void connectionLost() {$/;"	m	class:BluetoothChatService	file:	access:private	signature:()
+convertToPodKey	PodListActivity.java	/^    private static String convertToPodKey(String podName) {$/;"	m	class:PodListActivity	file:	access:private	signature:(String podName)
+copyFile	Utilities.java	/^	    public static void copyFile(File fromFile, File toFile) throws IOException {$/;"	m	class:Utilities.FileUtils	access:public	signature:(File fromFile, File toFile)
+ctx	ExportDatabaseFileTask.java	/^    private Context ctx;$/;"	f	class:ExportDatabaseFileTask	file:	access:private
+cur_context	BluMote.java	/^	private String cur_context = CATEGORIES.TV_DVD.getValue();$/;"	f	class:BluMote	file:	access:private
+cur_device	BluMote.java	/^	String cur_device;$/;"	f	class:BluMote	access:default
+data_index	Codes.java	/^    static int data_index = 0;$/;"	f	class:Codes	access:default
+debug_send	Codes.java	/^    static int debug_send = 0;$/;"	f	class:Codes	access:default
+deleteActivity	Activities.java	/^	public void deleteActivity(int position) {$/;"	m	class:Activities	access:public	signature:(int position)
+deleteLookupId	InterfaceLookup.java	/^	void deleteLookupId(String name) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name)
+deviceButton	Activities.java	/^		private String deviceButton;$/;"	f	class:Activities.ActivityButton	file:	access:private
+deviceButton	Activities.java	/^		private String deviceButton;$/;"	f	class:Activities.DeviceButton	file:	access:private
+deviceName	Activities.java	/^		private String deviceName;$/;"	f	class:Activities.ActivityButton	file:	access:private
+deviceName	Activities.java	/^		private String deviceName;$/;"	f	class:Activities.DeviceButton	file:	access:private
+deviceName	ManageDevices.java	/^	String deviceName; \/\/ holds table that we were working on (like when rename is called)$/;"	f	class:ManageDevices	access:default
+device_data	BluMote.java	/^	DeviceDB device_data;$/;"	f	class:BluMote	access:default
+device_data	ManageDevices.java	/^	private DeviceDB device_data;$/;"	f	class:ManageDevices	file:	access:private
+device_spinner	MainInterface.java	/^	private Spinner device_spinner;$/;"	f	class:MainInterface	file:	access:private
+device_string	EnterDevice.java	/^	CharSequence device_string;$/;"	f	class:EnterDevice	access:default
+devicesListView	ManageDevices.java	/^    ListView devicesListView;$/;"	f	class:ManageDevices	access:default
+dialog	ExportDatabaseFileTask.java	/^    private ProgressDialog dialog;$/;"	f	class:ExportDatabaseFileTask	file:	access:private
+disc_btn	MainInterface.java	/^    private  Button disc_btn;$/;"	f	class:MainInterface	file:	access:private
+displayPodNames	PodListActivity.java	/^    private void displayPodNames() {$/;"	m	class:PodListActivity	file:	access:private	signature:()
+doDiscovery	PodListActivity.java	/^    private void doDiscovery() {$/;"	m	class:PodListActivity	file:	access:private	signature:()
+doInBackground	ExportDatabaseFileTask.java	/^    protected Boolean doInBackground(final String... args) {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:(final String... args)
+down_btn	MainInterface.java	/^	private ImageButton down_btn;$/;"	f	class:MainInterface	file:	access:private
+eject_btn	MainInterface.java	/^    private  ImageButton eject_btn;$/;"	f	class:MainInterface	file:	access:private
+ensureDiscoverable	BluMote.java	/^	private void ensureDiscoverable() {$/;"	m	class:BluMote	file:	access:private	signature:()
+entered_device	EnterDevice.java	/^	private EditText entered_device;$/;"	f	class:EnterDevice	file:	access:private
+executeButtonLongDown	BluMote.java	/^	protected void executeButtonLongDown() {		$/;"	m	class:BluMote	access:protected	signature:()
+executeNavigationButton	BluMote.java	/^	public void executeNavigationButton(int buttonID) {$/;"	m	class:BluMote	access:public	signature:(int buttonID)
+exit_btn	MainInterface.java	/^    private  Button exit_btn;$/;"	f	class:MainInterface	file:	access:private
+exportPreferences	BluMote.java	/^	private boolean exportPreferences() {$/;"	m	class:BluMote	file:	access:private	signature:()
+fav_btn	MainInterface.java	/^	private  ImageButton fav_btn;$/;"	f	class:MainInterface	file:	access:private
+fetchButtons	MainInterface.java	/^	void fetchButtons() {$/;"	m	class:MainInterface	access:default	signature:()
+flip	BluMote.java	/^	private ViewFlipper flip;$/;"	f	class:BluMote	file:	access:private
+formatActivityInitSuffix	Activities.java	/^	private static String formatActivityInitSuffix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+formatActivityOffSuffix	Activities.java	/^	private static String formatActivityOffSuffix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+formatNameForLookup	InterfaceLookup.java	/^	private String formatNameForLookup(String name) {$/;"	m	class:InterfaceLookup	file:	access:private	signature:(String name)
+formatNameForPrefsFile	InterfaceLookup.java	/^	private String formatNameForPrefsFile(String name) {$/;"	m	class:InterfaceLookup	file:	access:private	signature:(String name)
+forward_btn	MainInterface.java	/^    private  ImageButton forward_btn;$/;"	f	class:MainInterface	file:	access:private
+gestureDetector	BluMote.java	/^	GestureDetector gestureDetector;$/;"	f	class:BluMote	access:default
+gestureListener	BluMote.java	/^	View.OnTouchListener gestureListener;$/;"	f	class:BluMote	access:default
+getActivityButton	Activities.java	/^		String getActivityButton() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+getActivityButtons	Activities.java	/^	ButtonData[] getActivityButtons() {$/;"	m	class:Activities	access:default	signature:()
+getActivityButtons	Activities.java	/^	ButtonData[] getActivityButtons(String activityName) {$/;"	m	class:Activities	access:default	signature:(String activityName)
+getActivityInitSequence	Activities.java	/^	private String[] getActivityInitSequence() {$/;"	m	class:Activities	file:	access:private	signature:()
+getActivityInitSequence	Activities.java	/^	static String[] getActivityInitSequence(String activityName, SharedPreferences prefs) {$/;"	m	class:Activities	access:default	signature:(String activityName, SharedPreferences prefs)
+getActivityName	Activities.java	/^		String getActivityName() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+getButton	Activities.java	/^		String getButton() {$/;"	m	class:Activities.DeviceButton	access:default	signature:()
+getButtonCategory	ButtonData.java	/^	String getButtonCategory() {$/;"	m	class:ButtonData	access:default	signature:()
+getButtonData	ButtonData.java	/^	byte[] getButtonData() {$/;"	m	class:ButtonData	access:default	signature:()
+getButtonID	BluMote.java	/^        int getButtonID() {$/;"	m	class:BluMote.ButtonCountDown	access:default	signature:()
+getButtonId	ButtonData.java	/^	int getButtonId() {$/;"	m	class:ButtonData	access:default	signature:()
+getButtonMap	MainInterface.java	/^	public HashMap<Integer,String> getButtonMap() {$/;"	m	class:MainInterface	access:public	signature:()
+getButtonName	ButtonData.java	/^	String getButtonName() {$/;"	m	class:ButtonData	access:default	signature:()
+getCurrentDropDown	MainInterface.java	/^	String getCurrentDropDown() {$/;"	m	class:MainInterface	access:default	signature:()
+getDataDir	BluMote.java	/^	private String getDataDir() { $/;"	m	class:BluMote	file:	access:private	signature:()
+getDevice	Activities.java	/^		String getDevice() {$/;"	m	class:Activities.DeviceButton	access:default	signature:()
+getDeviceButton	Activities.java	/^		String getDeviceButton() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+getDeviceName	Activities.java	/^		String getDeviceName() {$/;"	m	class:Activities.ActivityButton	access:default	signature:()
+getDropDownDevices	MainInterface.java	/^	public CharSequence[] getDropDownDevices() {$/;"	m	class:MainInterface	access:public	signature:()
+getID	InterfaceLookup.java	/^	String getID(String name) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name)
+getIDNumber	InterfaceLookup.java	/^	private int getIDNumber(String name) {$/;"	m	class:InterfaceLookup	file:	access:private	signature:(String name)
+getName	InterfaceLookup.java	/^	String getName(String id) {$/;"	m	class:InterfaceLookup	access:default	signature:(String id)
+getName	InterfaceLookup.java	/^	String getName(int id) {$/;"	m	class:InterfaceLookup	access:default	signature:(int id)
+getNewID	InterfaceLookup.java	/^	private int getNewID() {$/;"	m	class:InterfaceLookup	file:	access:private	signature:()
+getPowerOffButtonData	Activities.java	/^	ButtonData[] getPowerOffButtonData(String activityName) {$/;"	m	class:Activities	access:default	signature:(String activityName)
+getResourceFromString	MainInterface.java	/^	int getResourceFromString(String name) {$/;"	m	class:MainInterface	access:default	signature:(String name)
+getState	BluetoothChatService.java	/^    synchronized int getState() {$/;"	m	class:BluetoothChatService	access:default	signature:()
+getWorkingActivity	Activities.java	/^	public String getWorkingActivity() {$/;"	m	class:Activities	access:public	signature:()
+green_btn	MainInterface.java	/^	private ImageButton green_btn;$/;"	f	class:MainInterface	file:	access:private
+guide_btn	MainInterface.java	/^    private  Button guide_btn;$/;"	f	class:MainInterface	file:	access:private
+hapticFeedback	BluMote.java	/^    private boolean hapticFeedback = true;$/;"	f	class:BluMote	file:	access:private
+highestId	InterfaceLookup.java	/^	int highestId;$/;"	f	class:InterfaceLookup	access:default
+importPreferences	BluMote.java	/^	private boolean importPreferences() {   $/;"	m	class:BluMote	file:	access:private	signature:()
+info_btn	MainInterface.java	/^    private  Button info_btn;$/;"	f	class:MainInterface	file:	access:private
+info_state	Codes.java	/^    static INFO_STATE info_state = INFO_STATE.IDLE;$/;"	f	class:Codes	access:default
+initItems	Activities.java	/^	private String[] initItems = null;$/;"	f	class:Activities	file:	access:private
+initItemsIndex	Activities.java	/^	private int initItemsIndex = 0;	$/;"	f	class:Activities	file:	access:private
+initialize	MainInterface.java	/^	public void initialize(Activities a) {$/;"	m	class:MainInterface	access:public	signature:(Activities a)
+interpretResponse	BluMote.java	/^	protected void interpretResponse(byte[] response, int bytes, int index) {$/;"	m	class:BluMote	access:protected	signature:(byte[] response, int bytes, int index)
+isButtonPushed	BluMote.java	/^    private static boolean isButtonPushed;$/;"	f	class:BluMote	file:	access:private
+isButtonTimerStarted	BluMote.java	/^	private static boolean isButtonTimerStarted = false;$/;"	f	class:BluMote	file:	access:private
+isGreaterThanUnsignedByte	Utilities.java	/^    public static boolean isGreaterThanUnsignedByte(int x, int y) {$/;"	m	class:Utilities	access:public	signature:(int x, int y)
+isNavigationButton	MainInterface.java	/^	boolean isNavigationButton(int buttonID) {$/;"	m	class:MainInterface	access:default	signature:(int buttonID)
+isValidActivityButton	Activities.java	/^	static boolean isValidActivityButton(int buttonId) {		 $/;"	m	class:Activities	access:default	signature:(int buttonId)
+itemSelected	ActivityInitEdit.java	/^	private int itemSelected; \/\/ index of init item that context menu was created on$/;"	f	class:ActivityInitEdit	file:	access:private
+lastView	BluMote.java	/^    private static View lastView;$/;"	f	class:BluMote	file:	access:private
+learn_state	Codes.java	/^    static LEARN_STATE learn_state = LEARN_STATE.IDLE;$/;"	f	class:Codes	access:default
+left_btn	MainInterface.java	/^	private ImageButton left_btn;$/;"	f	class:MainInterface	file:	access:private
+lookup	ActivityInitEdit.java	/^	InterfaceLookup lookup;$/;"	f	class:ActivityInitEdit	access:default
+lookup	BluMote.java	/^	InterfaceLookup lookup;$/;"	f	class:BluMote	access:default
+lookup	InterfaceLookup.java	/^	HashMap<Integer, String> lookup = new HashMap<Integer, String>();$/;"	f	class:InterfaceLookup	access:default
+lookup	ManageDevices.java	/^	InterfaceLookup lookup;$/;"	f	class:ManageDevices	access:default
+mActivitiesArrayAdapter	Activities.java	/^	ArrayAdapter<String> mActivitiesArrayAdapter = null;$/;"	f	class:Activities	access:default
+mAdapter	BluetoothChatService.java	/^    private final BluetoothAdapter mAdapter;$/;"	f	class:BluetoothChatService	file:	access:private
+mBluetoothAdapter	BluMote.java	/^	private BluetoothAdapter mBluetoothAdapter = null;$/;"	f	class:BluMote	file:	access:private
+mBtAdapter	PodListActivity.java	/^    private BluetoothAdapter mBtAdapter;$/;"	f	class:PodListActivity	file:	access:private
+mChatService	BluMote.java	/^	private BluetoothChatService mChatService = null;	$/;"	f	class:BluMote	file:	access:private
+mConnectThread	BluetoothChatService.java	/^    private ConnectThread mConnectThread;$/;"	f	class:BluetoothChatService	file:	access:private
+mConnectedDeviceName	BluMote.java	/^	private String mConnectedDeviceName = null;$/;"	f	class:BluMote	file:	access:private
+mConnectedThread	BluetoothChatService.java	/^    private ConnectedThread mConnectedThread;$/;"	f	class:BluetoothChatService	file:	access:private
+mDeviceClickListener	PodListActivity.java	/^    private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {$/;"	f	class:PodListActivity	file:	access:private
+mDevicesArrayAdapter	ManageDevices.java	/^	private ArrayAdapter<String> mDevicesArrayAdapter;$/;"	f	class:ManageDevices	file:	access:private
+mEditor	InterfaceLookup.java	/^	Editor mEditor;$/;"	f	class:InterfaceLookup	access:default
+mHandler	BluMote.java	/^	private final Handler mHandler = new Handler() {$/;"	f	class:BluMote	file:	access:private
+mHandler	BluetoothChatService.java	/^    private final Handler mHandler;$/;"	f	class:BluetoothChatService	file:	access:private
+mNewDevicesArrayAdapter	PodListActivity.java	/^    private ArrayAdapter<String> mNewDevicesArrayAdapter;$/;"	f	class:PodListActivity	file:	access:private
+mPairedDevicesArrayAdapter	PodListActivity.java	/^    private ArrayAdapter<String> mPairedDevicesArrayAdapter;$/;"	f	class:PodListActivity	file:	access:private
+mReceiver	PodListActivity.java	/^    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {$/;"	f	class:PodListActivity	file:	access:private
+mState	BluetoothChatService.java	/^    private int mState;$/;"	f	class:BluetoothChatService	file:	access:private
+mTitle	BluMote.java	/^	private TextView mTitle;$/;"	f	class:BluMote	file:	access:private
+mainScreen	BluMote.java	/^	private MainInterface mainScreen = null;$/;"	f	class:BluMote	file:	access:private
+mainint	Activities.java	/^	private MainInterface mainint = null;$/;"	f	class:Activities	file:	access:private
+misc_button	BluMote.java	/^	private static String misc_button;$/;"	f	class:BluMote	file:	access:private
+mmDevice	BluetoothChatService.java	/^        private BluetoothDevice mmDevice;$/;"	f	class:BluetoothChatService.ConnectThread	file:	access:private
+mmInStream	BluetoothChatService.java	/^        private final InputStream mmInStream;$/;"	f	class:BluetoothChatService.ConnectedThread	file:	access:private
+mmOutStream	BluetoothChatService.java	/^        private final OutputStream mmOutStream;$/;"	f	class:BluetoothChatService.ConnectedThread	file:	access:private
+mmSocket	BluetoothChatService.java	/^        private BluetoothSocket mmSocket;$/;"	f	class:BluetoothChatService.ConnectThread	file:	access:private
+mmSocket	BluetoothChatService.java	/^        private final BluetoothSocket mmSocket;$/;"	f	class:BluetoothChatService.ConnectedThread	file:	access:private
+moveLeft	BluMote.java	/^	private void moveLeft() {$/;"	m	class:BluMote	file:	access:private	signature:()
+moveRight	BluMote.java	/^	private void moveRight() {$/;"	m	class:BluMote	file:	access:private	signature:()
+mute_btn	MainInterface.java	/^    private  ImageButton mute_btn;$/;"	f	class:MainInterface	file:	access:private
+myMenu	BluMote.java	/^	Menu myMenu;$/;"	f	class:BluMote	access:default
+new_name	Codes.java	/^	static String new_name;$/;"	f	class:Codes	access:default
+nextActivityInitSequence	Activities.java	/^	void nextActivityInitSequence() {$/;"	m	class:Activities	access:default	signature:()
+nextPowerOffData	Activities.java	/^	public void nextPowerOffData() {$/;"	m	class:Activities	access:public	signature:()
+onActivityResult	BluMote.java	/^	protected void onActivityResult(int requestCode, int resultCode, Intent data) {$/;"	m	class:BluMote	access:protected	signature:(int requestCode, int resultCode, Intent data)
+onActivityResult	ManageDevices.java	/^    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {$/;"	m	class:ManageDevices	access:protected	signature:(int requestCode, int resultCode, Intent intent)
+onActivityResult	PodListActivity.java	/^	protected void onActivityResult(int requestCode, int resultCode, Intent data) {$/;"	m	class:PodListActivity	access:protected	signature:(int requestCode, int resultCode, Intent data)
+onClick	BluMote.java	/^	public void onClick(View v) {$/;"	m	class:BluMote	access:public	signature:(View v)
+onContextItemSelected	ActivityInitEdit.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:ActivityInitEdit	access:public	signature:(MenuItem item)
+onContextItemSelected	BluMote.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:BluMote	access:public	signature:(MenuItem item)
+onContextItemSelected	ManageDevices.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:ManageDevices	access:public	signature:(MenuItem item)
+onContextItemSelected	PodListActivity.java	/^	public boolean onContextItemSelected(MenuItem item) {$/;"	m	class:PodListActivity	access:public	signature:(MenuItem item)
+onCreate	ActivityInitEdit.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:ActivityInitEdit	access:protected	signature:(Bundle savedInstanceState)
+onCreate	BluMote.java	/^	protected void onCreate(Bundle savedInstanceState) {	$/;"	m	class:BluMote	access:protected	signature:(Bundle savedInstanceState)
+onCreate	EnterDevice.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:EnterDevice	access:protected	signature:(Bundle savedInstanceState)
+onCreate	ManageDevices.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:ManageDevices	access:protected	signature:(Bundle savedInstanceState)
+onCreate	MyPreferences.java	/^	protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:MyPreferences	access:protected	signature:(Bundle savedInstanceState)
+onCreate	PodListActivity.java	/^    protected void onCreate(Bundle savedInstanceState) {$/;"	m	class:PodListActivity	access:protected	signature:(Bundle savedInstanceState)
+onCreateContextMenu	ActivityInitEdit.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:ActivityInitEdit	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+onCreateContextMenu	BluMote.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:BluMote	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+onCreateContextMenu	ManageDevices.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:ManageDevices	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+onCreateContextMenu	PodListActivity.java	/^	public void onCreateContextMenu(ContextMenu menu, View v,$/;"	m	class:PodListActivity	access:public	signature:(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+onCreateDialog	ActivityInitEdit.java	/^	protected Dialog onCreateDialog(int id) {$/;"	m	class:ActivityInitEdit	access:protected	signature:(int id)
+onCreateDialog	BluMote.java	/^	protected Dialog onCreateDialog(int id) {$/;"	m	class:BluMote	access:protected	signature:(int id)
+onCreateOptionsMenu	BluMote.java	/^	public boolean onCreateOptionsMenu(Menu menu) {$/;"	m	class:BluMote	access:public	signature:(Menu menu)
+onCreateOptionsMenu	PodListActivity.java	/^    public boolean onCreateOptionsMenu(Menu menu) {$/;"	m	class:PodListActivity	access:public	signature:(Menu menu)
+onDestroy	BluMote.java	/^	protected void onDestroy() {$/;"	m	class:BluMote	access:protected	signature:()
+onDestroy	PodListActivity.java	/^    protected void onDestroy() {$/;"	m	class:PodListActivity	access:protected	signature:()
+onFinish	BluMote.java	/^		public abstract void onFinish();$/;"	m	class:BluMote.ButtonCountDown	access:public	signature:()
+onFling	BluMote.java	/^        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {$/;"	m	class:BluMote.MyGestureDetector	access:public	signature:(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+onItemClick	BluMote.java	/^	public void onItemClick(AdapterView<?> av, View v, int position, long id) {		$/;"	m	class:BluMote	access:public	signature:(AdapterView<?> av, View v, int position, long id)
+onItemSelected	BluMote.java	/^	public void onItemSelected(AdapterView<?> parent, View view, int pos,$/;"	m	class:BluMote	access:public	signature:(AdapterView<?> parent, View view, int pos, long id)
+onNothingSelected	BluMote.java	/^	public void onNothingSelected(AdapterView<?> parent) {$/;"	m	class:BluMote	access:public	signature:(AdapterView<?> parent)
+onOptionsItemSelected	BluMote.java	/^	public boolean onOptionsItemSelected(MenuItem item) {$/;"	m	class:BluMote	access:public	signature:(MenuItem item)
+onOptionsItemSelected	PodListActivity.java	/^    public boolean onOptionsItemSelected(MenuItem item) {$/;"	m	class:PodListActivity	access:public	signature:(MenuItem item)
+onPause	BluMote.java	/^	protected synchronized void onPause() {$/;"	m	class:BluMote	access:protected	signature:()
+onPause	ManageDevices.java	/^	protected void onPause() {$/;"	m	class:ManageDevices	access:protected	signature:()
+onPostExecute	ExportDatabaseFileTask.java	/^    protected void onPostExecute(final Boolean success) {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:(final Boolean success)
+onPreExecute	ExportDatabaseFileTask.java	/^    protected void onPreExecute() {$/;"	m	class:ExportDatabaseFileTask	access:protected	signature:()
+onPrepareOptionsMenu	BluMote.java	/^	public boolean onPrepareOptionsMenu(Menu menu) {$/;"	m	class:BluMote	access:public	signature:(Menu menu)
+onRestart	BluMote.java	/^	protected void onRestart() {$/;"	m	class:BluMote	access:protected	signature:()
+onResume	BluMote.java	/^	protected synchronized void onResume() {$/;"	m	class:BluMote	access:protected	signature:()
+onResume	ManageDevices.java	/^	protected void onResume() {$/;"	m	class:ManageDevices	access:protected	signature:()
+onStart	BluMote.java	/^	protected void onStart() {$/;"	m	class:BluMote	access:protected	signature:()
+onStop	BluMote.java	/^	protected void onStop() {$/;"	m	class:BluMote	access:protected	signature:()
+onTick	BluMote.java	/^        public void onTick(long millisUntilFinished) {$/;"	m	class:BluMote.ButtonCountDown	access:public	signature:(long millisUntilFinished)
+onTouchEvent	BluMote.java	/^	public boolean onTouchEvent(MotionEvent event) {$/;"	m	class:BluMote	access:public	signature:(MotionEvent event)
+page	BluMote.java	/^	private Pages page = Pages.MAIN;$/;"	f	class:BluMote	file:	access:private
+pager	BluMote.java	/^	ImageView pager;$/;"	f	class:BluMote	access:default
+pause_btn	MainInterface.java	/^    private  ImageButton pause_btn;$/;"	f	class:MainInterface	file:	access:private
+pgdn_btn	MainInterface.java	/^    private  ImageButton pgdn_btn;$/;"	f	class:MainInterface	file:	access:private
+pgup_btn	MainInterface.java	/^    private  ImageButton pgup_btn;$/;"	f	class:MainInterface	file:	access:private
+play_btn	MainInterface.java	/^    private  ImageButton play_btn;$/;"	f	class:MainInterface	file:	access:private
+pod_data	Codes.java	/^	static byte[] pod_data;$/;"	f	class:Codes	access:default
+pod_rename	PodListActivity.java	/^    private static String pod_rename;$/;"	f	class:PodListActivity	file:	access:private
+populateActivites	Activities.java	/^	void populateActivites(boolean suppressPrefix, ArrayAdapter<String> adapter) { $/;"	m	class:Activities	access:default	signature:(boolean suppressPrefix, ArrayAdapter<String> adapter)
+populateActivities	Activities.java	/^	static void populateActivities(boolean suppressPrefix, ArrayAdapter<String> adapter, $/;"	m	class:Activities	access:default	signature:(boolean suppressPrefix, ArrayAdapter<String> adapter, SharedPreferences prefs)
+populateDisplay	ActivityInitEdit.java	/^	private void populateDisplay() {$/;"	m	class:ActivityInitEdit	file:	access:private	signature:()
+populateDisplay	ManageDevices.java	/^	private void populateDisplay() {$/;"	m	class:ManageDevices	file:	access:private	signature:()
+populateDropDown	MainInterface.java	/^	void populateDropDown() {$/;"	m	class:MainInterface	access:default	signature:()
+powerOffData	Activities.java	/^	private ButtonData[] powerOffData = null;$/;"	f	class:Activities	file:	access:private
+powerOffDataIndex	Activities.java	/^	private int powerOffDataIndex = 0;$/;"	f	class:Activities	file:	access:private
+power_off_btn	MainInterface.java	/^    private  ImageButton power_off_btn;$/;"	f	class:MainInterface	file:	access:private
+power_on_btn	MainInterface.java	/^    private  ImageButton power_on_btn;$/;"	f	class:MainInterface	file:	access:private
+prefs	ActivityInitEdit.java	/^    SharedPreferences prefs; $/;"	f	class:ActivityInitEdit	access:default
+prefs	BluMote.java	/^	SharedPreferences prefs;$/;"	f	class:BluMote	access:default
+prefs	InterfaceLookup.java	/^	SharedPreferences prefs;$/;"	f	class:InterfaceLookup	access:default
+prefs	ManageDevices.java	/^	SharedPreferences prefs;$/;"	f	class:ManageDevices	access:default
+prefs	PodListActivity.java	/^    private SharedPreferences prefs;$/;"	f	class:PodListActivity	file:	access:private
+record_btn	MainInterface.java	/^    private  ImageButton record_btn;$/;"	f	class:MainInterface	file:	access:private
+red_btn	MainInterface.java	/^	private ImageButton red_btn;$/;"	f	class:MainInterface	file:	access:private
+redo_init_btn	ActivityInitEdit.java	/^	private Button redo_init_btn;$/;"	f	class:ActivityInitEdit	file:	access:private
+refreshLookup	InterfaceLookup.java	/^	void refreshLookup() {$/;"	m	class:InterfaceLookup	access:default	signature:()
+refreshMiscBtns	MainInterface.java	/^	void refreshMiscBtns() {$/;"	m	class:MainInterface	access:default	signature:()
+removeActivityKeyBinding	Activities.java	/^	void removeActivityKeyBinding(String activityName, String buttonID) {$/;"	m	class:Activities	access:default	signature:(String activityName, String buttonID)
+removeActivityKeyBinding	Activities.java	/^	void removeActivityKeyBinding(String binding) {$/;"	m	class:Activities	access:default	signature:(String binding)
+removeActivityPrefix	Activities.java	/^	private static String removeActivityPrefix(String key) {$/;"	m	class:Activities	file:	access:private	signature:(String key)
+renameActivity	Activities.java	/^	public void renameActivity(String newName, int position) { $/;"	m	class:Activities	access:public	signature:(String newName, int position)
+renameMisc	MainInterface.java	/^	void renameMisc(String return_string, String misc_button) {$/;"	m	class:MainInterface	access:default	signature:(String return_string, String misc_button)
+renameMiscButtons	MainInterface.java	/^	static void renameMiscButtons(String oldName, String newName, SharedPreferences prefs) {$/;"	m	class:MainInterface	access:default	signature:(String oldName, String newName, SharedPreferences prefs)
+restoreSpinner	MainInterface.java	/^	private void restoreSpinner() {$/;"	m	class:MainInterface	file:	access:private	signature:()
+return_btn	MainInterface.java	/^    private  ImageButton return_btn;$/;"	f	class:MainInterface	file:	access:private
+right_btn	MainInterface.java	/^	private ImageButton right_btn;$/;"	f	class:MainInterface	file:	access:private
+run	BluetoothChatService.java	/^        public void run() {$/;"	m	class:BluetoothChatService.ConnectThread	access:public	signature:()
+run	BluetoothChatService.java	/^        public void run() {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:()
+savePowerOffButton	Activities.java	/^	static void savePowerOffButton(String activityName, ArrayList<String> powerOnDevices, SharedPreferences prefs) {$/;"	m	class:Activities	access:default	signature:(String activityName, ArrayList<String> powerOnDevices, SharedPreferences prefs)
+savePowerOffButton	Activities.java	/^	void savePowerOffButton(ArrayList<String> powerOnDevices) {$/;"	m	class:Activities	access:default	signature:(ArrayList<String> powerOnDevices)
+scanButton	PodListActivity.java	/^    private Button scanButton;$/;"	f	class:PodListActivity	file:	access:private
+sendButton	BluMote.java	/^	protected void sendButton(byte[] code) {$/;"	m	class:BluMote	access:protected	signature:(byte[] code)
+sendCode	BluMote.java	/^	protected void sendCode(int code) {$/;"	m	class:BluMote	access:protected	signature:(int code)
+sendMessage	BluMote.java	/^	private void sendMessage(byte[] message) {$/;"	m	class:BluMote	file:	access:private	signature:(byte[] message)
+sendPowerOffData	Activities.java	/^	public void sendPowerOffData(ButtonData[] powerOff) {$/;"	m	class:Activities	access:public	signature:(ButtonData[] powerOff)
+setButtonData	ButtonData.java	/^	void setButtonData(byte[] buttonData) {$/;"	m	class:ButtonData	access:default	signature:(byte[] buttonData)
+setButtonMap	BluMote.java	/^	protected void setButtonMap(HashMap<Integer, String> map) {$/;"	m	class:BluMote	access:protected	signature:(HashMap<Integer, String> map)
+setDropDown	MainInterface.java	/^	void setDropDown(String s) {		$/;"	m	class:MainInterface	access:default	signature:(String s)
+setSpinnerErrorState	MainInterface.java	/^	void setSpinnerErrorState() {$/;"	m	class:MainInterface	access:default	signature:()
+setState	BluetoothChatService.java	/^    private synchronized void setState(int state) {$/;"	m	class:BluetoothChatService	file:	access:private	signature:(int state)
+setWorkingActivity	Activities.java	/^	public void setWorkingActivity(String key) 	{$/;"	m	class:Activities	access:public	signature:(String key)
+setWorkingActivity	Activities.java	/^	void setWorkingActivity(int position) {$/;"	m	class:Activities	access:default	signature:(int position)
+signalError	BluMote.java	/^	protected void signalError(int code) {$/;"	m	class:BluMote	access:protected	signature:(int code)
+skip_forward_btn	MainInterface.java	/^    private  ImageButton skip_forward_btn;$/;"	f	class:MainInterface	file:	access:private
+slide_left_anim	BluMote.java	/^	private Animation slide_left_anim;$/;"	f	class:BluMote	file:	access:private
+slide_left_out_anim	BluMote.java	/^	private Animation slide_left_out_anim;$/;"	f	class:BluMote	file:	access:private
+slide_right_anim	BluMote.java	/^	private Animation slide_right_anim;$/;"	f	class:BluMote	file:	access:private
+slide_right_out_anim	BluMote.java	/^	private Animation slide_right_out_anim;$/;"	f	class:BluMote	file:	access:private
+spinnerAdapter	MainInterface.java	/^	private ArrayAdapter<String> spinnerAdapter;   $/;"	f	class:MainInterface	file:	access:private
+start	BluetoothChatService.java	/^    synchronized void start() {$/;"	m	class:BluetoothChatService	access:default	signature:()
+startActivityEdit	BluMote.java	/^	void startActivityEdit() {$/;"	m	class:BluMote	access:default	signature:()
+startActivityInitSequence	Activities.java	/^	void startActivityInitSequence() {$/;"	m	class:Activities	access:default	signature:()
+startActivityInitSequence	Activities.java	/^	void startActivityInitSequence(String activityName) {$/;"	m	class:Activities	access:default	signature:(String activityName)
+stop	BluetoothChatService.java	/^    synchronized void stop() {$/;"	m	class:BluetoothChatService	access:default	signature:()
+stop_btn	MainInterface.java	/^    private  ImageButton stop_btn;$/;"	f	class:MainInterface	file:	access:private
+storeButton	BluMote.java	/^	protected void storeButton() {$/;"	m	class:BluMote	access:protected	signature:()
+timerReady	Activities.java	/^	protected static boolean timerReady = true;$/;"	f	class:Activities	access:protected
+toggleDropDownVis	MainInterface.java	/^	void toggleDropDownVis() {$/;"	m	class:MainInterface	access:default	signature:()
+translatePodName	PodListActivity.java	/^    static String translatePodName(String podName, SharedPreferences prefs) {$/;"	m	class:PodListActivity	access:default	signature:(String podName, SharedPreferences prefs)
+updateInitDelay	ActivityInitEdit.java	/^	private void updateInitDelay(int newDelay) {			$/;"	m	class:ActivityInitEdit	file:	access:private	signature:(int newDelay)
+updateLookupID	InterfaceLookup.java	/^	void updateLookupID(String name, int id) {$/;"	m	class:InterfaceLookup	access:default	signature:(String name, int id)
+updateLookupName	InterfaceLookup.java	/^	void updateLookupName(String newName, String oldName) {$/;"	m	class:InterfaceLookup	access:default	signature:(String newName, String oldName)
+workingActivity	Activities.java	/^	private String workingActivity = null;$/;"	f	class:Activities	file:	access:private
+write	BluetoothChatService.java	/^        public void write(byte[] buffer) {$/;"	m	class:BluetoothChatService.ConnectedThread	access:public	signature:(byte[] buffer)
+write	BluetoothChatService.java	/^    void write(byte[] out) {$/;"	m	class:BluetoothChatService	access:default	signature:(byte[] out)
+yellow_btn	MainInterface.java	/^	private ImageButton yellow_btn;$/;"	f	class:MainInterface	file:	access:private

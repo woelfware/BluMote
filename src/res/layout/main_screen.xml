@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false">
+    <Spinner 	
+		android:id="@+id/device_spinner" 
+		android:prompt="@string/spinner_prompt"
+		android:layout_height = "50dp"
+		android:layout_width="fill_parent"
+		android:layout_gravity="center"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:background="@drawable/spinner_look"
+		android:textColor="#FFFFFF" >
+	</Spinner>		
+	<RelativeLayout
+		android:layout_width="fill_parent" 
+		android:layout_height="0dp"
+		android:layout_gravity="center"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingBottom="5dp"
+		android:layout_weight="1.2"
+		android:weightSum="3.0">     
+		<ImageButton style="@style/CustomImageBtnText" android:layout_alignParentLeft="true" android:src="@drawable/pwr_grey" android:id="@+id/power_on_btn" android:layout_weight="1" android:background="@drawable/round_btn_look" android:layout_width="60dp" android:layout_height="60dp" android:adjustViewBounds="false" android:layout_centerVertical="true"></ImageButton>
+		<Button android:id="@+id/btn_input" android:text="Input" style="@style/CustomBtnText" android:layout_marginLeft="20dp" android:layout_marginRight="20dp" android:layout_width="100dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_centerInParent="true"></Button>					  
+		<ImageButton style="@style/CustomImageBtnText" android:layout_alignParentRight="true" android:layout_marginLeft="20dp" android:src="@drawable/pwr_dark" android:id="@+id/power_off_btn" android:layout_weight="1" android:background="@drawable/round_btn_look" android:adjustViewBounds="false" android:layout_centerVertical="true" android:layout_width="60dp" android:layout_height="60dp"></ImageButton>
+	</RelativeLayout>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="0dp"
+		android:layout_gravity="center"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:layout_weight="1"
+		android:weightSum="5.0">
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_skip_backward" android:id="@+id/back_skip_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_seek_backward" android:id="@+id/back_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_seek_forward" android:id="@+id/forward_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_skip_forward" android:id="@+id/skip_forward_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_record" android:id="@+id/record_btn"></ImageButton>   		
+	</LinearLayout>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="0dp"
+		android:layout_gravity="center" 
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:layout_weight="1"
+		android:weightSum="5.0">    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_playback_stop" android:id="@+id/stop_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_playback_start" android:id="@+id/play_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_playback_pause" android:id="@+id/pause_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/media_eject" android:id="@+id/eject_btn"></ImageButton>    
+		<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/emblem_favorite" android:id="@+id/fav_btn"></ImageButton>    		
+	</LinearLayout>	
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="0dp"
+		android:layout_gravity="center"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:layout_weight="3"
+		android:weightSum="5.0">
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:weightSum="2.0">
+				<ImageButton android:layout_width="fill_parent" style="@style/TopRockerStyle" android:src="@drawable/vol_plus" android:id="@+id/btn_volume_up"></ImageButton> 		    				    
+				<ImageButton android:layout_width="fill_parent" style="@style/BottomRockerStyle" android:src="@drawable/vol_minus" android:id="@+id/btn_volume_down"></ImageButton> 		    				    
+			</LinearLayout>	    
+		    <LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:weightSum="3.0">
+				<Button android:layout_width="fill_parent" android:id="@+id/disc_btn" android:text="Disc Menu" style="@style/CustomBtnText"></Button>	
+				<Button android:layout_width="fill_parent" android:id="@+id/info_btn" android:text="Info/ Display" style="@style/CustomBtnText" android:textSize="13sp"></Button>						
+				<ImageButton android:layout_width="fill_parent" style="@style/CustomImageBtnText" android:src="@drawable/audio_volume_muted" android:id="@+id/mute_btn"></ImageButton>				    	    
+			</LinearLayout>
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:weightSum="3.0">									    					    
+				<ImageButton style="@style/CustomImageBtnText" android:layout_width="fill_parent" android:src="@drawable/pg_plus" android:id="@+id/pgup_btn"></ImageButton>								    					    
+				<ImageButton style="@style/CustomImageBtnText" android:layout_width="fill_parent" android:src="@drawable/pg_minus" android:id="@+id/pgdn_btn"></ImageButton>
+				<ImageButton style="@style/CustomImageBtnText" android:layout_width="fill_parent" android:src="@drawable/go_return" android:id="@+id/return_btn"></ImageButton>
+			</LinearLayout>
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:weightSum="3.0">			  									    					    
+				<Button android:id="@+id/guide_btn" android:layout_width="fill_parent" android:text="Guide" style="@style/CustomBtnText"></Button>			
+				<Button android:id="@+id/exit_btn" android:layout_width="fill_parent" android:text="Exit" style="@style/CustomBtnText"></Button>
+				<Button android:id="@+id/btn_last" android:layout_width="fill_parent" android:text="Last" style="@style/CustomBtnText"></Button>												    				    					    
+			</LinearLayout>
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:weightSum="2.0">
+				<ImageButton style="@style/TopRockerStyle" android:layout_width="fill_parent" android:src="@drawable/ch_plus" android:id="@+id/btn_channel_up"></ImageButton> 		    				    
+				<ImageButton style="@style/BottomRockerStyle" android:layout_width="fill_parent" android:src="@drawable/ch_minus" android:id="@+id/btn_channel_down"></ImageButton>				    					
+			</LinearLayout>
+	</LinearLayout>
+	<ImageView android:src="@drawable/middle_circle" android:layout_width="50dp"
+			android:layout_height="20dp" android:layout_marginTop="5dp"
+			android:scaleType="fitXY" android:layout_gravity="center_horizontal"
+			android:visibility="invisible"
+	></ImageView> 
+</LinearLayout>
