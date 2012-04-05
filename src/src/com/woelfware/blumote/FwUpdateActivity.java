@@ -51,6 +51,7 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 
     static final String FW_LOCATION = "FW_LOCATION";
     static final String ORIGINAL_FW_LOCATION = "ORIGINAL_FW_LOCATION";
+    static final String POD_WORKING = "POD_WORKING";
     
     // name of file when stored in the sdcard temp directory
     private static final String FW_IMAGE_NAME = "fwImage.bin";
@@ -84,19 +85,20 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
     	// since we know that GET_VERSION was called prior to this activity, we can
     	// construct the version data from the Pod class
     	StringBuilder podVersion = new StringBuilder();
-    	
+    	Intent i = getIntent();
     	try {
     		byte[] version = Pod.getFwVersion();
 	    	podVersion.append(version[1] + ".");
 	    	podVersion.append(version[2] + ".");
 	    	podVersion.append(version[3]);
-	    	podV = podVersion.toString();
+	    	podV = podVersion.toString();	    	
+	    	i.putExtra(FwUpdateActivity.POD_WORKING, true);	    	
     	} catch (Exception e) {
+    		i.putExtra(FwUpdateActivity.POD_WORKING, false);
     		podV = "";
     		// if we weren't able to get a FW version then we won't be able
     		// to get the calibration data so safer to let user re-try with existing
     		// FW we downloaded if it exists already
-    		//TODO
     		File fileDir = FwUpdateActivity.this.getExternalFilesDir(null);
     		File f = new File(fileDir,FW_IMAGE_NAME);
     		if (f.exists()) {
@@ -113,8 +115,7 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
     		}
     	}    	
     	
-    	// set to OK only after data all downloaded and ready to flash
-    	Intent i = getIntent();
+    	// set to OK only after data all downloaded and ready to flash    	
     	setResult(RESULT_CANCELED,i);        
 	}
 
@@ -172,11 +173,10 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 				builder = new AlertDialog.Builder(this);
 				builder.setMessage("It appears your pod is not responding " +
 						"and a FW image already exists.  Press OK to use the FW image" +
-						" already downloaded (RECOMMENDED)")
+						" already downloaded (REQUIRED)")
 				       .setCancelable(false)
 				       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				    	   public void onClick(DialogInterface dialog, int id) {
-				    		   // TODO
 				    		   Intent i = getIntent();
 				    		   setResult(RESULT_OK,i);
 				    		   File fileDir = FwUpdateActivity.this.getExternalFilesDir(null);
@@ -187,12 +187,6 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 									e.printStackTrace();
 								}
 				    		   finish();
-				           }
-				       })
-				       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				        	   	// just close the dialog
-				                dialog.cancel();
 				           }
 				       });
 				alert = builder.create();

@@ -39,6 +39,7 @@
 		          android:title="Rename Misc Button" ></item>
 			 <!--<item android:title="@string/discoverable" android:id="@+id/discoverable" android:icon="@android:drawable/ic_menu_add" /> -->			 
 			<item android:title="@string/get_pod_info" android:id="@+id/get_info" android:icon="@android:drawable/ic_menu_info_details" />
+			<item android:title="Reset Pod" android:id="@+id/reset_pod" android:icon="@android:drawable/ic_delete" />
 			<item android:title="About" android:id="@+id/about" android:icon="@android:drawable/ic_menu_info_details" />
 			<item android:title="Check for firmware updates" android:id="@+id/fw_update"/>
 			<item android:title="Preferences" android:id="@+id/preferences" android:icon="@android:drawable/ic_menu_preferences" />

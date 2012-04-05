@@ -216,7 +216,7 @@ class Pod {
 		}
 	}
 
-	// TODO apply the calibration data to the newly downloaded firmware to be
+	// apply the calibration data to the newly downloaded firmware to be
 	// flashed
 	static void applyCalibration() {
 		// parse the hex file and dump the cal_data information to it
@@ -864,7 +864,7 @@ class Pod {
 
 		case BSL:
 			// Just log the messages we get from the Pod during BSL
-			Log.v("BSL", response.toString());
+			//Log.v("BSL", response.toString());
 			int i = 0;
 			pod_data = new byte[bytes];
 			while (bytes > 0) {
@@ -881,7 +881,6 @@ class Pod {
 			break;
 
 		case READ_ADDRESS:
-			// TODO
 			while (bytes > 0) {
 				if (data_index == 0) {
 					// then parse response code
@@ -927,7 +926,7 @@ class Pod {
 		byte[] toSend;
 		toSend = new byte[1];
 		toSend[0] = (byte) Codes.RESET_RN42;
-		blumote.sendMessage(toSend);
+		blumote.sendMessage(toSend);		
 	}
 
 	static void retrieveFwVersion() {
@@ -986,10 +985,14 @@ class Pod {
 		// test _______________
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", (rst | test), rst));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_BSL_EXIT", String.format("S*,%02X%02X\r\n", (rst | test), rst));
+		String returnStr = new String(receiveResponse(BT_STATES.BSL));		
+		Log.d("IN_BSL_EXIT", returnStr);
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", rst, 0));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_BSL_EXIT", String.format("S*,%02X%02X\r\n", rst, 0));
+		returnStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_BSL_EXIT", returnStr);		
 	}
 
 	/**
@@ -1007,26 +1010,40 @@ class Pod {
 		// NOTE: inverted rst due to FET on the pod hw
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", (rst | test), rst));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", (rst | test), rst));
+		String testStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_ENTER_BSL", testStr);
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", test, test));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, test));
+		testStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_ENTER_BSL", testStr); 
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", test, 0));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, 0));
+		testStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_ENTER_BSL", testStr); 
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", test, test));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, test));
+		testStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_ENTER_BSL", testStr); 
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", rst, 0));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", rst, 0));
+		testStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_ENTER_BSL", testStr); 
 		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", test, 0));
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, 0));
+		testStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_ENTER_BSL", testStr); 
 		clearPodData();
 		// step 3, set to 9600 baud
 		sendBSLString("U,9600,E\r\n");
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_ENTER_BSL", "U,9600,E\r\n");
+		testStr = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_ENTER_BSL", testStr); 
 		clearPodData();
 	}
 
@@ -1038,6 +1055,8 @@ class Pod {
 	 *            RN42
 	 */
 	static void startBSL(int flag) throws BslException {
+		final int retryTime = 300; // 30 seconds
+		final int timeOut = 1000; // 1 minute
 		int timer = 0;
 		if (flag == ENABLE_RESET) {
 			// reset the RN42 module
@@ -1051,11 +1070,11 @@ class Pod {
 					e.printStackTrace();
 				}
 				timer++;
-				if (timer == 100) {
+				if (timer == retryTime) {
 					Log.v("BSL", "Trying to reset again");
 					resetRn42();
 				}
-				if (timer > 200) {
+				if (timer > timeOut) {
 					// give up, indicate the reset failed which means user
 					// should try a power cycle of pod
 					throw new BslException(
@@ -1111,15 +1130,28 @@ class Pod {
 
 		// step 1, enter the command mode
 		sendBSLString(BSL_CODES.CMD_MODE);
-		receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_BSL_CMD_MODE", BSL_CODES.CMD_MODE);
+		String response = new String(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_BSL_CMD_MODE", response);
+		
 		clearPodData();
 
 		// step 2, enter the BSL
 		enterBsl();
-
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
 		// step 3, sending Rx password
 		sendPassword();
-
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
 		// step 4, sending Rx password
 		sendPassword();
 
@@ -1127,7 +1159,6 @@ class Pod {
 		// the pod
 	}
 
-	// TODO - test this function
 	/**
 	 * This function will parse a stored hex file and search for the valid
 	 * addresses of the interrupt vector bytes (32 bytes) and then overlay those
@@ -1202,8 +1233,11 @@ class Pod {
 				0x00 };
 
 		msg = Util.concat(msg, passwd);
-		blumote.sendMessage(Util.concat(msg, calcChkSum(msg)));
-		receiveResponse(BT_STATES.BSL);
+		msg = Util.concat(msg, calcChkSum(msg));
+		blumote.sendMessage(msg);
+		Log.d("OUT_BSL_PASS", Util.byteArrayToString(msg));
+		String returnStr = Util.byteArrayToString(receiveResponse(BT_STATES.BSL));
+		Log.d("IN_BSL_PASSWORD", returnStr);
 		clearPodData();
 	}
 
@@ -1359,7 +1393,13 @@ class Pod {
 
 		// send to Pod
 		blumote.sendMessage(msg);
-		receiveResponse(BT_STATES.BSL);
+		byte[] returnData = receiveResponse(BT_STATES.BSL);
+		Log.d("OUT_BSL_FW_LINE", Util.byteArrayToString(msg));		
+		String stringRet = Util.byteArrayToString(returnData);		
+		Log.d("IN_BSL_FW_LINE", stringRet);
+		if (stringRet.equals("a0")) {
+			throw new BslException("Got a NACK");
+		}
 		clearPodData();
 	}
 }

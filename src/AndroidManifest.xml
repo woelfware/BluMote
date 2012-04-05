@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionCode="1"
-      package="com.woelfware.blumote" android:versionName="0.11.12.7">
+      package="com.woelfware.blumote" android:versionName="0.12.3.31">
     <application android:label="@string/app_name" android:debuggable="true" android:icon="@drawable/bluemote">
         <activity android:name="BluMote"
                   android:label="@string/app_name"

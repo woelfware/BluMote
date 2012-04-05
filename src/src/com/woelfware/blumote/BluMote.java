@@ -885,12 +885,18 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					} else {
 						Pod.ORIGINAL_FW_LOCATION = null;
 					}					
-										
-					showDialog(DIALOG_WAIT_BSL);
-					EnterBSLTask bsl = new EnterBSLTask();
-					bsl.execute(Pod.ENABLE_RESET);					
+					
+					if (return_bundle.getBoolean(FwUpdateActivity.POD_WORKING)) {					
+						showDialog(DIALOG_WAIT_BSL);
+						EnterBSLTask bsl = new EnterBSLTask();
+						bsl.execute(Pod.ENABLE_RESET);
+					} else {
+						showDialog(DIALOG_RESET_POD);
+					}
+				} else {
+					Toast.makeText(this, "Undetected error, please try again",
+							Toast.LENGTH_SHORT).show();
 				}
-				// TODO add some Toast message here indicating a failure 
 			}
 			break;
 		}				
@@ -1036,7 +1042,14 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			return true;
 
 		case R.id.get_info:
+			Pod.unlockDialog();
 			Pod.retrieveFwVersion();
+			return true;
+			
+		case R.id.reset_pod:
+			Pod.resetRn42();
+			// disconnect the bluetooth link
+			disconnectPod();
 			return true;
 
 		case R.id.learn_mode:
@@ -1123,6 +1136,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		return false;
 	}
 
+	void disconnectPod() {
+		// disconnect the bluetooth link
+		mChatService.stop();
+		return;
+	}
+	
 	void stopLearning() {
 		Pod.abortLearn();
 		Pod.setStopLearnState();
@@ -1461,17 +1480,18 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			bslWait.setCancelable(false); // allow back button to cancel it
 			bslWait.setMessage("Resetting pod...this may take a minute");
             return bslWait;
-            
+            			
 		case DIALOG_RESET_POD:
 			builder = new AlertDialog.Builder(this);
-			builder.setMessage("Automatic reset failed.  Please power cycle " +
-					"the pod and press OK.  Press CANCEL to stop the FW update utility.")
+			builder.setMessage("Automatic reset failed.  Please remove power to the pod then " +
+					"re-attach power and press OK.  Press CANCEL to stop the FW update utility.")
 			       .setCancelable(false)
 			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			    	   public void onClick(DialogInterface dialog, int id) {
 			    		   // launch another instance of EnterBslTask
 			    		   EnterBSLTask enterbsl = new EnterBSLTask();
 			    		   enterbsl.execute(Pod.INHIBIT_RESET);
+			    		   showDialog(DIALOG_WAIT_BSL);
 			           }
 			       })
 			       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -1642,16 +1662,17 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	 private class EnterBSLTask extends AsyncTask<Integer, Integer, String> {
 			protected String doInBackground(Integer... flag) {
 				try {
-					// TODO - need to extract the interrupt byte vector from the downloaded original FW 
+					// need to extract the interrupt byte vector from the downloaded original FW 
 					// image so that we can enter the password correctly (to prevent wiping the flash)
-					Pod.calculatePassword(Pod.ORIGINAL_FW_LOCATION);
+					// TODO - temporarily commented out for debug, won't work if valid password sent for some reason!
+					//Pod.calculatePassword(Pod.ORIGINAL_FW_LOCATION);
 					Pod.getCalibrationData();								
 					
 		 			Pod.setBslState();
 					if (flag[0] == Pod.INHIBIT_RESET) {
 						Pod.startBSL(Pod.INHIBIT_RESET);
-					} else {
-						Pod.startBSL(Pod.ENABLE_RESET);
+					} else {						
+						Pod.startBSL(Pod.ENABLE_RESET);						
 					}		 	
 				} catch (BslException e) {
 					if (e.getTag() == BslException.RESET_FAILED) {
@@ -1664,8 +1685,6 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			protected void onPostExecute(String result) {	
 				// check return code
 				if (result.matches("FAILED")) {
-					//TODO pop up OK/Cancel screen to prevent endless loop of this
-					// try a power cycle option
 					showDialog(DIALOG_RESET_POD);
 				} else {
 					// need to change visual indicator screen
@@ -1706,9 +1725,17 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		 			//Read File Line By Line
 		 			int lineCounter = 0;
 		 			while ((strLine = br.readLine()) != null)   {		 					
-		 				Pod.sendFwLine(strLine);
+		 				try { 
+		 					Pod.sendFwLine(strLine);		 				
+		 				} catch (BslException e) {
+		 					// retry once more
+		 					Pod.sendFwLine(strLine);		 					
+		 				}
 		 				lineCounter++;
 		 				publishProgress((int)((lineCounter / (float) count) * 100));
+		 				try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) { /* do nothing */	}
 		 			}
 		 			f.close();	
 		 			
@@ -1753,8 +1780,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 				new AlertDialog.Builder(BluMote.this)
 		        	.setIcon(android.R.drawable.ic_dialog_info)
 			        .setTitle(R.string.success)
+			        .setMessage(R.string.fw_installed)
 			        .setPositiveButton(R.string.OK, null)
-			        .show();				
+			        .show();	
+				disconnectPod(); // Disconnect after successful load
 				return;
 			}
 		}
