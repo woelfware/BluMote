@@ -1053,7 +1053,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			return true;
 
 		case R.id.learn_mode:
-			mainScreen.toplevel.setBackgroundResource(R.drawable.background_gry_scaled);
+			try {
+				mainScreen.toplevel.setBackgroundResource(R.drawable.background_gry_scaled);
+			} catch (Exception e) {
+				Toast.makeText(this, "You need to select a device", Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			// need to make sure we are connected to a pod.
 			if (mChatService == null || 
 					mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
