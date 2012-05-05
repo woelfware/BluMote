@@ -349,6 +349,10 @@ public class MainInterface {
 		refreshInterfaceBackground();
 	}
 	
+	protected TYPE getInterfaceType() {
+		return ACTIVE_BTN_TYPE;
+	}
+	
 	/**
 	 * This method will initialize the button elements of the interface
 	 */

@@ -5,6 +5,7 @@ import bluetooth
 import struct
 import sys
 import time
+import ctypes
 
 SYNC = 0x80
 DATA_ACK = 0x90
@@ -74,6 +75,9 @@ class BluMote(bluetooth.BluetoothSocket):
 		ckh ^= 0xFF
 
 		return (ckl, ckh)
+		
+	def reset_rn42(self):
+		self.send('04');
 
 	def enter_bsl(self):
 		test = 1 << 2	# PIO-10
@@ -116,6 +120,18 @@ class BluMote(bluetooth.BluetoothSocket):
 		self.send(struct.pack('B' * len(msg), *msg))
 		return self.recv(128)
 
+	def erase_mem(self):
+		self.sync()
+		main_erase_cycles = 12
+		
+		msg = [0x80, 0x16, 0x04, 0x04, 0x00, 0xff , 0x04, 0xA5]
+		msg.extend(self.calc_chksum(msg))
+		# I guess need to do this multiple times to accommodate
+		# write cycles required to finish?
+		for i in range(main_erase_cycles):
+			self.send(struct.pack('B' * len(msg), *msg))
+			return self.recv(128)
+		
 	def mass_erase(self):
 		self.sync()
 
@@ -136,9 +152,24 @@ class BluMote(bluetooth.BluetoothSocket):
 		except:
 			raise
 
+	def test_password(self):
+		self.sync()
+		msg = [0x80, 0x10, 0x24, 0x24, 0x00, 0x00, 0x00, 0x00]
+		
+		# TESTING, password generated from phone app
+		passwd = (-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 38, -25, 102, -21, -10, -21, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -23)
+		passwd = [ctypes.c_ubyte(i).value for i in passwd]
+		
+		msg.extend(passwd)
+		msg.extend(self.calc_chksum(msg))
+
+		self.send(struct.pack('B' * len(msg), *msg))
+		return self.recv(128)
+		
 	def rx_password(self):
 		self.sync()
 		msg = [0x80, 0x10, 0x24, 0x24, 0x00, 0x00, 0x00, 0x00]
+				
 		passwd = (
 			0xFF, 0xFF,	# 0xFFE0
 			0xFF, 0xFF,	# 0xFFE2
@@ -156,7 +187,7 @@ class BluMote(bluetooth.BluetoothSocket):
 			0xFF, 0xFF,	# 0xFFFA
 			0xFF, 0xFF,	# 0xFFFC
 			0xFF, 0xFF)	# 0xFFFE
-
+		
 		msg.extend(passwd)
 		msg.extend(self.calc_chksum(msg))
 
@@ -250,8 +281,8 @@ if __name__ == '__main__':
 
 	with BluMote() as bm_up:
 		#bm_up.connect(('00:06:66:42:05:91', 1))
-		bm_up.connect((addr, 1))
-
+		bm_up.connect((addr, 1))		
+		
 		print 'Entering command mode:', bm_up.enter_cmd_mode()
 
 		print 'Entering the BSL...'
@@ -260,12 +291,16 @@ if __name__ == '__main__':
 		print 'Setting the RN-42 UART baud to 9600:', bm_up.set_baud_9600()
 
 		print 'sending rx password...'
-		msg = bm_up.rx_password()
+		#msg = bm_up.rx_password()
+		msg = bm_up.test_password()
 		print [hex(i) for i in struct.unpack('B' * len(msg), msg)]
 
-		print 'sending rx password...'
-		msg = bm_up.rx_password()
-		print [hex(i) for i in struct.unpack('B' * len(msg), msg)]
+		#print 'sending rx password...'
+		#msg = bm_up.rx_password()
+		#print [hex(i) for i in struct.unpack('B' * len(msg), msg)]
+		
+		print 'erasing main memory...'
+		bm_up.erase_mem()
 
 		print 'sending %s' % (sys.argv[1],)
 		bm_up.send_hex(sys.argv[1])

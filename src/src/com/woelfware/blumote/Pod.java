@@ -40,20 +40,19 @@ class Pod {
 	private static boolean lockDialog = false;
 
 	// if the button has been pushed down recently, this prevents another button
-	// press which could overflow the
-	// pod with too much button data
+	// press which could overflow the pod with too much button data
 	private static boolean buttonLock = false;
 
 	// these are all in ms (milli-seconds)
-	private static int LOCK_RELEASE_TIME = 5000; // timeout to release IR
-													// transmit lock if pod
-													// doesn't send us an ACK
+	private static int LOCK_RELEASE_TIME = 500; // timeout to release IR
+												// transmit lock if pod
+												// doesn't send us an ACK
 
 	// number of times that pod should repeat when button held down
 	private static final byte REPEAT_IR_LONG = (byte) 150;
 
 	// the firmware log data we downloaded when requesting a firmware update
-	// proccess
+	// process
 	static String[] firmwareRevisions = null;
 
 	// holds the current revision code extracted from pod FW
@@ -218,7 +217,13 @@ class Pod {
 
 	// apply the calibration data to the newly downloaded firmware to be
 	// flashed
+	@SuppressWarnings("unused")
 	static void applyCalibration() {
+		// TODO - skipping this just to test robustness of BSL loader
+		if (true) {
+			return;
+		}
+		
 		// parse the hex file and dump the cal_data information to it
 		FileInputStream f = null;
 		try {
@@ -563,9 +568,12 @@ class Pod {
 	 *            the IR code data to send
 	 */
 	static void sendButtonCode(byte[] code) {
+		Log.v("POD_DEBUG", " Sent: "+Util.byteArrayToString(code));
+		
 		if (!buttonLock && code != null) { // make sure we have not recently
 											// sent a button
 			buttonLock = true;
+			Log.v("POD_DEBUG", "set button lock in sendButtonCode");
 			// create a new timer to avoid flooding pod with button data
 			new CountDownTimer(LOCK_RELEASE_TIME, LOCK_RELEASE_TIME) {
 				public void onTick(long millisUntilFinished) {
@@ -574,6 +582,7 @@ class Pod {
 
 				public void onFinish() {
 					// called when timer expired
+					Log.v("POD_DEBUG", "count down timer unlocked");
 					buttonLock = false; // release lock
 				}
 			}.start();
@@ -596,6 +605,11 @@ class Pod {
 			setIrTransmitState();
 
 			blumote.sendMessage(toSend); // send data if matches
+		} else {
+			// locked out
+			if (BluMote.DEBUG) {
+				Toast.makeText(blumote, "button locked!", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 
@@ -845,11 +859,14 @@ class Pod {
 			if (response[index] == Codes.ACK) {
 				// release lock if we get an ACK
 				buttonLock = false;
+				Log.v("POD_DEBUG", "unlocked button lock in interpretResponse");
 				if (BluMote.DEBUG) {
 					Toast.makeText(blumote, "ACK received - lock removed",
 							Toast.LENGTH_SHORT).show();
 				}
-			}
+			}			
+			Log.v("POD_DEBUG", "Got back: "+Util.oneHexByteToString(response[index]));
+			Log.v("POD_DEBUG", buttonLock == true ? "button lock is true" : "button lock is false");
 			break;
 
 		case ABORT_TRANSMIT:
@@ -1118,7 +1135,7 @@ class Pod {
 			if (timer == 50) {
 				// try again
 				Log.v("BSL", "Trying to connect again");
-				if (blumote.getBluetoothState() == BluetoothChatService.STATE_NONE) {
+				if (blumote.getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
 					blumote.reconnectPod();
 				}
 			}
@@ -1153,10 +1170,27 @@ class Pod {
 			e.printStackTrace();
 		}
 		// step 4, sending Rx password
-		sendPassword();
+		//sendPassword();
+		
+		// TODO send erase command
+		clearMemory();
 
 		// after this is finished we are ready to start flashing the hex code to
 		// the pod
+	}
+	
+	static void clearMemory() throws BslException {
+		byte[] msg = {(byte)0x80, 0x16, 0x04, 0x04, 0x00, (byte)0xff , 0x04, (byte)0xA5};
+		final int main_erase_cycles = 12;
+		sync();		
+		msg = Util.concat(msg, calcChkSum(msg));
+		
+		for (int i=0; i < main_erase_cycles; i++) {
+			blumote.sendMessage(msg);
+			Log.d("OUT_CLR_MEM", Util.byteArrayToString(msg));
+			String returnStr = Util.byteArrayToString(receiveResponse(BT_STATES.BSL));
+			Log.d("IN_CLR_MEM", returnStr);
+		}
 	}
 
 	/**

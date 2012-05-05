@@ -35,7 +35,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  *
  */
 public class ActivityInitEdit extends Activity {	
-	private ArrayAdapter<String> activityArrayAdapter;
+	private ArrayAdapter<InitItem> activityArrayAdapter;
     ListView activitiesListView;
 	
     // intent return codes
@@ -77,7 +77,7 @@ public class ActivityInitEdit extends Activity {
 		lookup = new InterfaceLookup(prefs);
 		
         // Initialize array adapters. 
-        activityArrayAdapter = new ArrayAdapter<String>(this, R.layout.manage_devices_item);
+        activityArrayAdapter = new ArrayAdapter<InitItem>(this, R.layout.manage_devices_item);
         
         // Find and set up the ListView for paired devices
         activitiesListView = (ListView) findViewById(R.id.activity_edit_list);
@@ -134,14 +134,15 @@ public class ActivityInitEdit extends Activity {
 	private void populateDisplay() {
         activityArrayAdapter.clear(); // always clear before adding items
         
-        String[] initItems = Activities.getActivityInitSequence(activityName, prefs);
-        if (initItems != null && initItems.length > 0) {
+        ArrayList<String[]> initItems = Activities.getActivityInitSequence(activityName, prefs);
+        if (initItems != null && initItems.size() > 0) {
         	// iterate through these values
-        	for (String item : initItems) {	
-        		if (item.equals("")) {
+        	for (String[] item : initItems) {	
+        		if (item[0].matches("")) {
         			continue; // skip if its empty
         		}
-        		activityArrayAdapter.add(item);
+        		activityArrayAdapter.add(new InitItem(item));
+        		//activityArrayAdapter.add(item[0]+" "+item[1]);
         	}
         }
 	}
@@ -153,20 +154,15 @@ public class ActivityInitEdit extends Activity {
 		switch(item.getItemId()) {
 		case ID_DELETE:	
 			// the position in the arraylist is also the position in initItems
-			String[] initItems = Activities.getActivityInitSequence(activityName, prefs);
+			ArrayList<String[]> initItems = Activities.getActivityInitSequence(activityName, prefs);
 			// copy the initItems into a new List<String> that excludes (int)(info.id)
 			// then addActivityInitSequence(String key, List<String> init) needs to be modified to be static
 			// and used to add the newly created inititems to replace the old....
-			int ignoreIndex = (int)info.id;
-			ArrayList<String> newItems = new ArrayList<String>();
-			for (int i=0; i < initItems.length; i++) {
-				if (i != ignoreIndex) {
-					newItems.add(initItems[i]);
-				}
-			}
+			int ignoreIndex = (int)info.id;						
+			initItems.remove(ignoreIndex);							
 			
 			// now replace the old init items with the new
-			Activities.addActivityInitSequence(activityName, newItems, prefs, lookup);
+			Activities.addActivityInitSequence(activityName, initItems, prefs, lookup);
 			
 			populateDisplay();
 			return true;
@@ -189,7 +185,8 @@ public class ActivityInitEdit extends Activity {
 		if (v.getId() == R.id.activity_edit_list) {
 			// extract exact item that was selected in the list
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;	
-			if (activityArrayAdapter.getItem(info.position).startsWith("DELAY") ) {
+			InitItem item = activityArrayAdapter.getItem(info.position);
+			if (item.getInitData()[0].startsWith("DELAY") ) {
 				// display DELAY modification item
 				menu.add(0, ID_CHANGE, 0, "Change Delay");
 				menu.setHeaderTitle("DELAY MENU");
@@ -258,19 +255,41 @@ public class ActivityInitEdit extends Activity {
 	 */
 	private void updateInitDelay(int newDelay) {			
 		// the position in the activityArrayAdapter is also the position in initItems
-		ArrayList<String> initItems = new ArrayList<String>();
+		ArrayList<String[]> initItems = new ArrayList<String[]>();
 		for (int i=0; i< activityArrayAdapter.getCount(); i++) {
 			if (i == itemSelected) {
 				// if this is the item that we wanted to change, then change item to DELAY + newDelay
-				initItems.add("DELAY "+Integer.toString(newDelay));
+				initItems.add(new String[]{"DELAY", Integer.toString(newDelay)});
 			}
 			else {
-				initItems.add(activityArrayAdapter.getItem(i));
+				InitItem item = activityArrayAdapter.getItem(i);
+				initItems.add(item.getInitData());
 			}
 		}
 		
 		// replace old activity init items with the new ones
 		Activities.addActivityInitSequence(activityName, initItems, prefs, lookup);
 		populateDisplay();
+	}
+	
+	private class InitItem {
+		String[] initData;
+		
+		InitItem(String[] data) {
+			if (data.length == 2) {
+				this.initData = data;
+			} else {
+				throw new RuntimeException("invalid array size");
+			}
+		}
+		
+		public String[] getInitData() {
+			return initData;
+		}
+		
+		@Override
+		public String toString() {
+			return initData[0]+"\t:\t"+initData[1];
+		}
 	}
 }

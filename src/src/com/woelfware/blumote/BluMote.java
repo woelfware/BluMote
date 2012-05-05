@@ -176,7 +176,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	private static int buttonPushID = 0;	
 	
 	// for holding the activity init sequence while it's being built
-	ArrayList<String> activityInit = new ArrayList<String>();
+	// designed to hold 2 element String[]
+	ArrayList<String[]> activityInit = new ArrayList<String[]>();
 
 	// used to convert device/activity names into IDs that do not change
 	InterfaceLookup lookup;
@@ -211,6 +212,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
     
     // preference : haptic button feedback
     private boolean hapticFeedback = true;
+    // preference : HTC insecure BT connection
+    private static boolean htcInsecure = false;
         
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
@@ -317,11 +320,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
                 } // END else
                 return false; // allows XML to consume
             } // END onTouch(View v, MotionEvent e)
-		}; // END gestureListener								
-		
-		// refresh the haptic feedback pref
-		SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
-		hapticFeedback = myprefs.getBoolean("hapticPREF", false);
+		}; // END gestureListener										
 		
 		// Load the last pod that we connected to, onResume() will try to connect to this
 		connectingMAC = prefs.getString("lastPod", null);
@@ -380,6 +379,13 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	@Override
 	protected synchronized void onResume() {
 		super.onResume();
+		
+		// refresh the haptic feedback pref
+		SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
+		hapticFeedback = myprefs.getBoolean("hapticPREF", false);
+		// get the HTC insecure pref
+		htcInsecure = myprefs.getBoolean("htcInsecure", false);
+		
 		device_data.open(); // make sure database open
 
 		reconnectPod();
@@ -466,8 +472,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	 * Execute a button long press event.  This is called after a timer expires.
 	 * The button will repeat for as long as the user keeps their finger on the button.
 	 */
-	protected void executeButtonLongDown() {		
-		
+	protected void executeButtonLongDown() {				
 		// This method entered if the long key press is triggered from countdown timer,
 		// also if we re-launch the method after a short delay time which is done if 
 		// the user is still holding the button down.
@@ -551,7 +556,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 						Toast.LENGTH_SHORT).show();
 			}
 
-			mainScreen.setInterfaceState(MainInterface.INTERFACE_STATES.MAIN); // reset state in any case
+			//TODO verify if should set state to MAIN or to ACTIVITY based on dropdown
+			if (mainScreen.getInterfaceType() == MainInterface.TYPE.ACTIVITY) {
+				mainScreen.setInterfaceState(MainInterface.INTERFACE_STATES.ACTIVITY); // reset state in any case
+			} else {
+				mainScreen.setInterfaceState(MainInterface.INTERFACE_STATES.MAIN); // reset state in any case
+			}
 		} else if (mainScreen.INTERFACE_STATE == MainInterface.INTERFACE_STATES.ACTIVITY_EDIT) {
 			if (Activities.isValidActivityButton(BUTTON_ID)) {
 				if (captureButton) {
@@ -601,8 +611,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			}
 		} else if (mainScreen.INTERFACE_STATE == MainInterface.INTERFACE_STATES.ACTIVITY_INIT) {
 			// store init entries by device, button-id
-			if (Activities.isValidActivityButton(BUTTON_ID)) {
-				activityInit.add(cur_device+" "+mainScreen.button_map.get(BUTTON_ID));
+			if (Activities.isValidActivityButton(BUTTON_ID)) {				
+				activityInit.add(new String[]{cur_device, mainScreen.button_map.get(BUTTON_ID)});
 				Toast.makeText(this, "Button press added to initialization list!",
 						Toast.LENGTH_SHORT).show();
 			} else {
@@ -624,6 +634,14 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		}
 	}			
 
+	/**
+	 * Returns setting of preference for HTC BT insecure mode
+	 * @return
+	 */
+	protected static boolean getHtcInsecureSetting() {
+		return htcInsecure;
+	}
+	
 	/**
 	 * Set the current button_map that contains all the data for the buttons on the interface 
 	 * to a new map.
@@ -667,6 +685,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			mChatService.write(send);
 			return true;
 		}		
+				
 		return false;
 	}
 
@@ -853,11 +872,11 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 						// get list of activity init items into local data structure
 						// assumption here is setWorkingActivity was called prior 
 						// to launching the intent that got us here
-						String[] newInitItems = 
+						ArrayList<String[]> newInitItems = 
 							Activities.getActivityInitSequence(activities.getWorkingActivity(), prefs);		
 						if (newInitItems != null) {
-							for (int i=0; i< newInitItems.length; i++) {
-								activityInit.add(newInitItems[i]);
+							for (int i=0; i< newInitItems.size(); i++) {
+								activityInit.add(newInitItems.get(i));
 							}
 						}
 						// enter ACTIVITY_INIT mode to begin adding more items
@@ -1328,7 +1347,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		else if (buttons != null && buttons.length > 0) {
 			String buttonName = mainScreen.button_map.get(buttonID);
 			if (buttonName != null) {
-				for (int i=0; i < buttons.length; i++) {
+				for (int i=0; i < buttons.length && foundIt == false; i++) {
 					if ( buttonName.equals(buttons[i].getButtonName()) ) {
 						// then extract the button data out to be sent, check if data is non-null
 						byte[] code = buttons[i].getButtonData();
@@ -1404,8 +1423,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			           public void onClick(DialogInterface dialog, int id) {
 			        	   try {
 			        		   if (Integer.parseInt(text.getText().toString()) > 0) {
-			        			   activityInit.add("DELAY "+Integer.parseInt(
-			        					   text.getText().toString()));
+			        			   activityInit.add(new String[]{
+			        					   "DELAY", ""+Integer.parseInt(text.getText().toString()) } );
 			        			   Toast.makeText(BluMote.this, "Delay added to initialization list!",
 			        						Toast.LENGTH_SHORT).show();
 			        		   }
@@ -1501,7 +1520,6 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			       })
 			       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
-			        	   	dismissDialog(DIALOG_WAIT_BSL);
 			                dialog.cancel();
 			           }
 			       });
@@ -1670,7 +1688,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					// need to extract the interrupt byte vector from the downloaded original FW 
 					// image so that we can enter the password correctly (to prevent wiping the flash)
 					// TODO - temporarily commented out for debug, won't work if valid password sent for some reason!
-					//Pod.calculatePassword(Pod.ORIGINAL_FW_LOCATION);
+					Pod.calculatePassword(Pod.ORIGINAL_FW_LOCATION);
 					Pod.getCalibrationData();								
 					
 		 			Pod.setBslState();

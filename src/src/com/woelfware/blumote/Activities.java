@@ -54,7 +54,7 @@ public class Activities {
 	// these member variables will deal with executing all the 
 	// initialization steps
 	private int initItemsIndex = 0;	
-	private String[] initItems = null;
+	private ArrayList<String[]> initItems = null;
 	
 	// these member variables will deal with sending the power off codes for an activity
 	private ButtonData[] powerOffData = null;
@@ -236,7 +236,7 @@ public class Activities {
 			// remove the prefix
 			key = key.replace(ACTIVITY_PREFIX, "");
 		} else if (key.startsWith(ACTIVITY_PREFIX_SPACE)) {
-			key = key.replace(ACTIVITY_PREFIX_SPACE, ACTIVITY_PREFIX);
+			key = key.replace(ACTIVITY_PREFIX_SPACE, "");
 		}
 		if (key.endsWith(OFF)) {
 			return key;
@@ -429,34 +429,33 @@ public class Activities {
 	 * @param prefs The shared preferences object that the data is persisted in 
 	 * @param lookup the InterfaceLookup object to use to convert the device/activity names to IDs
 	 */
-	static void addActivityInitSequence(String activityName, List<String> init, SharedPreferences prefs, 
+	static void addActivityInitSequence(String activityName, List<String[]> init, SharedPreferences prefs, 
 			InterfaceLookup lookup) {
 		if (activityName != null) {
 			Editor mEditor = prefs.edit();
 			
 			// convert List to a compacted csv string
 			StringBuilder initItems = new StringBuilder();
-			String currentItem;
-			String[] curItems;
+			String[] curItem;
 			ArrayList<String> powerOffItems = new ArrayList<String>();
-			for (Iterator<String> initStep = init.iterator(); initStep.hasNext();) {
-				currentItem = initStep.next();
-				curItems = currentItem.split(" "); // split on a space delimeter												
+			for (Iterator<String[]> initStep = init.iterator(); initStep.hasNext();) {
+				curItem = initStep.next();
 				
+				//TODO - need to make init items into hashmap....
 				//check if the item is a power button, if so then need to add it to the activity power off button				
-				if (curItems.length == 2) { // should have 2 elements
+				if (!curItem[0].isEmpty()) { // check for valid entry
 					// second item is the button name (if not a delay)
-					if(!curItems[0].equals("DELAY")) {
+					if(!curItem[0].equals("DELAY")) {
 						// parse the element [0] to a proper device/activity ID if it is not a delay item
-						curItems[0] = lookup.getID(curItems[0]);
+						curItem[0] = lookup.getID(curItem[0]);
 						
 						// check to see if this is a power_on button and if so add it to the arraylist
-						if (curItems[1].equals("power_on_btn")) { 
-							powerOffItems.add(curItems[0]); // save just the device ID
+						if (curItem[1].equals("power_on_btn")) { 
+							powerOffItems.add(curItem[0]); // save just the device ID
 						}
 					}
 					// add this item to the initItems stringbuilder
-					initItems.append(curItems[0] + " " + curItems[1] + ","); 
+					initItems.append(curItem[0] + "+" + curItem[1] + ","); 
 				}
 			}
 			
@@ -481,7 +480,7 @@ public class Activities {
 	 * "Device button" : 'device' represents one of the known devices in the database,
 	 * 'button' represents the button ID on the device's interface
 	 */
-	void addActivityInitSequence(String activityName, List<String> init) {
+	void addActivityInitSequence(String activityName, List<String[]> init) {
 		addActivityInitSequence(activityName,init, blumote.prefs, blumote.lookup);
 	}
 	
@@ -494,7 +493,7 @@ public class Activities {
 	 * "Device button" : 'device' represents one of the known devices in the database,
 	 * 'button' represents the button ID on the device's interface
 	 */
-	void addActivityInitSequence(List<String> init) {
+	void addActivityInitSequence(List<String[]> init) {
 		addActivityInitSequence(workingActivity,init, blumote.prefs, blumote.lookup);
 	}
 	
@@ -504,14 +503,36 @@ public class Activities {
 	 * @param prefs the Shared preferences object that has the init data
 	 * @return String[] with the elements in order (first to last)
 	 */
-	static String[] getActivityInitSequence(String activityName, SharedPreferences prefs) {
+	static ArrayList<String[]> getActivityInitSequence(String activityName, SharedPreferences prefs) {
 		activityName = formatActivityInitSuffix(activityName);
 		String initSequence = prefs.getString(activityName, null);
+		String[] initItems;
+		ArrayList<String[]> parsedInitItems = new ArrayList<String[]>();
+		
+		InterfaceLookup lookup = new InterfaceLookup(prefs);
+		
 		if (initSequence==null) {
 			return null;
 		}
 		else {
-			return initSequence.split(",");
+			initItems = initSequence.split(",");
+			// now split the individual entries by the "+" token
+			for (int i=0; i< initItems.length; i++) {				
+				try {
+					String[] item = initItems[i].split("\\+");
+					String name = lookup.getName(item[0]);
+					// attempt to convert a lookup-id to a real text name
+					if ( name != null) {
+						parsedInitItems.add(new String[]{name, item[1]});
+					} else { // otherwise just add it
+						parsedInitItems.add(item);
+					}
+				} catch (Exception e) {
+					// ignore invalid tokens
+				}
+			}
+			
+			return parsedInitItems;
 		}
 	}
 	
@@ -520,7 +541,7 @@ public class Activities {
 	 * This function assumes setWorkingActivity() was called and that the default blumote prefs file is used
 	 * @return String[] with the elements in order (first to last)
 	 */
-	private String[] getActivityInitSequence() {
+	private ArrayList<String[]> getActivityInitSequence() {
 		return getActivityInitSequence(workingActivity, blumote.prefs);
 	}
 	
@@ -558,21 +579,21 @@ public class Activities {
 	 * no more items are available it will dismiss the progress dialog
 	 */
 	void nextActivityInitSequence() {
-		String item;
-		while (initItems != null && initItemsIndex < initItems.length) {
+		String[] item;
+		while (initItems != null && initItemsIndex < initItems.size()) {
 			// use initItemIndex to deal with getting through all the items
 			// if run into a delay item then need to spawn CountDownTimer and then CountDownTimer
 			// will call this method after it finishes...			
-			item = initItems[initItemsIndex];
+			item = initItems.get(initItemsIndex);
 			initItemsIndex++;
-			if (item == "") {
+			if (item[0].matches("")) {
 				// log error and continue to next item
 				Log.e(TAG, "initialization item was null - malformed item");
 			}
 			// check if item is null and is a DELAY xx item
-			else if (item.startsWith("DELAY")) {
+			else if (item[0].startsWith("DELAY")) {
 				// extract value after the space
-				String delay = (item.split(" ")[1]);
+				String delay = (item[1]);
 				try {
 					int delayTime = Integer.parseInt(delay);
 					//need to start a wait timer for this period of time
@@ -595,10 +616,10 @@ public class Activities {
 			// else if the item is a button in format "Device Button"
 			else {
 				// extract value after the space
-				String buttonID = (item.split(" ")[1]); 
+				String buttonID = (item[1]); 
 				byte[] toSend = null;
 
-				String buttonSource = item.split(" ")[0];
+				String buttonSource = item[0];
 				buttonSource = blumote.lookup.getName(buttonSource);
 				// if buttonSource is null that means the device/activity was deleted, so just skip over this item
 				if (buttonSource != null) {
@@ -630,7 +651,7 @@ public class Activities {
 			}				
 		} // end while	
 		// check if we are done processing, if so dismiss the progress dialog
-		if (initItems == null || initItemsIndex >= initItems.length) {
+		if (initItems == null || initItemsIndex >= initItems.size()) {
 			blumote.dismissDialog(BluMote.DIALOG_INIT_PROGRESS);
 		}
 	} // end nextActivityInitSequence

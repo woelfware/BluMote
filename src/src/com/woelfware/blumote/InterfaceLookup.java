@@ -68,6 +68,7 @@ class InterfaceLookup {
 					id = prefs.getInt(item, INVALID_ID);
 					if (id != INVALID_ID) {
 						item = formatNameForLookup(item); // remove prefix
+						item = item.replace("_", " ");
 						lookup.put(id, item);
 					}
 				}

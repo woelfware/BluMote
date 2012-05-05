@@ -16,7 +16,7 @@ import android.widget.Spinner;
 
 public class EnterDevice extends Activity {
 	private EditText entered_device;
-	CharSequence device_string;
+	String device_string;
 	private Button closeButton;
 	private Spinner layoutSpinner;
 	
@@ -55,10 +55,12 @@ public class EnterDevice extends Activity {
 		closeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// grab the text for use in the activity
-				device_string = entered_device.getText();
+				device_string = entered_device.getText().toString();
+				// remove invalid/unwanted characters.....
+				device_string = removeBannedChars(device_string);
 				String buttonLayout = (String)layoutSpinner.getSelectedItem();
 				Intent i = getIntent();
-				i.putExtra("returnStr", device_string.toString());
+				i.putExtra("returnStr", device_string);
 				i.putExtra(BUTTON_CONFIG, buttonLayout);
 				setResult(RESULT_OK,i);
 				finish();	
@@ -68,4 +70,15 @@ public class EnterDevice extends Activity {
 		Intent i = getIntent();
 		setResult(RESULT_OK,i);
 	} // end of oncreate
+	
+	private String removeBannedChars(String device_string) {
+		String[] invalidList = {"\\+", "," , "DELAY"};
+		
+		String returnString = device_string;
+		for (int i=0; i< invalidList.length; i++) {
+			// replace invalid strings with a underscore
+			returnString = returnString.replaceAll(invalidList[i], "_");
+		}
+		return returnString;
+	}
 }

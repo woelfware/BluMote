@@ -231,7 +231,8 @@ class BluetoothChatService {
             		// so the tryConnect() tries to use reflection before giving up entirely
             		tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);            		
             	}
-            	else if (Build.VERSION.SDK_INT >= 10 && Build.MANUFACTURER.equals("HTC")) {
+            	else if (Build.VERSION.SDK_INT >= 10 && Build.MANUFACTURER.equals("HTC")
+            			&& BluMote.getHtcInsecureSetting() == true) {
             		Log.v(TAG, "Using connection method 2");
             		// Even newer HTC phones need to use the reflection technique
             		Method m = device.getClass().getMethod("createInsecureRfcommSocket", new Class[] {int.class});                       			
@@ -239,9 +240,7 @@ class BluetoothChatService {
             	}
             	else {
             		Log.v(TAG, "Using connection method 3");
-            		// older phones will have to use secure which requires a PIN
-//            		Method m = device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});                       			
-//        			tmp = (BluetoothSocket) m.invoke(device, 1);	    
+            		// older phones will have to use secure which requires a PIN  
             		// Note, HTC Eris works with this call using android 2.1
             		tmp = device.createRfcommSocketToServiceRecord(MY_UUID);  
             	} 

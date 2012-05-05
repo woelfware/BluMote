@@ -5,5 +5,10 @@
 	 	android:title="Haptic Feedback" 
 	 	android:key="hapticPREF" 
 	 	android:defaultValue="true" 
-	 	android:summary="When checked the buttons will give haptic feedback when pushed"/>	 
+	 	android:summary="When checked the buttons will give haptic feedback when pushed"/>
+	 <CheckBoxPreference 
+	 	android:title="HTC Bluetooth Insecure Mode" 
+	 	android:key="htcInsecure" 
+	 	android:defaultValue="false" 
+	 	android:summary="Some HTC phones have problems in insecure mode, check to enable"/>	 	 
 </PreferenceScreen>
