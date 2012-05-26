@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionCode="1"
-      package="com.woelfware.blumote" android:versionName="0.12.55"
+      package="com.woelfware.blumote" android:versionName="0.12.522"
       android:installLocation="preferExternal">
     
     <uses-sdk android:targetSdkVersion="10" android:minSdkVersion="5"></uses-sdk>

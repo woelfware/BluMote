@@ -290,17 +290,22 @@ if __name__ == '__main__':
 
 		print 'Setting the RN-42 UART baud to 9600:', bm_up.set_baud_9600()
 
-		print 'sending rx password...'
-		#msg = bm_up.rx_password()
-		msg = bm_up.test_password()
-		print [hex(i) for i in struct.unpack('B' * len(msg), msg)]
-
+		#### COMMENT OUT FOR OLD CODE
 		#print 'sending rx password...'
 		#msg = bm_up.rx_password()
+		#msg = bm_up.test_password()
 		#print [hex(i) for i in struct.unpack('B' * len(msg), msg)]
+
+		print 'sending rx password...'
+		msg = bm_up.rx_password()
+		print [hex(i) for i in struct.unpack('B' * len(msg), msg)]
+		print 'sending rx password...'
+		msg = bm_up.rx_password()
+		print [hex(i) for i in struct.unpack('B' * len(msg), msg)]
 		
-		print 'erasing main memory...'
-		bm_up.erase_mem()
+		#### COMMENT OUT FOR OLD CODE
+		#print 'erasing main memory...'
+		#bm_up.erase_mem()
 
 		print 'sending %s' % (sys.argv[1],)
 		bm_up.send_hex(sys.argv[1])

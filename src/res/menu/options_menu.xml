@@ -29,7 +29,7 @@
     <item android:id="@+id/stop_learn"
           android:icon="@android:drawable/ic_input_delete"
           android:title="Cancel Learn"
-          android:visible = "false" ></item>
+          android:visible = "false" ></item>    
     <item android:id="@+id/advanced"
           android:title="More" 
           android:icon ="@android:drawable/ic_menu_more">

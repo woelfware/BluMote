@@ -92,12 +92,6 @@ class BluetoothChatService {
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
 
-        // Start the thread to listen on a BluetoothServerSocket
-//        if (mAcceptThread == null) {
-//            mAcceptThread = new AcceptThread();
-//            mAcceptThread.start();
-//        }
-//        setState(STATE_LISTEN);
         setState(STATE_NONE);
     }
 
@@ -225,14 +219,15 @@ class BluetoothChatService {
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
             try {
-            	if (Build.VERSION.SDK_INT >= 10 && !(Build.MANUFACTURER.equals("HTC")) ) {
+            	if (Build.VERSION.SDK_INT >= 10 && !(Build.MANUFACTURER.equals("HTC")) 
+            			&& BluMote.getHtcInsecureSetting() ) {
             		Log.v(TAG, "Using connection method 1");
             		// the newer SDK includes this function call, but it doesn't appear to work on HTC phones
             		// so the tryConnect() tries to use reflection before giving up entirely
             		tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);            		
             	}
             	else if (Build.VERSION.SDK_INT >= 10 && Build.MANUFACTURER.equals("HTC")
-            			&& BluMote.getHtcInsecureSetting() == true) {
+            			&& BluMote.getHtcInsecureSetting()) {
             		Log.v(TAG, "Using connection method 2");
             		// Even newer HTC phones need to use the reflection technique
             		Method m = device.getClass().getMethod("createInsecureRfcommSocket", new Class[] {int.class});                       			

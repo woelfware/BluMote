@@ -67,10 +67,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	// Debugging
 	@SuppressWarnings("unused")
 	private static final String TAG = "BlueMote";
-	static final boolean DEBUG = true; // for debugging only, set to false for production
-		
-	// set false for using the emulator for testing UI
-	static final boolean ENABLE_BT = true;
+	static final boolean DEBUG = false; // for debugging only, set to false for production		
 
 	// Preferences file for this application
 	static final String PREFS_FILE = "BluMoteSettings";
@@ -135,6 +132,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	private BluetoothChatService mChatService = null;	
 
 	// where to download the list of firmware updates from the web
+	//TODO put this string into a resource
 	private static final String FW_IMAGE_URL = "http://woelfware.com/fw/FW_LOG";
 	
 	// SQL database class
@@ -219,6 +217,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	protected void onCreate(Bundle savedInstanceState) {	
 		
 		super.onCreate(savedInstanceState);
+		Log.v("BluMote_State", "In onCreate");
 		
 		LOCK_LAST_DEVICE = true;
 
@@ -242,21 +241,19 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		activities = new Activities(this, mainScreen);
 		
 		// Get local Bluetooth adapter
-		if (ENABLE_BT) {
-			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		}
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		// If the adapter is null, then Bluetooth is not supported
-		if (ENABLE_BT && mBluetoothAdapter == null) {
+		if (mBluetoothAdapter == null) {
 			Toast.makeText(this, "Bluetooth is not available",
-					Toast.LENGTH_SHORT).show();
-			finish();
+					Toast.LENGTH_LONG).show();
+			//finish();
 			return;
 		}
 
 		// If BT is not on, request that it be enabled.
 		// setupChat() will then be called during onActivityResult
-		if (ENABLE_BT && !mBluetoothAdapter.isEnabled() ) {
+		if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled() ) {
 			Intent enableIntent = new Intent(
 					BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
@@ -338,8 +335,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	}		
 	
 	@Override
-	protected void onStart() {
+	protected void onStart() {		
 		super.onStart();
+		Log.v("BluMote_State", "In onStart");
+		
 		if (mChatService == null) { // then first time this was called
 			// Initialize the BluetoothChatService to perform bluetooth
 			// connections
@@ -379,6 +378,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	@Override
 	protected synchronized void onResume() {
 		super.onResume();
+		Log.v("BluMote_State", "In onResume");
 		
 		// refresh the haptic feedback pref
 		SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -410,13 +410,15 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			// started already
 			if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
 				// Start the Bluetooth chat services
-				if (ENABLE_BT) {
+				try {
 					mChatService.start();
+				} catch (Exception e) {
+					// do nothing
 				}
 			}
 		}
 
-		if (ENABLE_BT) {
+		try {
 			// See if the bluetooth device is connected, if not try to connect
 			if (mBluetoothAdapter.isEnabled()) {
 				if ( (mChatService.getState() != BluetoothChatService.STATE_CONNECTING) &&
@@ -429,43 +431,50 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					}
 				}
 			}
+		} catch (Exception e) {
+			// do nothing
 		}
 	}
 
 	@Override
 	protected synchronized void onPause() {
 		super.onPause();
+		Log.v("BluMote_State", "In onPause");
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-
-		// if (mChatService != null) mChatService.stop();
+		Log.v("BluMote_State", "In onStop");
+		
 		// close sqlite database connection
 		device_data.close();
-
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// Stop the Bluetooth chat services
-		if (mChatService != null)
-			mChatService.stop();
+		Log.v("BluMote_State", "In onDestroy");
+		
+		// TODO - testing removing this, Stop the Bluetooth chat services
+		disconnectPod();
 	}
 
 	// this is called after resume from another full-screen activity
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-
+		Log.v("BluMote_State", "In onRestart");
+		
 		device_data.open();
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		return gestureDetector.onTouchEvent(event);
+		if (gestureDetector != null) {
+			return gestureDetector.onTouchEvent(event);
+		} else 
+			return false;
 	}	
 	
 	/**
@@ -746,7 +755,13 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 //				case BluetoothChatService.STATE_LISTEN:
 				case BluetoothChatService.STATE_NONE:
-					mTitle.setText(R.string.title_not_connected);
+					try {
+						mTitle.setText(R.string.title_not_connected);
+					} catch (Exception e) {
+						// can throw exception if the message gets sent when app
+						// is destroyed after system reclaims memory
+						// do nothing
+					}
 					break;
 				}
 				break;
@@ -769,9 +784,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 				break;
 
 			case MESSAGE_TOAST:
-				Toast.makeText(getApplicationContext(),
-						msg.getData().getString(TOAST), Toast.LENGTH_SHORT)
-						.show();
+				Log.v("BluMote",msg.getData().getString(TOAST));
+//				Toast.makeText(getApplicationContext(),
+//						msg.getData().getString(TOAST), Toast.LENGTH_SHORT)
+//						.show();
 				break;			
 			}
 		}
@@ -978,7 +994,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		case R.id.scan:
 			// first stop any connecting process if it is running
 			if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-				mChatService.stop();
+				disconnectPod();
 			}
 			// Launch the DeviceListActivity to see devices and do scan
 			Intent serverIntent = new Intent(this, PodListActivity.class);
@@ -987,7 +1003,14 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		
 		case R.id.disconnect:
 			// disconnect the bluetooth link
-			mChatService.stop();
+			disconnectPod();
+			stopLearning();
+			return true;
+			
+		case R.id.kill_conn:
+			// TODO, what else is required here to kill the connection attempt?
+			// disconnect the bluetooth link
+			disconnectPod();
 			stopLearning();
 			return true;
 			
@@ -1162,7 +1185,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 	void disconnectPod() {
 		// disconnect the bluetooth link
-		mChatService.stop();
+		if (mChatService != null)
+			mChatService.stop();
 		return;
 	}
 	
@@ -1687,8 +1711,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 				try {
 					// need to extract the interrupt byte vector from the downloaded original FW 
 					// image so that we can enter the password correctly (to prevent wiping the flash)
-					// TODO - temporarily commented out for debug, won't work if valid password sent for some reason!
-					Pod.calculatePassword(Pod.ORIGINAL_FW_LOCATION);
+					if (flag[0] == Pod.ENABLE_RESET && Pod.ORIGINAL_FW_LOCATION != null) {
+						// if the enable_reset is set then it means we were able to talk to the pod
+						// which implies we should be able to calculate the proper password
+						Pod.calculatePassword(Pod.ORIGINAL_FW_LOCATION);
+					} 											
+					
 					Pod.getCalibrationData();								
 					
 		 			Pod.setBslState();
@@ -1697,6 +1725,9 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					} else {						
 						Pod.startBSL(Pod.ENABLE_RESET);						
 					}		 	
+					while (Pod.BSL_FINISHED == false) { 
+						// wait 
+					}					
 				} catch (BslException e) {
 					if (e.getTag() == BslException.RESET_FAILED) {
 						return "FAILED";
@@ -1770,7 +1801,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		 			} catch (Exception exception) {
 		 				// do nothing if BSL fails here
 		 			}		 				 			
-		 		} catch (Exception e) {
+		 		} catch (Exception e) {		 			
 		 			this.e = e;
 		 		}
 				return new Integer(byteCounter);

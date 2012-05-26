@@ -171,6 +171,8 @@ class Pod {
 
 	static int debug_send = 0;
 
+	static boolean BSL_FINISHED;
+
 	// component ID is defined in blumote spec
 	static final HashMap<Integer, String> componentMap = new HashMap<Integer, String>();
 	static {
@@ -209,6 +211,7 @@ class Pod {
 			// get 10 bytes of data starting at 0x10F6
 			cal_data = getMemorySpace(
 					Util.bytesToInt((byte) 0x10, (byte) 0xF6), 10);
+			Log.d("BSL_CAL_DATA", Util.byteArrayToString(cal_data));
 			applyCalibration();
 		} catch (Exception e) {
 			cal_data = null;
@@ -217,13 +220,8 @@ class Pod {
 
 	// apply the calibration data to the newly downloaded firmware to be
 	// flashed
-	@SuppressWarnings("unused")
 	static void applyCalibration() {
-		// TODO - skipping this just to test robustness of BSL loader
-		if (true) {
-			return;
-		}
-		
+			
 		// parse the hex file and dump the cal_data information to it
 		FileInputStream f = null;
 		try {
@@ -1072,6 +1070,8 @@ class Pod {
 	 *            RN42
 	 */
 	static void startBSL(int flag) throws BslException {
+		Pod.BSL_FINISHED = false;
+		
 		final int retryTime = 300; // 30 seconds
 		final int timeOut = 1000; // 1 minute
 		int timer = 0;
@@ -1154,6 +1154,7 @@ class Pod {
 		clearPodData();
 
 		// step 2, enter the BSL
+		Log.d("BSL", "Entering the BSL");
 		enterBsl();
 		try {
 			Thread.sleep(100);
@@ -1162,19 +1163,29 @@ class Pod {
 			e.printStackTrace();
 		}
 		// step 3, sending Rx password
+		Log.d("BSL", "Sending Unlock Password");
 		sendPassword();
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
-		}
-		// step 4, sending Rx password
-		//sendPassword();
 		
-		// TODO send erase command
-		clearMemory();
+		if (flag == ENABLE_RESET && ORIGINAL_FW_LOCATION != null) {
+			// if we get enable_reset it means we can talk to the pod
+			// so we should try to use the non-destructive memory clearing command
+			// step 4 send erase command
+			Log.d("BSL", "Clearing memory");
+			clearMemory();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			Log.d("BSL", "Destructive memory clear");
+			// step 4, sending Rx password
+			sendPassword();
+		}
 
+		Log.d("BSL", "BSL routine finished, starting to flash");
+		Pod.BSL_FINISHED = true;
 		// after this is finished we are ready to start flashing the hex code to
 		// the pod
 	}
@@ -1185,11 +1196,17 @@ class Pod {
 		sync();		
 		msg = Util.concat(msg, calcChkSum(msg));
 		
-		for (int i=0; i < main_erase_cycles; i++) {
+		for (int i=0; i < main_erase_cycles; i++) {			
 			blumote.sendMessage(msg);
-			Log.d("OUT_CLR_MEM", Util.byteArrayToString(msg));
+			Log.d("BSL_OUT_CLR_MEM", Util.byteArrayToString(msg));
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// Auto-generated catch block
+				e.printStackTrace();
+			}
 			String returnStr = Util.byteArrayToString(receiveResponse(BT_STATES.BSL));
-			Log.d("IN_CLR_MEM", returnStr);
+			Log.d("BSL_IN_CLR_MEM", returnStr);
 		}
 	}
 
@@ -1279,6 +1296,7 @@ class Pod {
 	 * Sync's the loader program to the pod, requires a ACK/NAK to continue
 	 */
 	static void sync() throws BslException {
+		Log.d("BSL", "Sending Sync...");
 		sync_data = (byte) 0xFF;
 		BT_STATE = BT_STATES.SYNC;
 
@@ -1304,10 +1322,12 @@ class Pod {
 
 		// process the data received, if it ever came
 		if ((waiter.waitTime >= waiter.maxWaitTime)) {
-			throw new BslException("Exceeded max wait time during sync");
+			Log.d("BSL", "Sync timed out...failure");
+			throw new BslException("Exceeded max wait time during sync");		
 		}
 
 		if (sync_data == (byte) 0xFF) {
+			Log.d("BSL", "Sync data failure...");
 			throw new BslException("never received any data during sync");
 		}
 
@@ -1316,9 +1336,11 @@ class Pod {
 			return;
 
 		case BSL_CODES.DATA_NAK:
+			Log.d("BSL", "Sync returned NAK");
 			throw new BslException("Received NAK sync byte");
 
 		default:
+			Log.d("BSL", "Invalid sync data received");
 			throw new BslException("Received invalid sync byte "
 					+ Integer.toString(0x00FF & (byte) sync_data));
 		}
@@ -1431,7 +1453,7 @@ class Pod {
 		Log.d("OUT_BSL_FW_LINE", Util.byteArrayToString(msg));		
 		String stringRet = Util.byteArrayToString(returnData);		
 		Log.d("IN_BSL_FW_LINE", stringRet);
-		if (stringRet.equals("a0")) {
+		if (stringRet.startsWith("a0")) {
 			throw new BslException("Got a NACK");
 		}
 		clearPodData();

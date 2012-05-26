@@ -14,20 +14,20 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 
 
 /**
@@ -52,13 +52,16 @@ public class PodListActivity extends Activity {
     // Member fields
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
-    private ArrayAdapter<String> mNewDevicesArrayAdapter;
+    private PodListViewAdapter mNewDevicesArrayAdapter;
     private Button scanButton;
     
     //Shared preferences class - for storing config settings between runs
     private SharedPreferences prefs;
 
     private static String pod_rename;
+        
+    private ListView pairedListView;
+    private ListView newDevicesListView;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +86,16 @@ public class PodListActivity extends Activity {
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.manage_devices_item);
-        mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.manage_devices_item);
+        mNewDevicesArrayAdapter = new PodListViewAdapter(this, R.layout.manage_devices_item);
 
-        // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+        pairedListView = (ListView) findViewById(R.id.paired_devices);
+        newDevicesListView = (ListView) findViewById(R.id.new_devices);
+        
+        // Find and set up the ListView for paired devices        
         pairedListView.setAdapter(mPairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = (ListView) findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
@@ -135,16 +139,6 @@ public class PodListActivity extends Activity {
             mPairedDevicesArrayAdapter.add(noDevices);
         }
     	
-        // If there are paired devices, add each one to the ArrayAdapter
-//        if (pairedDevices.size() > 0) {
-//            findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
-//            for (BluetoothDevice device : pairedDevices) {
-//                mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());                
-//            }
-//        } else {
-//            String noDevices = getResources().getText(R.string.none_paired).toString();
-//            mPairedDevicesArrayAdapter.add(noDevices);
-//        }
     }
 
     @Override
@@ -211,26 +205,21 @@ public class PodListActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-
+            if (action == null) return;
+            
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (BluMote.DEBUG) {
-                	String name = device.getName();
-                	if (name.endsWith("\n") || name == "" || name == null) {
-                		Log.e(TAG, "found a malformed device name: "+ name);
-                	}
-                	addToNewDevices(translatePodName(device.getName(), prefs)
-                    		+ "\n" + device.getAddress());
-                }
-                else {
-                	// if we are not in debug mode then screen the entries
-                	if (device.getName().startsWith("BluMote")) {                		
-                		addToNewDevices(translatePodName(device.getName(), prefs)
-                				+ "\n" + device.getAddress());
-                	}
-                }
+                if (device == null) return;
+                
+            	String name = device.getName();
+            	if (name == null) return;
+            	if (name.endsWith("\n") || name == "") {
+            		Log.e(TAG, "found an invalid device name: "+ name);
+            	}
+	            addToNewDevices(translatePodName(device.getName(), prefs)
+	                		+ "\n" + device.getAddress());            	            	
             // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
@@ -247,15 +236,17 @@ public class PodListActivity extends Activity {
     private void addToNewDevices(String name) {
     	// make sure the item is not already in the list....
     	boolean foundIt = false;
+    	String test;
     	for (int i=0; i< mNewDevicesArrayAdapter.getCount(); i++) {
-    		if (name.split("\n")[0].startsWith(mNewDevicesArrayAdapter.getItem(i))) {
+    		test = name.split("\n")[0];
+    		if ( mNewDevicesArrayAdapter.getItem(i).startsWith(test) ) {
     			foundIt = true;
-    			break;     	
-    		}
+    			break;
+    		}     		
     	} 
     	if (foundIt != true) {
     		// add to list if it is unique
-    		mNewDevicesArrayAdapter.add(name);
+    		mNewDevicesArrayAdapter.add(name);    	
     	}
     }
     
