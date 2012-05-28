@@ -1007,13 +1007,6 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			stopLearning();
 			return true;
 			
-		case R.id.kill_conn:
-			// TODO, what else is required here to kill the connection attempt?
-			// disconnect the bluetooth link
-			disconnectPod();
-			stopLearning();
-			return true;
-			
 		case R.id.about:
 			showDialog(DIALOG_ABOUT);
 			return true;
