@@ -5,17 +5,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-public class PodListViewAdapter extends ArrayAdapter<String> {
+public class BlueListViewAdapter extends ArrayAdapter<String> {
+	private String tag = "";
 	
-    public PodListViewAdapter(Context context, int textViewResourceId) {
+    public BlueListViewAdapter(Context context, int textViewResourceId, String newTag) {
             super(context, textViewResourceId);
+            tag = newTag;
     }
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 	  View view = super.getView(position, convertView, parent);
 	  String item = super.getItem(position);
-	  if (item.startsWith("BluMote")) {
+	  if (item.startsWith(tag)) {
 		  view.setBackgroundColor(Color.BLUE);
 	  } else {
 		  view.setBackgroundColor(Color.TRANSPARENT);

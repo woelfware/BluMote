@@ -443,7 +443,7 @@ public class Activities {
 				
 				//TODO - need to make init items into hashmap....
 				//check if the item is a power button, if so then need to add it to the activity power off button				
-				if (!curItem[0].isEmpty()) { // check for valid entry
+				if (curItem[0].length() != 0) { // check for valid entry
 					// second item is the button name (if not a delay)
 					if(!curItem[0].equals("DELAY")) {
 						// parse the element [0] to a proper device/activity ID if it is not a delay item

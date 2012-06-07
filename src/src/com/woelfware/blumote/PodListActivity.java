@@ -52,7 +52,7 @@ public class PodListActivity extends Activity {
     // Member fields
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
-    private PodListViewAdapter mNewDevicesArrayAdapter;
+    private BlueListViewAdapter mNewDevicesArrayAdapter;
     private Button scanButton;
     
     //Shared preferences class - for storing config settings between runs
@@ -86,7 +86,7 @@ public class PodListActivity extends Activity {
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.manage_devices_item);
-        mNewDevicesArrayAdapter = new PodListViewAdapter(this, R.layout.manage_devices_item);
+        mNewDevicesArrayAdapter = new BlueListViewAdapter(this, R.layout.manage_devices_item, "BluMote");
 
         pairedListView = (ListView) findViewById(R.id.paired_devices);
         newDevicesListView = (ListView) findViewById(R.id.new_devices);

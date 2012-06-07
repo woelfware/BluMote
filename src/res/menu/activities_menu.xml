@@ -43,7 +43,7 @@
 			<item android:title="Preferences" android:id="@+id/preferences" android:icon="@android:drawable/ic_menu_preferences" />
 			<item android:title="Backup to SD card" android:id="@+id/backup" android:icon="@android:drawable/ic_menu_upload" />
 			<item android:title="Import from SD card" android:id="@+id/restore" android:icon="@android:drawable/ic_menu_recent_history" />	
-			<item android:title="Close BluMote" android:id="@+id/exit" android:icon="@android:drawable/ic_lock_power_off" />		
+			<item android:title="Close BluMote" android:id="@+id/exit" android:icon="@android:drawable/ic_lock_power_off" />
 		</menu>
 	</item>
 </menu>

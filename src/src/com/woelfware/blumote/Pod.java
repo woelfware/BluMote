@@ -56,7 +56,7 @@ class Pod {
 	static String[] firmwareRevisions = null;
 
 	// holds the current revision code extracted from pod FW
-	private static byte[] currentSwRev = null;
+	private static byte[] currentSwRev = null;	
 
 	// note to self, byte is signed datatype
 	static String new_name;
@@ -1120,7 +1120,7 @@ class Pod {
 		// once we got here the connection dropped
 		// tell it to reconnect
 		if (blumote.getBluetoothState() == BluetoothChatService.STATE_NONE) {
-			blumote.reconnectPod();
+			blumote.connectPod();
 		}
 		timer = 0;
 		// wait until it reconnects
@@ -1132,14 +1132,14 @@ class Pod {
 				e.printStackTrace();
 			}
 			timer++;
-			if (timer == 50) {
+			if (timer == 100) {
 				// try again
 				Log.v("BSL", "Trying to connect again");
 				if (blumote.getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
-					blumote.reconnectPod();
+					blumote.connectPod();
 				}
 			}
-			if (timer >= 100) {
+			if (timer >= 150) {
 				// give up
 				throw new BslException("Timed out waiting for RN42 to reset");
 			}

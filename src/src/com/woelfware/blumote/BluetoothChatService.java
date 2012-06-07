@@ -28,7 +28,11 @@ class BluetoothChatService {
     // Debugging
     private static final String TAG = "BluetoothChatService";
     private static final boolean D = true;
+    
+    static final int BT_CONNECT_TIMEOUT = 7000; // 7 seconds
 
+    static boolean BT_ENABLING = false;
+    
     // Name for the SDP record when creating server socket
     //private static final String NAME = "BlueMote";
 
@@ -93,6 +97,14 @@ class BluetoothChatService {
         if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
 
         setState(STATE_NONE);
+    }
+    
+    synchronized void disableBt() {
+    	mAdapter.disable();
+    }
+    
+    synchronized void enableBt() {
+    	mAdapter.enable();
     }
 
     /**
@@ -230,7 +242,7 @@ class BluetoothChatService {
             			&& BluMote.getHtcInsecureSetting()) {
             		Log.v(TAG, "Using connection method 2");
             		// Even newer HTC phones need to use the reflection technique
-            		Method m = device.getClass().getMethod("createInsecureRfcommSocket", new Class[] {int.class});                       			
+            		Method m = device.getClass().getMethod("createInsecureRfcommSocket", new Class[] {int.class});     
         			tmp = (BluetoothSocket) m.invoke(device, 1);	        		
             	}
             	else {

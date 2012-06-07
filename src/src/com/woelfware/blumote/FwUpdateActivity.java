@@ -17,6 +17,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 
     static final String FW_LOCATION = "FW_LOCATION";
     static final String ORIGINAL_FW_LOCATION = "ORIGINAL_FW_LOCATION";
+    static final String ORIGINAL_FW_DOWNLOADED = "ORIGINAL_FW_DOWNLOADED";
     static final String POD_WORKING = "POD_WORKING";
     
     // name of file when stored in the sdcard temp directory
@@ -109,9 +111,12 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
     	// indicate the version in the list that matches podVersion
     	for (int j=0 ; j < fwImagesArrayAdapter.getCount(); j++) {
     		FwItem test = fwImagesArrayAdapter.getItem(j);
-    		if (test.title.equalsIgnoreCase(podV)) {
-    			test.notes = "Currently installed version";
-    			break;
+    		if (test.title.equalsIgnoreCase(podV)) {    		    			 
+    			test.installed = true;
+//    			fwImagesListView.getChildAt(j).setBackgroundColor(Color.BLUE);
+    		} else {
+    			test.installed = false;
+//    			fwImagesListView.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
     		}
     	}    	
     	
@@ -136,7 +141,7 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
         		try {
         			if (items.length >= 3) {
         				fwImagesArrayAdapter.add(
-        						new FwItem(items[0], items[1], new URL(items[2]), items[3]));
+        					new FwItem(items[0], items[1], new URL(items[2]), items[3], false));
         			}
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -278,7 +283,11 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 					if (originalItem != null) {
 						i.putExtra(FwUpdateActivity.ORIGINAL_FW_LOCATION,
 								new File(fileDir, ORIGINAL_FW_IMAGE_NAME).getCanonicalPath());
-					} 
+						i.putExtra(ORIGINAL_FW_DOWNLOADED, true);
+					} else {
+						// indicate that no FW downloaded (could not find it or missing)
+						i.putExtra(ORIGINAL_FW_DOWNLOADED, false);
+					}
 					i.putExtra(FwUpdateActivity.FW_LOCATION, 
 							new File(fileDir, FW_IMAGE_NAME).getCanonicalPath());
 
@@ -343,6 +352,12 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 			holder.txtTitle.setText(item.title);
 			holder.txtNotes.setText(item.notes);
 
+			if (item.installed) {
+				row.setBackgroundColor(Color.BLUE);
+			} else {
+				row.setBackgroundColor(Color.TRANSPARENT);
+			}
+			
 			return row;
 		}
 
@@ -363,17 +378,19 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 		public String notes;
 		public URL url;
 		public String md5sum;
+		public boolean installed;
 
 		public FwItem(){
 			super();
 		}
 
-		public FwItem(String title, String notes, URL url, String md5sum) {
+		public FwItem(String title, String notes, URL url, String md5sum, boolean installed) {
 			super();
 			this.notes = notes;
 			this.title = title;
 			this.url = url;
 			this.md5sum = md5sum;
+			this.installed = installed;
 		}
 	}
 
