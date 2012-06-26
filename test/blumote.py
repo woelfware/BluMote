@@ -27,6 +27,6 @@ class Services():
 		self.cmd_codes = Command_Codes()
 		self.cmd_rc = Command_Return_Codes()
 		self.component_codes = Component_Codes()
-		self.service = {"name" : "Bluemote",
+		self.service = {"name" : "Blumote",
 			"provider" : "Woelfware",
 			"description" : "IR XPDR"}

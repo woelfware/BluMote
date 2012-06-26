@@ -2,7 +2,7 @@
 # Copyright (C) 2010 Woelfware
 
 from bluetooth import *
-import bluemote
+import blumote
 import time
 import sys
 import subprocess
@@ -21,9 +21,9 @@ sample_key_codes = [[8985, 4475, 564, 569, 539, 1694, 568, 1667, 566, 564, 564, 
 	[9087, 4376, 694, 433, 697, 1542, 691, 1568, 666, 442, 688, 440, 695, 455, 648, 433, 697, 1567, 668, 1566, 692, 440, 666, 1590, 672, 433, 673, 432, 698, 433, 697, 433, 668, 437, 693, 1570, 668, 1554, 694, 1553, 694, 456, 672, 438, 666, 439, 693, 437, 695, 433, 671, 435, 695, 435, 697, 433, 670, 1566, 692, 1545, 683, 1575, 668, 1567, 695, 1541, 691],
 	[9085, 4376, 668, 450, 678, 1569, 666, 1594, 646, 446, 682, 448, 682, 448, 658, 447, 682, 1590, 650, 1586, 665, 453, 660, 1587, 668, 473, 640, 441, 680, 452, 678, 455, 659, 441, 681, 450, 681, 449, 664, 441, 682, 1590, 653, 441, 677, 455, 676, 452, 664, 439, 683, 1591, 655, 1579, 677, 1558, 677, 442, 682, 1565, 679, 1581, 659, 1574, 681, 1555, 679]]
 
-class Bluemote_Server(bluemote.Services):
+class Blumote_Server(blumote.Services):
 	def __init__(self):
-		bluemote.Services.__init__(self)
+		blumote.Services.__init__(self)
 		self.version = ((self.component_codes.software, 0, 1, 0),)
 		self.zero = None
 		self.one = None
@@ -184,7 +184,7 @@ if __name__ == "__main__":
 		print "Failed to setup the LIRC driver"
 		print "You won't be able to run IR related commands."
 
-	bm_pod = Bluemote_Server()
+	bm_pod = Blumote_Server()
 
 	try:
 		while True:

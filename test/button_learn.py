@@ -2,24 +2,24 @@
 # Copyright (C) 2011 Woelfware
 
 from bluetooth import *
-import bluemote
+import blumote
 import cPickle
 import os
 import sys
 import time
 
-class Bluemote_Client(bluemote.Services):
+class Blumote_Client(blumote.Services):
 	def __init__(self):
-		bluemote.Services.__init__(self)
+		blumote.Services.__init__(self)
 		self.addr = None
 
-	def find_bluemote_pods(self, pod_name = None):
+	def find_blumote_pods(self, pod_name = None):
 		if pod_name is None:
 			pod_name = self.service["name"]
 		print "Searching for \"%s\" service..." % (pod_name)
 		return find_service(name = pod_name)
 
-	def connect_to_bluemote_pod(self, addr):
+	def connect_to_blumote_pod(self, addr):
 		self.client_sock = BluetoothSocket(RFCOMM)
 		self.client_sock.connect((addr, 1))
 
@@ -64,7 +64,7 @@ class Bluemote_Client(bluemote.Services):
 		return self._learn_unpack_msg(msg)
 
 if __name__ == "__main__":
-	bm_remote = Bluemote_Client()
+	bm_remote = Blumote_Client()
 
 	found = False
 	while not found:
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 		for addr, name in nearby_devices:
 			if name[:len('BluMote')] == 'BluMote':
 				print 'connecting to', addr, name
-				bm_remote.connect_to_bluemote_pod(addr)
+				bm_remote.connect_to_blumote_pod(addr)
 				found = True
 				break
 
