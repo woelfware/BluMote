@@ -29,7 +29,7 @@ class BluetoothChatService {
     private static final String TAG = "BluetoothChatService";
     private static final boolean D = true;
     
-    static final int BT_CONNECT_TIMEOUT = 7000; // 7 seconds
+    static final int BT_CONNECT_TIMEOUT = 10000; // 10 seconds
 
     static boolean BT_ENABLING = false;
     

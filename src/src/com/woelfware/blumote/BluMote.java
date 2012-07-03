@@ -119,6 +119,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	private static int LONG_DELAY_TIME = 1000; // starts repeated button clicks
 	static int DELAY_TIME = 200; // repeat button click delay (after button held)
 	
+	boolean BLOCK_TRANSMIT = false;
+	
 	// Layout Views
 	private TextView mTitle;
 
@@ -161,7 +163,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	// used to prevent the drop-down from changing the last device, unless we specifically
 	// selected a new device after the program is all set up, seems like when the interface
 	// loads we get spurious onItemSelected() events firing.
-	boolean LOCK_LAST_DEVICE = false;  		
+	boolean LOCK_LAST_DEVICE = false;  				
 	
 	// Flag that tells us if we are holding our finger on a button and should loop
 	static boolean BUTTON_LOOPING = false;
@@ -182,6 +184,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 	// used to convert device/activity names into IDs that do not change
 	InterfaceLookup lookup;
+
+	private boolean LOCK_RECONNECT = false; 
 	
 	// These are used for activities display window
 	private static final int ID_DELETE = 0;
@@ -486,15 +490,17 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 		     public void onTick(long millisUntilFinished) {
 		         // called once a second, if connected then cancel		    	 
-		    	 if (mChatService.getState() != BluetoothChatService.STATE_CONNECTING) {
+		    	 if (getBluetoothState() != BluetoothChatService.STATE_CONNECTING) {
 		    		 this.cancel();
 		    	 }
 		     }
 
 		     public void onFinish() {
-		         if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+		         if (getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
 		        	 // close bluetooth connection
-		        	 mChatService.disableBt();
+		        	 if (mChatService != null) {
+		        		 mChatService.disableBt();
+		        	 }
 		         }
 		     }
 		  }.start();
@@ -568,7 +574,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 						// called when timer expired
 						if (getButtonID() == buttonPushID) {
 							// if same push ID then execute this function again
-							executeButtonLongDown();
+							//executeButtonLongDown();
 						}
 					}
 				}.start();
@@ -608,6 +614,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	
 	// interface implementation for buttons
 	public void onClick(View v) {
+		if (BLOCK_TRANSMIT == true) {
+			BLOCK_TRANSMIT = false;
+			return;
+		}
 		BUTTON_ID = v.getId(); // save Button ID - besides this function, also referenced in storeButton()
 								// when a new button is learned	
 		String buttonName = null;
@@ -756,6 +766,9 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			// Get the message bytes and tell the BluetoothChatService to
 			// write
 			byte[] send = message;
+			Log.d("BluMote", " Sent: "+Util.byteArrayToString(send));
+			Log.d("BluMote", " Sent Size: "+send.length);
+			Pod.LAST_PKT = send;
 			mChatService.write(send);
 			return true;
 		}		
@@ -867,6 +880,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
+			LOCK_RECONNECT = false;
 			// When DeviceListActivity returns with a device to connect
 			if (resultCode == Activity.RESULT_OK) {
 				// Get the device MAC address
@@ -987,13 +1001,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					} else {
 						Pod.ORIGINAL_FW_LOCATION = null;
 					}	
-										boolean podWorking = return_bundle.getBoolean(FwUpdateActivity.POD_WORKING);
+					boolean podWorking = return_bundle.getBoolean(FwUpdateActivity.POD_WORKING);
 					
 					if (Pod.ORIGINAL_FW_LOCATION == null && !podWorking) {
-						// TODO test this update
 						showDialog(WARN_BSL);
 					}
-					if (podWorking) {					
+					else if (podWorking) {					
 						showDialog(DIALOG_WAIT_BSL);
 						EnterBSLTask bsl = new EnterBSLTask();
 						bsl.execute(Pod.ENABLE_RESET);
@@ -1064,9 +1077,17 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		Intent i; 
 		switch (item.getItemId()) {
 		case R.id.scan:
-			// first stop any connecting process if it is running
 			if (getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
-				disconnectPod();
+				//disconnectPod();
+				// ensure BT device is enabled, and block reconnects until we return
+				try {
+					if (!mBluetoothAdapter.isEnabled()) {
+						LOCK_RECONNECT = true;
+						mChatService.enableBt();
+					}
+				} catch (Exception e) {
+					// intentionally blank
+				}
 			}
 			// Launch the DeviceListActivity to see devices and do scan
 			Intent serverIntent = new Intent(this, PodListActivity.class);
@@ -1151,7 +1172,11 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			return true;
 			
 		case R.id.reset_pod:
-			Pod.resetRn42();
+			try {
+				Pod.resetRn42();
+			} catch (Exception e) {
+				Toast.makeText(this, "Reset failed!", Toast.LENGTH_SHORT).show();
+			}
 			// disconnect the bluetooth link
 			disconnectPod();
 			return true;
@@ -1620,7 +1645,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			       .setCancelable(false)
 			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			    	   public void onClick(DialogInterface dialog, int id) {
-			    		   // launch another instance of EnterBslTask
+			    		   dialog.cancel();
+			    		   // launch another instance of EnterBslTask			    		   
 			    		   EnterBSLTask enterbsl = new EnterBSLTask();
 			    		   enterbsl.execute(Pod.INHIBIT_RESET);
 			    		   showDialog(DIALOG_WAIT_BSL);
@@ -1628,7 +1654,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			       })
 			       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
-			                dialog.cancel();
+			        	   try {
+			    			   dismissDialog(DIALOG_WAIT_BSL);
+			    		   } catch (Exception e) {
+			    			   // guess it wasn't open
+			    		   }
+			               dialog.cancel();
 			           }
 			       });
 			alert = builder.create();
@@ -1638,16 +1669,19 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage("Warning!  The pod is not responding and the original firmware on the pod could not be located. " +
 					"This can lead to loss of function to the pod.  It is recommended that the golden image be used if the pod becomes " +
-					"unresponsive after the FW update.")
+					"unresponsive after the FW update. \n" +
+					"Press OK to quit and try again (with the golden image), press cancel if you want to continue anyways.")
 			       .setCancelable(false)
 			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			    	   public void onClick(DialogInterface dialog, int id) {			    		   
-			    		   showDialog(DIALOG_RESET_POD);
+			    	   public void onClick(DialogInterface dialog, int id) {	
+			    		   dismissDialog(WARN_BSL);
+			    		   dialog.cancel();			    		   
 			           }
 			       })
 			       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
 			                dialog.cancel();
+			                showDialog(DIALOG_RESET_POD);
 			           }
 			       });
 			alert = builder.create();
@@ -1951,7 +1985,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 			if(action.equalsIgnoreCase(BluetoothAdapter.ACTION_STATE_CHANGED)) {
 				int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-				
+
+				if (LOCK_RECONNECT) {
+					return;
+				}
 				if (state == BluetoothAdapter.STATE_OFF) {
 					connectPod();
 				} else if (state == BluetoothAdapter.STATE_ON) {

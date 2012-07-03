@@ -52,7 +52,6 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 
     static final String FW_LOCATION = "FW_LOCATION";
     static final String ORIGINAL_FW_LOCATION = "ORIGINAL_FW_LOCATION";
-    static final String ORIGINAL_FW_DOWNLOADED = "ORIGINAL_FW_DOWNLOADED";
     static final String POD_WORKING = "POD_WORKING";
     
     // name of file when stored in the sdcard temp directory
@@ -186,8 +185,13 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 				    		   setResult(RESULT_OK,i);
 				    		   File fileDir = FwUpdateActivity.this.getExternalFilesDir(null);
 				    		   try {
-				    			   i.putExtra(FwUpdateActivity.FW_LOCATION, 
+				    			   	i.putExtra(FwUpdateActivity.FW_LOCATION, 
 											new File(fileDir, FW_IMAGE_NAME).getCanonicalPath());
+				    			   	File originalFile = new File(fileDir, ORIGINAL_FW_IMAGE_NAME);
+									if (originalFile.exists()) {
+										i.putExtra(FwUpdateActivity.ORIGINAL_FW_LOCATION,
+												new File(fileDir, ORIGINAL_FW_IMAGE_NAME).getCanonicalPath());
+									}
 								} catch (IOException e) {
 									e.printStackTrace();
 								}
@@ -280,13 +284,12 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 				Intent i = getIntent();
 				
 				try {
-					if (originalItem != null) {
+					File originalFile;
+					//if (originalItem != null) {
+					originalFile = new File(fileDir, ORIGINAL_FW_IMAGE_NAME);
+					if (originalFile.exists()) {
 						i.putExtra(FwUpdateActivity.ORIGINAL_FW_LOCATION,
-								new File(fileDir, ORIGINAL_FW_IMAGE_NAME).getCanonicalPath());
-						i.putExtra(ORIGINAL_FW_DOWNLOADED, true);
-					} else {
-						// indicate that no FW downloaded (could not find it or missing)
-						i.putExtra(ORIGINAL_FW_DOWNLOADED, false);
+								new File(fileDir, ORIGINAL_FW_IMAGE_NAME).getCanonicalPath());											
 					}
 					i.putExtra(FwUpdateActivity.FW_LOCATION, 
 							new File(fileDir, FW_IMAGE_NAME).getCanonicalPath());

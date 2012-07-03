@@ -64,7 +64,13 @@ class Pod {
 	static byte sync_data; // data used explicitly for syncing during BSL
 							// process
 	static byte[] cal_data = null;
-
+	
+	// Record the last packet sent, so if pod NACK's can resend
+	static byte[] LAST_PKT = null; 
+	
+	// record # of retries for sending a message
+	static int sendMsgCounter = 0;
+	
 	// interrupt vector based BSL flash unlock password
 	private static byte[] passwd = { (byte) 0xFF, (byte) 0xFF, // 0xFFE0
 			(byte) 0xFF, (byte) 0xFF, // 0xFFE2
@@ -167,6 +173,7 @@ class Pod {
 		ABORT_TRANSMIT, BSL, // bootstrap loader
 		SYNC, // Syncing the BSL to the Pod
 		READ_ADDRESS, // reading address of mem from pod
+		RESET_RN42,
 	}
 
 	static int debug_send = 0;
@@ -669,12 +676,13 @@ class Pod {
 	 *            be read
 	 */
 	static void interpretResponse(byte[] response, int bytes, int index) {
-		switch (BT_STATE) {
+		Log.v("BluMote Pod", "Response Code: "+ (response[index] == Codes.NACK ? "NACK" : "ACK"));
+		switch (BT_STATE) {		
+			
 		case LEARN:
-			try { // catch any unforseen state machine errors.....
+			try { 
 					// learn data may not come all together, so need to process
-					// data
-					// in chunks
+					// data in chunks
 				while (bytes > 0) {
 					switch (learn_state) {
 					case IDLE:
@@ -845,37 +853,29 @@ class Pod {
 			}
 			break;
 
-		case ABORT_LEARN:
-			setIdleState(); // reset state
-			if (response[index] == Codes.ACK) {
-				// nothing
-			}
-			break;
-
-		case IR_TRANSMIT:
-			setIdleState();
-			if (response[index] == Codes.ACK) {
-				// release lock if we get an ACK
-				buttonLock = false;
-				Log.v("POD_DEBUG", "unlocked button lock in interpretResponse");
-				if (BluMote.DEBUG) {
-					Toast.makeText(blumote, "ACK received - lock removed",
-							Toast.LENGTH_SHORT).show();
-				}
-			}			
-			Log.v("POD_DEBUG", "Got back: "+Util.oneHexByteToString(response[index]));
-			Log.v("POD_DEBUG", buttonLock == true ? "button lock is true" : "button lock is false");
-			break;
-
+		case RESET_RN42:
+			// fall through intentional
 		case ABORT_TRANSMIT:
-			setIdleState(); // reset state
-			if (BluMote.DEBUG) {
-				if (response[index] == Codes.ACK) {
-					Toast.makeText(blumote, "ACK received for abort transmit",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-			break;
+			// fall through intentional
+		case ABORT_LEARN:			
+			// fall through intentional
+		case IR_TRANSMIT:			
+			// release lock
+			buttonLock = false;
+			while (bytes-- > 1) { // move index to last position
+				index = (index + 1) % BluetoothChatService.buffer_size;
+			}			
+			if( response[index] != Codes.ACK && sendMsgCounter++ < 1) {
+				index = (index + 1) % BluetoothChatService.buffer_size;
+				blumote.sendMessage(LAST_PKT);
+			} else { // assume we got an ACK back
+				pod_data = new byte[1];	
+				pod_data[0] = response[index];
+				index = (index + 1) % BluetoothChatService.buffer_size;
+				sendMsgCounter = 0;
+				setIdleState();							
+			}						
+			break;		
 
 		case BSL:
 			// Just log the messages we get from the Pod during BSL
@@ -920,7 +920,7 @@ class Pod {
 			break;
 		}
 	}
-
+	
 	static void requestLearn() {
 		byte[] toSend;
 		toSend = new byte[1];
@@ -937,11 +937,13 @@ class Pod {
 		blumote.sendMessage(toSend);
 	}
 
-	static void resetRn42() {
+	static void resetRn42() throws BslException {
 		byte[] toSend;
 		toSend = new byte[1];
 		toSend[0] = (byte) Codes.RESET_RN42;
-		blumote.sendMessage(toSend);		
+		blumote.sendMessage(toSend);	
+		receiveResponse(BT_STATES.RESET_RN42);
+		
 	}
 
 	static void retrieveFwVersion() {
@@ -954,6 +956,7 @@ class Pod {
 	}
 
 	static void abortTransmit() {
+		blumote.BLOCK_TRANSMIT = true;
 		byte[] toSend;
 		setStopTransmitState();
 		toSend = new byte[1];
