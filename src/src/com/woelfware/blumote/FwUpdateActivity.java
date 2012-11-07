@@ -49,6 +49,7 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
     // constants for showDialog()
     private static final int FW_DOWNLOAD_DIALOG = 0;
     private static final int OLD_FW_DIALOG = 1;
+    private static final int GOLDEN_FW_DIALOG = 2;
 
     static final String FW_LOCATION = "FW_LOCATION";
     static final String ORIGINAL_FW_LOCATION = "ORIGINAL_FW_LOCATION";
@@ -97,14 +98,16 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
     	} catch (Exception e) {
     		i.putExtra(FwUpdateActivity.POD_WORKING, false);
     		podV = "";
-    		// if we weren't able to get a FW version then we won't be able
-    		// to get the calibration data so safer to let user re-try with existing
-    		// FW we downloaded if it exists already
+    		// if we weren't able to get a FW version then we need to check if cal data is cached
     		File fileDir = FwUpdateActivity.this.getExternalFilesDir(null);
-    		File f = new File(fileDir,FW_IMAGE_NAME);
-    		if (f.exists()) {
+    		File oldfw = new File(fileDir, FW_IMAGE_NAME);
+    		File cal = new File(fileDir,Pod.CAL_CACHE);
+    		if (oldfw.exists() || cal.exists()) {
     			showDialog(OLD_FW_DIALOG);
-    		}    		
+    		} else {
+    			//TODO
+    			showDialog(GOLDEN_FW_DIALOG);
+    		}
     		
     	}
     	// indicate the version in the list that matches podVersion
@@ -177,7 +180,7 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 				builder = new AlertDialog.Builder(this);
 				builder.setMessage("It appears your pod is not responding " +
 						"and a FW image already exists.  Press OK to use the FW image" +
-						" already downloaded (REQUIRED)")
+						" already downloaded or cancel to select another.")
 				       .setCancelable(false)
 				       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				    	   public void onClick(DialogInterface dialog, int id) {
@@ -196,6 +199,25 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 									e.printStackTrace();
 								}
 				    		   finish();
+				           }
+				       })
+				       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				    	   public void onClick(DialogInterface dialog, int id) {
+				    		   // do nothing
+				    	   }
+				       });
+				alert = builder.create();
+				return alert;
+				
+			case GOLDEN_FW_DIALOG:
+				builder = new AlertDialog.Builder(this);
+				builder.setMessage("Warning!  The pod is not responding and no older firmware on the pod could be located. " +
+						"This can lead to loss of function to the pod.  The GOLDEN IMAGE should be used! " +
+						"Press OK and select the golden image in the list.")
+				       .setCancelable(false)
+				       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				    	   public void onClick(DialogInterface dialog, int id) {	
+				    		   dialog.cancel();			    		   
 				           }
 				       });
 				alert = builder.create();

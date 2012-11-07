@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false">
+    
+    <LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="0dp"
+		android:layout_gravity="center"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:layout_weight="8"
+		android:weightSum="10.0">
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent"
+			android:layout_gravity="center"
+			android:layout_weight="1"
+			android:weightSum="2.0">
+			<ImageButton android:layout_width="fill_parent" style="@style/TopRockerStyle" android:src="@drawable/vol_plus" android:id="@+id/btn_volume_up"></ImageButton> 		    				    
+			<ImageButton android:layout_width="fill_parent" style="@style/BottomRockerStyle" android:src="@drawable/vol_minus" android:id="@+id/btn_volume_down"></ImageButton> 		    				    
+		</LinearLayout>	    
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:weightSum="2.0">
+				<ImageButton style="@style/TopRockerStyle" android:layout_width="fill_parent" android:src="@drawable/ch_plus" android:id="@+id/btn_channel_up"></ImageButton> 		    				    
+				<ImageButton style="@style/BottomRockerStyle" android:layout_width="fill_parent" android:src="@drawable/ch_minus" android:id="@+id/btn_channel_down"></ImageButton>				    					
+		</LinearLayout>		
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button style="@style/SpacerStyle"></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button android:id="@+id/btn_misc1" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 1" ></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button android:id="@+id/btn_misc1" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 1" ></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button android:id="@+id/btn_misc1" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 1" ></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button android:id="@+id/btn_misc1" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 1" ></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button android:id="@+id/btn_misc1" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 1" ></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button android:id="@+id/btn_misc1" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 1" ></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical"
+		    android:weightSum="5.0" >     
+				<Button android:id="@+id/btn_misc1" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 1" ></Button>	
+				<Button android:id="@+id/btn_n1" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="1" ></Button>			
+				<Button android:id="@+id/btn_n2" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="2" ></Button>				
+				<Button android:id="@+id/btn_n3" style="@style/CustomNumbersText" android:layout_width="fill_parent" android:text="3" ></Button>			
+				<Button android:id="@+id/btn_misc5" style="@style/CustomBtnText" android:layout_width="fill_parent" android:text="Misc 5" ></Button>	
+		</LinearLayout>
+	</LinearLayout>
+	
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="0dp"
+		android:layout_gravity="center"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:layout_weight="1"
+		android:weightSum="8.0">
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >   
+		</LinearLayout>
+	</LinearLayout>
+		
+	<ImageView android:src="@drawable/middle_circle" android:layout_width="50dp"
+		android:layout_height="20dp" android:layout_marginTop="5dp"
+		android:scaleType="fitXY" android:layout_gravity="center_horizontal"
+		android:visibility="invisible"
+	></ImageView> 
+</LinearLayout>

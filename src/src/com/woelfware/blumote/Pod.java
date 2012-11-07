@@ -5,12 +5,15 @@ package com.woelfware.blumote;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,33 +26,44 @@ import android.widget.Toast;
  * 
  */
 class Pod {
-	static String FW_LOCATION;
+	String FW_LOCATION;
 
-	static String ORIGINAL_FW_LOCATION;
+	String ORIGINAL_FW_LOCATION;
+	
+	final static String CAL_CACHE = "cal_cache"; // cache of calibration data
 
+	// private instance for getInstance()
+	private static Pod mInstance = new Pod();   
+	
 	// private constructor to make this class non-instantiable
 	private Pod() {
 	}
+	
+	// singleton class instance creator
+	public static Pod getInstance()
+	{
+	   return mInstance;
+	}
 
-	static BluMote blumote; // reference to blumote instance
+	BluMote blumote; // reference to blumote instance
 
 	// current State of the pod bluetooth communication
-	static BT_STATES BT_STATE = BT_STATES.IDLE;
+	BT_STATES BT_STATE = BT_STATES.IDLE;
 
 	// used to lock displaying dialogs for get_version cmd
-	private static boolean lockDialog = false;
+	private boolean lockDialog = false;
 
 	// if the button has been pushed down recently, this prevents another button
 	// press which could overflow the pod with too much button data
-	private static boolean buttonLock = false;
+	private boolean buttonLock = false;
 
 	// these are all in ms (milli-seconds)
-	private static int LOCK_RELEASE_TIME = 500; // timeout to release IR
+	private final int LOCK_RELEASE_TIME = 500; // timeout to release IR
 												// transmit lock if pod
 												// doesn't send us an ACK
 
 	// number of times that pod should repeat when button held down
-	private static final byte REPEAT_IR_LONG = (byte) 150;
+	private final byte REPEAT_IR_LONG = (byte) 150;
 
 	// the firmware log data we downloaded when requesting a firmware update
 	// process
@@ -57,22 +71,23 @@ class Pod {
 
 	// holds the current revision code extracted from pod FW
 	private static byte[] currentSwRev = null;	
-
-	// note to self, byte is signed datatype
-	static String new_name;
-	static byte[] pod_data;
-	static byte sync_data; // data used explicitly for syncing during BSL
+	
+	String new_name;
+	byte[] pod_data; // byte is signed datatype
+	byte sync_data; // data used explicitly for syncing during BSL
 							// process
-	static byte[] cal_data = null;
+	byte[] cal_data = null;
+	
+	boolean podWorking = false;
 	
 	// Record the last packet sent, so if pod NACK's can resend
-	static byte[] LAST_PKT = null; 
+	byte[] LAST_PKT = null; 
 	
 	// record # of retries for sending a message
-	static int sendMsgCounter = 0;
+	int sendMsgCounter = 0;
 	
 	// interrupt vector based BSL flash unlock password
-	private static byte[] passwd = { (byte) 0xFF, (byte) 0xFF, // 0xFFE0
+	private byte[] passwd = { (byte) 0xFF, (byte) 0xFF, // 0xFFE0
 			(byte) 0xFF, (byte) 0xFF, // 0xFFE2
 			(byte) 0xFF, (byte) 0xFF, // 0xFFE4
 			(byte) 0xFF, (byte) 0xFF, // 0xFFE6
@@ -91,74 +106,74 @@ class Pod {
 	};
 
 	// status return codes
-	static final int ERROR = -1;
+	final int ERROR = -1;
 
-	static int MIN_GAP_TIME = 20000; // us
-	static final int US_PER_SYS_TICK = 4; // needs to match pod FW, micro-secs
+	final int MIN_GAP_TIME = 20000; // us
+	final int US_PER_SYS_TICK = 4; // needs to match pod FW, micro-secs
 											// per system clock tick
-	static final int HDR_PULSE_TOL = 25; // 1/25 = +/-4%
-	static final int HDR_SPACE_TOL = 25; // 1/25 = +/-4%
-	static final int GAP_TOL = 10; // 1/10 = +/- 10%
+	final int HDR_PULSE_TOL = 25; // 1/25 = +/-4%
+	final int HDR_SPACE_TOL = 25; // 1/25 = +/-4%
+	final int GAP_TOL = 10; // 1/10 = +/- 10%
 	// define offsets to important pieces of data in bytestream
-	static final int LENGTH_OFFSET = 0; // length of data sent from pod
+	final int LENGTH_OFFSET = 0; // length of data sent from pod
 										// (minus length/ack/reserved)
-	static final int MODFREQ_OFFSET = 1; // modulation frequency
-	static final int RESERVED = 2; // reserved byte
-	static final int DATA_SIZE = 2; // # bytes of each data element
-	static final int HP_OFFSET = RESERVED + 1; // header space
-	static final int HS_OFFSET = HP_OFFSET + DATA_SIZE; // header pulse
-	static final int FPULSE_OFFSET = HS_OFFSET + DATA_SIZE; // First pulse after
+	final int MODFREQ_OFFSET = 1; // modulation frequency
+	final int RESERVED = 2; // reserved byte
+	final int DATA_SIZE = 2; // # bytes of each data element
+	final int HP_OFFSET = RESERVED + 1; // header space
+	final int HS_OFFSET = HP_OFFSET + DATA_SIZE; // header pulse
+	final int FPULSE_OFFSET = HS_OFFSET + DATA_SIZE; // First pulse after
 															// header
-	static final int FSPACE_OFFSET = FPULSE_OFFSET + DATA_SIZE; // First space
+	final int FSPACE_OFFSET = FPULSE_OFFSET + DATA_SIZE; // First space
 																// after header
 
 	// keeps track of bytes accumulated in LEARN_MODE
 	// private static byte[] learn_data;
-	static int data_index = 0;
-	static int total_bytes = 0; // number of bytes to be received from pod
-	static int offset = 0; // keeps track of offset in pod_data being retrieved
+	int data_index = 0;
+	int total_bytes = 0; // number of bytes to be received from pod
+	int offset = 0; // keeps track of offset in pod_data being retrieved
 
 	enum LEARN_STATE {
 		IDLE, CARRIER_FREQ, PKT_LENGTH, RESERVED, COLLECTING
 	}
 
-	static LEARN_STATE learn_state = LEARN_STATE.IDLE;
+	LEARN_STATE learn_state = LEARN_STATE.IDLE;
 
 	enum INFO_STATE {
 		IDLE, BYTE0, BYTE1, BYTE2, BYTE3
 	}
 
-	static INFO_STATE info_state = INFO_STATE.IDLE;
+	INFO_STATE info_state = INFO_STATE.IDLE;
 
 	class Codes {
-		public static final byte IDLE = (byte) 0xFE; // Default state - nothing
+		static final byte IDLE = (byte) 0xFE; // Default state - nothing
 														// going on
-		public static final byte RENAME_DEVICE = 0x01; // Unused pod command
-		public static final byte LEARN = 0x01; // Pod Command
-		public static final byte GET_VERSION = 0x00; // Pod command
-		public static final byte IR_TRANSMIT = 0x02; // Pod command
-		public static final byte ABORT_LEARN = (byte) 0xFD; // currently matt
+		static final byte RENAME_DEVICE = 0x01; // Unused pod command
+		static final byte LEARN = 0x01; // Pod Command
+		static final byte GET_VERSION = 0x00; // Pod command
+		static final byte IR_TRANSMIT = 0x02; // Pod command
+		static final byte ABORT_LEARN = (byte) 0xFD; // currently matt
 															// does not use this
-		public static final byte DEBUG = (byte) 0xFF; // testing purpose only
-		public static final byte ACK = (byte) 0x06;
-		public static final byte NACK = (byte) 0x15;
-		public static final byte ABORT_TRANSMIT = (byte) 0x03; // stop repeating
+		static final byte DEBUG = (byte) 0xFF; // testing purpose only
+		static final byte ACK = (byte) 0x06;
+		static final byte NACK = (byte) 0x15;
+		static final byte ABORT_TRANSMIT = (byte) 0x03; // stop repeating
 																// IR command
-		public static final byte RESET_RN42 = 0x04; // resets the rn42 module
+		static final byte RESET_RN42 = 0x04; // resets the rn42 module
 													// from msp430
-		public static final byte READ_ADDRESS = 0x05; // read a segment of flash
+		static final byte READ_ADDRESS = 0x05; // read a segment of flash
 														// on micro
 	}
 
 	class BSL_CODES {
-		public static final String CMD_MODE = "$$$";
-		public static final byte SYNC = (byte) 0x80;
-		public static final byte DATA_ACK = (byte) 0x90;
-		public static final byte DATA_NAK = (byte) 0xA0;
+		static final String CMD_MODE = "$$$";
+		static final byte SYNC = (byte) 0x80;
+		static final byte DATA_ACK = (byte) 0x90;
+		static final byte DATA_NAK = (byte) 0xA0;
 	}
 
-	public static final Integer INHIBIT_RESET = 1;
-	public static final Integer ENABLE_RESET = 0;
+	final Integer INHIBIT_RESET = 1;
+	final Integer ENABLE_RESET = 0;
 
 	// this is to keep track of state machines for example
 	// for receiving data from bluetooth interface, how that
@@ -176,13 +191,14 @@ class Pod {
 		RESET_RN42,
 	}
 
-	static int debug_send = 0;
+	int debug_send = 0;
 
-	static boolean BSL_FINISHED;
+	boolean BSL_FINISHED;
 
 	// component ID is defined in blumote spec
-	static final HashMap<Integer, String> componentMap = new HashMap<Integer, String>();
-	static {
+	@SuppressLint("UseSparseArrays")
+	final HashMap<Integer, String> componentMap = new HashMap<Integer, String>();
+	{
 		componentMap.put(0, "Hardware");
 		componentMap.put(1, "Firmware");
 		componentMap.put(2, "Software");
@@ -202,33 +218,82 @@ class Pod {
 	 * @throws BslException
 	 *             Often thrown due to a time-out
 	 */
-	static byte[] sendPodCommand(byte[] message, int returnLength,
-			BT_STATES state) throws BslException {
+	byte[] sendPodCommand(byte[] message, int returnLength, BT_STATES state) 
+			throws BslException {
 		data_index = 0;
 		total_bytes = returnLength;
 		offset = 0;
 		pod_data = new byte[returnLength - 1]; // exclude response code
-		blumote.sendMessage(message);
-		receiveResponse(state);
+		sendMessage(message, state);
+		receiveResponse();
 		return pod_data;
 	}
 
-	static void getCalibrationData() {
+	void setPodWorking(boolean value) {
+		podWorking = value;
+	}
+	
+	void getCalibrationData() {
 		try {
-			// get 10 bytes of data starting at 0x10F6
-			cal_data = getMemorySpace(
-					Util.bytesToInt((byte) 0x10, (byte) 0xF6), 10);
-			Log.d("BSL_CAL_DATA", Util.byteArrayToString(cal_data));
+			if (podWorking) {
+				// get 10 bytes of data starting at 0x10F6
+				cal_data = getMemorySpace(
+						Util.bytesToInt((byte) 0x10, (byte) 0xF6), 10);
+				Log.d("BSL_CAL_DATA", Util.byteArrayToString(cal_data));
+				saveCalibration();
+			} else {
+				// check if local cache exists
+				getCalibrationCache();
+			}
 			applyCalibration();
 		} catch (Exception e) {
 			cal_data = null;
 		}
+				
 	}
 
+	void getCalibrationCache() {
+		File filedir = blumote.getExternalFilesDir(null);
+		File file = new File(filedir, CAL_CACHE);
+		byte[] data = new byte[(int) file.length()];
+		try {
+		    new FileInputStream(file).read(data);
+		} catch (Exception e) {
+			cal_data = null;
+		    e.printStackTrace();
+		}
+		if (data != null && data.length > 0) {
+			cal_data = data;
+		} else {
+			cal_data = null;
+		}
+	}
+	
+	void saveCalibration() {
+		if (cal_data == null || cal_data.length == 0) {
+			return;
+		}
+		File fileDir = blumote.getExternalFilesDir(null);
+		FileOutputStream f;		
+		try {
+			f = new FileOutputStream(new File(fileDir,CAL_CACHE));
+			f.write(cal_data, 0, cal_data.length);
+			f.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}					
+	}
+	
 	// apply the calibration data to the newly downloaded firmware to be
 	// flashed
-	static void applyCalibration() {
+	void applyCalibration() {
 			
+		if (cal_data == null) {
+			return; // skip if no data to apply
+		}
+		
 		// parse the hex file and dump the cal_data information to it
 		FileInputStream f = null;
 		try {
@@ -277,7 +342,7 @@ class Pod {
 	 *            for example 5 words = 10 bytes
 	 * @return
 	 */
-	static byte[] getMemorySpace(int startAddress, int bytes)
+	byte[] getMemorySpace(int startAddress, int bytes)
 			throws BslException {
 		byte[] message;
 		byte[] address;
@@ -290,11 +355,11 @@ class Pod {
 		return sendPodCommand(message, bytes + 1, BT_STATES.READ_ADDRESS);
 	}
 
-	static void setBluMoteRef(BluMote ref) {
+	void setBluMoteRef(BluMote ref) {
 		blumote = ref;
 	}
 
-	private static int popInt() {
+	private int popInt() {
 		try {
 			int upperByte = 0x00FF & (byte) pod_data[offset++];
 			int lowerByte = 0x00FF & (byte) pod_data[offset++];
@@ -304,7 +369,7 @@ class Pod {
 		}
 	}
 
-	private static int getLastOffset() {
+	private int getLastOffset() {
 		// last offset is length as computed by pod + offset of first real data
 		// element
 		int length = 0x00FF & (byte) pod_data[LENGTH_OFFSET];
@@ -316,7 +381,7 @@ class Pod {
 	 * 
 	 * @return
 	 */
-	private static int matchHeaders() {
+	private int matchHeaders() {
 		offset = HP_OFFSET; // start of actual data
 
 		int headerPulse = popInt();
@@ -356,7 +421,7 @@ class Pod {
 	 * 
 	 * @return
 	 */
-	private static int searchGapSize(int minGapTime) {
+	private int searchGapSize(int minGapTime) {
 		int workingData;
 		int endOffset = getLastOffset();
 
@@ -374,7 +439,7 @@ class Pod {
 		return ERROR;
 	}
 
-	private static int largeSpace() {
+	private int largeSpace() {
 		int minGapTime = MIN_GAP_TIME;
 		return searchGapSize(minGapTime);
 	}
@@ -384,7 +449,7 @@ class Pod {
 	 * 
 	 * @return
 	 */
-	private static int threeLargestSpaces() {
+	private int threeLargestSpaces() {
 		int workingData;
 		int endOffset = getLastOffset();
 		int minGapTime = MIN_GAP_TIME;
@@ -445,7 +510,7 @@ class Pod {
 	 * 
 	 * @param startingOffset
 	 */
-	static int findEndOfPkt() {
+	int findEndOfPkt() {
 
 		int lastIndex;
 		lastIndex = matchHeaders();
@@ -471,7 +536,7 @@ class Pod {
 	 * 
 	 * @param startingAddr
 	 */
-	static void processRawData() {
+	void processRawData() {
 
 		int endingOffset = findEndOfPkt();
 
@@ -492,7 +557,7 @@ class Pod {
 		}
 	}
 
-	static void setFirmwareRevision(String[] rev) {
+	void setFirmwareRevision(String[] rev) {
 		firmwareRevisions = rev;
 	}
 
@@ -503,7 +568,7 @@ class Pod {
 	 *            1 is for errors while in LEARN_MODE and 2 is for errors while
 	 *            in GET_INFO mode, affects the usage of Toast
 	 */
-	private static void signalError(int code) {
+	private void signalError(int code) {
 		if (code == 1) {
 			Toast.makeText(blumote, "Error occured, exiting learn mode!",
 					Toast.LENGTH_SHORT).show();
@@ -521,25 +586,55 @@ class Pod {
 		}
 	}
 
-	static void clearPodData() {
+	/**
+	 * Should be called just before sending a message to the pod.  Ensures data returned is fresh.
+	 */
+	void clearPodData() {
 		pod_data = null;
 		currentSwRev = null;
 	}
 
 	/**
-	 * This function just makes sure data comes back from pod before continuing.
-	 * A call to 'clearPodData()' may be necessary to prevent this from falsely
-	 * assuming pod data was received. This function will not clear out old pod
-	 * data.
+	 * Sends the byte[] to the currently connected bluetooth device
+	 * @param message the byte[] to send
 	 */
-	static byte[] receiveResponse(BT_STATES state) throws BslException {
+	boolean sendMessage(byte[] message, BT_STATES state) {
 		BT_STATE = state;
-
-		final BluMote.Wait waiter = new BluMote.Wait(300);
+		
+		clearPodData();
+		
+		// Check that we're actually connected before trying anything
+		if (blumote.getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
+			Toast.makeText(blumote, R.string.not_connected, Toast.LENGTH_SHORT)
+					.show();
+			return false;
+		}
+		
+		// Check that there's actually something to send
+		if (message.length > 0) {
+			// Get the message bytes and tell the BluetoothChatService to
+			// write
+			byte[] send = message;
+			Log.d("BluMote", " Sent: "+Util.byteArrayToString(send));
+			Log.d("BluMote", " Sent Size: "+send.length);
+			LAST_PKT = send;
+			blumote.mChatService.write(send);
+			return true;
+		}		
+				
+		return false;
+	}
+	
+	/**
+	 * This function just makes sure data comes back from pod before continuing.
+	 * It is a blocking function so should be called from a non-GUI thread.
+	 */
+	byte[] receiveResponse() throws BslException {
+		final BluMote.Wait waiter = new BluMote.Wait(500);
 
 		while (waiter.waitTime < waiter.maxWaitTime) {
 			// check if data was received yet from Pod
-			if (pod_data != null && (BT_STATE == BT_STATES.IDLE)) {
+			if ( pod_data != null ) { // pod_data will get defined in interpretResponse() after data rcvd
 				break;
 			} else {
 				try {
@@ -549,20 +644,20 @@ class Pod {
 				}
 				waiter.waitTime++;
 			}
-		}
-
+		}		
+		
+		BT_STATE = BT_STATES.IDLE; // reset state
+		
 		// process the data received, if it ever came
-		if ((waiter.waitTime >= waiter.maxWaitTime)) {
-			setIdleState(); // reset state
+		if ((waiter.waitTime >= waiter.maxWaitTime)) {			
 			throw new BslException("Exceeded max wait time receiveResponse");
 		}
-
-		if (pod_data == null) {
-			setIdleState(); // reset state
+		
+		if (pod_data == null) {		
 			throw new BslException(
 					"never received any data during receiveResponse");
 		}
-
+		
 		return pod_data;
 	}
 
@@ -572,7 +667,7 @@ class Pod {
 	 * @param code
 	 *            the IR code data to send
 	 */
-	static void sendButtonCode(byte[] code) {
+	void sendButtonCode(byte[] code) {
 		Log.v("POD_DEBUG", " Sent: "+Util.byteArrayToString(code));
 		
 		if (!buttonLock && code != null) { // make sure we have not recently
@@ -607,9 +702,8 @@ class Pod {
 			for (int j = 2; j < toSend.length; j++) {
 				toSend[j] = code[j - 2];
 			}
-			setIrTransmitState();
 
-			blumote.sendMessage(toSend); // send data if matches
+			sendMessage(toSend, BT_STATES.IR_TRANSMIT); // send data if matches
 		} else {
 			// locked out
 			if (BluMote.DEBUG) {
@@ -618,47 +712,15 @@ class Pod {
 		}
 	}
 
-	static boolean isLearnState() {
+	boolean isLearnState() {
 		return BT_STATE == BT_STATES.LEARN;
 	}
 
-	static void setStopLearnState() {
-		BT_STATE = BT_STATES.ABORT_LEARN;
-	}
-
-	static void setStopTransmitState() {
-		BT_STATE = BT_STATES.ABORT_TRANSMIT;
-	}
-
-	static void setGetVerState() {
-		BT_STATE = BT_STATES.GET_VERSION;
-	}
-
-	static void setIrTransmitState() {
-		BT_STATE = BT_STATES.IR_TRANSMIT;
-	}
-
-	static void setLearnState() {
-		BT_STATE = BT_STATES.LEARN;
-	}
-
-	static void setIdleState() {
-		BT_STATE = BT_STATES.IDLE;
-	}
-
-	static void setBslState() {
-		BT_STATE = BT_STATES.BSL;
-	}
-
-	static void setReadMemState() {
-		BT_STATE = BT_STATES.READ_ADDRESS;
-	}
-
-	static void lockDialog() {
+	void lockDialog() {
 		lockDialog = true;
 	}
 
-	static void unlockDialog() {
+	void unlockDialog() {
 		lockDialog = false;
 	}
 
@@ -675,21 +737,35 @@ class Pod {
 	 *            the starting index into the circular data buffer that should
 	 *            be read
 	 */
-	static void interpretResponse(byte[] response, int bytes, int index) {
-		Log.v("BluMote Pod", "Response Code: "+ (response[index] == Codes.NACK ? "NACK" : "ACK"));
+	synchronized void interpretResponse() {
+		byte[] response;
+
+		if (blumote.hasData()) {
+			response = blumote.getDataReceived();
+		} else {
+			return; // no data, no further processing necessary
+		}
+		int bytes = response.length;
+		int index = 0;
+		int i;
+		
+//		Log.v("BluMote Pod", "Response Code "+Util.oneHexByteToString(response[0])+
+//				(response[0] == Codes.NACK ? " : NACK" : " : ACK"));
+		
+		Log.v("Blumote state", BT_STATE.toString());
+		Log.v("blumote data received", Util.byteArrayToString(response));
+		
 		switch (BT_STATE) {		
 			
 		case LEARN:
 			try { 
-					// learn data may not come all together, so need to process
-					// data in chunks
 				while (bytes > 0) {
 					switch (learn_state) {
 					case IDLE:
 						if (response[index] == Codes.ACK) {
 							learn_state = LEARN_STATE.PKT_LENGTH;
-							index = (index + 1)
-									% BluetoothChatService.buffer_size;
+							//index = (index + 1)	% BluetoothChatService.buffer_size;
+							index++;
 							bytes--;
 							data_index = 0;
 						} else {
@@ -706,9 +782,9 @@ class Pod {
 							// first three bytes are 'pkt_length carrier_freq
 							// reserved'
 							pod_data[data_index++] = response[index];
+							index++;
 							bytes--;
-							index = (index + 1)
-									% BluetoothChatService.buffer_size;
+							//index = (index + 1) % BluetoothChatService.buffer_size;
 							learn_state = LEARN_STATE.CARRIER_FREQ;
 						} else {
 							signalError(1);
@@ -722,8 +798,8 @@ class Pod {
 							learn_state = LEARN_STATE.RESERVED;
 							pod_data[data_index++] = response[index];
 							bytes--;
-							index = (index + 1)
-									% BluetoothChatService.buffer_size;
+							index++;
+							//index = (index + 1)	% BluetoothChatService.buffer_size;
 						} else {
 							signalError(1);
 							return;
@@ -736,8 +812,8 @@ class Pod {
 							learn_state = LEARN_STATE.COLLECTING;
 							pod_data[data_index++] = 0; // default to 0
 							bytes--;
-							index = (index + 1)
-									% BluetoothChatService.buffer_size;
+							index++;
+							//index = (index + 1)	% BluetoothChatService.buffer_size;
 						} else {
 							signalError(1);
 							return;
@@ -748,8 +824,7 @@ class Pod {
 						if (checkPodDataBounds(bytes)) {
 							pod_data[data_index++] = response[index];
 							// first check to see if this is the last byte
-							if (Util.isGreaterThanUnsignedByte(data_index,
-									pod_data[0] + 2)) {
+							if (Util.isGreaterThanUnsignedByte(data_index, pod_data[0] + 2)) {
 								// data index at final position is nth or N+1
 								// total items, pod_data[0]
 								// is the # of bytes of IR data, so adding 2
@@ -761,12 +836,12 @@ class Pod {
 								learn_state = LEARN_STATE.IDLE;
 								blumote.dismissDialog(BluMote.DIALOG_LEARN_WAIT);
 								processRawData(); // first 3 bytes are not to be
-													// analyzed
+												  // analyzed
 								return;
 							}
 							bytes--;
-							index = (index + 1)
-									% BluetoothChatService.buffer_size;
+							index++;
+							//index = (index + 1)	% BluetoothChatService.buffer_size;
 						} else {
 							signalError(1);
 							return;
@@ -778,7 +853,7 @@ class Pod {
 				Toast.makeText(blumote,
 						"Communication error, exiting learn mode",
 						Toast.LENGTH_SHORT).show();
-				setIdleState();
+				BT_STATE = BT_STATES.IDLE;
 				return;
 			}
 			break;
@@ -791,8 +866,8 @@ class Pod {
 						if (response[index] == Codes.ACK) {
 							pod_data = new byte[INFO_STATE.values().length];
 							info_state = INFO_STATE.BYTE0;
-							index = (index + 1)
-									% BluetoothChatService.buffer_size;
+							//index = (index + 1)	% BluetoothChatService.buffer_size;
+							index++;
 							bytes--;
 							data_index = 0;
 						} else {
@@ -805,28 +880,32 @@ class Pod {
 						pod_data[0] = response[index];
 						info_state = INFO_STATE.BYTE1;
 						bytes--;
-						index = (index + 1) % BluetoothChatService.buffer_size;
+						index++;
+						//index = (index + 1) % BluetoothChatService.buffer_size;
 						break;
 
 					case BYTE1:
 						pod_data[1] = response[index];
 						info_state = INFO_STATE.BYTE2;
 						bytes--;
-						index = (index + 1) % BluetoothChatService.buffer_size;
+						index++;
+						//index = (index + 1) % BluetoothChatService.buffer_size;
 						break;
 
 					case BYTE2:
 						pod_data[2] = response[index];
 						info_state = INFO_STATE.BYTE3;
 						bytes--;
-						index = (index + 1) % BluetoothChatService.buffer_size;
+						index++;
+						//index = (index + 1) % BluetoothChatService.buffer_size;
 						break;
 
 					case BYTE3:
 						pod_data[3] = response[index];
 						info_state = INFO_STATE.IDLE;
 						bytes--;
-						index = (index + 1) % BluetoothChatService.buffer_size;
+						index++;
+						//index = (index + 1) % BluetoothChatService.buffer_size;
 
 						// save data we received
 						currentSwRev = pod_data;
@@ -848,9 +927,10 @@ class Pod {
 				Toast.makeText(blumote,
 						"Communication error, exiting learn mode",
 						Toast.LENGTH_SHORT).show();
-				setIdleState();
+				BT_STATE = BT_STATES.IDLE;
 				return;
 			}
+			BT_STATE = BT_STATES.IDLE;
 			break;
 
 		case RESET_RN42:
@@ -861,38 +941,53 @@ class Pod {
 			// fall through intentional
 		case IR_TRANSMIT:			
 			// release lock
+try {			
 			buttonLock = false;
 			while (bytes-- > 1) { // move index to last position
-				index = (index + 1) % BluetoothChatService.buffer_size;
+				//index = (index + 1) % BluetoothChatService.buffer_size;
+				index++;
 			}			
 			if( response[index] != Codes.ACK && sendMsgCounter++ < 1) {
-				index = (index + 1) % BluetoothChatService.buffer_size;
-				blumote.sendMessage(LAST_PKT);
+				//index = (index + 1) % BluetoothChatService.buffer_size;
+				index++;
+				sendMessage(LAST_PKT, BT_STATES.IR_TRANSMIT);
 			} else { // assume we got an ACK back
 				pod_data = new byte[1];	
 				pod_data[0] = response[index];
-				index = (index + 1) % BluetoothChatService.buffer_size;
+				//index = (index + 1) % BluetoothChatService.buffer_size;
+				index++;
 				sendMsgCounter = 0;
-				setIdleState();							
-			}						
+				BT_STATE = BT_STATES.IDLE;							
+			}
+} catch (Exception e) {
+	Log.e("Blumote", "ERROR");
+}
 			break;		
 
 		case BSL:
 			// Just log the messages we get from the Pod during BSL
-			//Log.v("BSL", response.toString());
-			int i = 0;
-			pod_data = new byte[bytes];
+//			Log.v("blumote_bsl_received", response.toString());
+try {
+			i = 0;
+			byte[] new_data = new byte[bytes];
 			while (bytes > 0) {
-				pod_data[i++] = response[index];
+				new_data[i++] = response[index];
 				bytes--;
-				index = (index + 1) % BluetoothChatService.buffer_size;
+				index++;
+				//index = (index + 1) % BluetoothChatService.buffer_size;
 			}
-			setIdleState();
+			BT_STATE = BT_STATES.IDLE;
+			pod_data = new_data;
+} catch (Exception e ) {
+	Log.e("Blumote", "ERROR");
+	return;
+}
 			break;
 
 		case SYNC:
 			// post the result to the Pod class
 			sync_data = response[index];
+			BT_STATE = BT_STATES.IDLE;
 			break;
 
 		case READ_ADDRESS:
@@ -900,68 +995,82 @@ class Pod {
 				if (data_index == 0) {
 					// then parse response code
 					if (response[index] == Codes.NACK) {
-						setIdleState();
+						BT_STATE = BT_STATES.IDLE;
 						pod_data = null;
 						break;
 					}
 					data_index++;
 					bytes--;
-					index = (index + 1) % BluetoothChatService.buffer_size;
+					index++;
+					//index = (index + 1) % BluetoothChatService.buffer_size;
 					continue;
 				}
 				pod_data[data_index - 1] = response[index];
 				bytes--;
-				index = (index + 1) % BluetoothChatService.buffer_size;
+				index++;
+				//index = (index + 1) % BluetoothChatService.buffer_size;
 				if (data_index++ == total_bytes - 1) {
 					// then we are done
-					setIdleState(); // reset state
+					BT_STATE = BT_STATES.IDLE; // reset state
 				}
 			}
 			break;
+			
+		case DEBUG:			
+		case IDLE:
+			i = 0;			
+			byte[] test = new byte[bytes];
+			while (bytes > 0) {				
+				test[i++] = response[index];
+				bytes--;
+				index++;
+				//index = (index + 1) % BluetoothChatService.buffer_size;
+			}
+//			Log.e("blumote_idle_received", test.toString());
+			break;
 		}
+		
+		// clean up datacache
+		blumote.clearDataCache();
 	}
 	
-	static void requestLearn() {
+	void requestLearn() {
 		byte[] toSend;
 		toSend = new byte[1];
-		toSend[0] = (byte) Codes.LEARN;
-		setLearnState();
-		blumote.sendMessage(toSend);
+		toSend[0] = (byte) Codes.LEARN;		
+		sendMessage(toSend, BT_STATES.LEARN);
 	}
 
-	static void abortLearn() {
+	void abortLearn() {
 		byte[] toSend;
 		toSend = new byte[1];
 		toSend[0] = (byte) Codes.ABORT_LEARN;
-		setStopLearnState();
-		blumote.sendMessage(toSend);
+		sendMessage(toSend, BT_STATES.ABORT_LEARN);
 	}
 
-	static void resetRn42() throws BslException {
+	void resetRn42() throws BslException {
+		if (blumote.getBluetoothState() != BluetoothChatService.STATE_CONNECTED) 
+			throw new BslException("Not connected to a pod");
 		byte[] toSend;
 		toSend = new byte[1];
 		toSend[0] = (byte) Codes.RESET_RN42;
-		blumote.sendMessage(toSend);	
-		receiveResponse(BT_STATES.RESET_RN42);
-		
+		sendMessage(toSend, BT_STATES.RESET_RN42);	
+		//receiveResponse(BT_STATES.RESET_RN42);	
 	}
 
-	static void retrieveFwVersion() {
-		clearPodData();
+	void retrieveFwVersion() {
 		byte[] toSend;
-		setGetVerState();
 		toSend = new byte[1];
 		toSend[0] = (byte) Codes.GET_VERSION;
-		blumote.sendMessage(toSend);
+		sendMessage(toSend, BT_STATES.GET_VERSION);
 	}
 
-	static void abortTransmit() {
+	void abortTransmit() {
 		blumote.BLOCK_TRANSMIT = true;
 		byte[] toSend;
-		setStopTransmitState();
 		toSend = new byte[1];
 		toSend[0] = (byte) Codes.ABORT_TRANSMIT;
-		blumote.sendMessage(toSend);
+		sendMessage(toSend, BT_STATES.ABORT_TRANSMIT);
 	}
 
 	/**
@@ -974,14 +1083,18 @@ class Pod {
 	 * @return false if the data is outside of the local storage space available
 	 *         and true if there is no error.
 	 */
-	private static boolean checkPodDataBounds(int bytes) {
+	private boolean checkPodDataBounds(int bytes) {
 		if (bytes > (pod_data.length - data_index)) {
 			return false;
 		}
 		return true;
 	}
 
-	static void setFwVersion(byte[] version) {
+	void setOperationalState(BT_STATES state) {
+		BT_STATE = state;
+	}
+	
+	void setFwVersion(byte[] version) {
 		currentSwRev = version;
 	}
 
@@ -994,23 +1107,19 @@ class Pod {
 	 * 
 	 * @throws BslException
 	 */
-	static void exitBsl() throws BslException {
+	void exitBsl() throws BslException {
 		byte test = 1 << 2; // PIO-10
 		byte rst = 1 << 3; // PIO-11
 
 		// http://www.ti.com/lit/ug/slau319a/slau319a.pdf
 		// rst ________|------ (actually inverted)
 		// test _______________
-		clearPodData();
 		sendBSLString(String.format("S*,%02X%02X\r\n", (rst | test), rst));
 		Log.d("OUT_BSL_EXIT", String.format("S*,%02X%02X\r\n", (rst | test), rst));
-		String returnStr = new String(receiveResponse(BT_STATES.BSL));		
-		Log.d("IN_BSL_EXIT", returnStr);
-		clearPodData();
+		Log.d("IN_BSL_EXIT", Util.byteArrayToString(pod_data));
 		sendBSLString(String.format("S*,%02X%02X\r\n", rst, 0));
 		Log.d("OUT_BSL_EXIT", String.format("S*,%02X%02X\r\n", rst, 0));
-		returnStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_BSL_EXIT", returnStr);		
+		Log.d("IN_BSL_EXIT", Util.byteArrayToString(pod_data));		
 	}
 
 	/**
@@ -1018,7 +1127,7 @@ class Pod {
 	 * 
 	 * @throws BslException
 	 */
-	static void enterBsl() throws BslException {
+	void enterBsl() throws BslException {
 		byte test = 1 << 2; // PIO-10
 		byte rst = 1 << 3; // PIO-11
 
@@ -1026,43 +1135,42 @@ class Pod {
 		// rst _________|------ (actually inverted)
 		// test ___|-|_|---|____
 		// NOTE: inverted rst due to FET on the pod hw
-		clearPodData();
-		sendBSLString(String.format("S*,%02X%02X\r\n", (rst | test), rst));
-		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", (rst | test), rst));
-		String testStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_ENTER_BSL", testStr);
-		clearPodData();
-		sendBSLString(String.format("S*,%02X%02X\r\n", test, test));
-		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, test));
-		testStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_ENTER_BSL", testStr); 
-		clearPodData();
-		sendBSLString(String.format("S*,%02X%02X\r\n", test, 0));
-		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, 0));
-		testStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_ENTER_BSL", testStr); 
-		clearPodData();
-		sendBSLString(String.format("S*,%02X%02X\r\n", test, test));
-		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, test));
-		testStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_ENTER_BSL", testStr); 
-		clearPodData();
-		sendBSLString(String.format("S*,%02X%02X\r\n", rst, 0));
-		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", rst, 0));
-		testStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_ENTER_BSL", testStr); 
-		clearPodData();
-		sendBSLString(String.format("S*,%02X%02X\r\n", test, 0));
-		Log.d("OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, 0));
-		testStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_ENTER_BSL", testStr); 
-		clearPodData();
+		Log.d("Blumote OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", (rst | test), rst));
+		try {
+			sendBSLString(String.format("S*,%02X%02X\r\n", (rst | test), rst));		
+		} catch (Exception e) {	/*ignore*/ }
+		
+		Log.d("Blumote OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, test));
+		try { 
+			sendBSLString(String.format("S*,%02X%02X\r\n", test, test));
+		} catch (Exception e) {	/*ignore*/ }
+		
+		Log.d("Blumote OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, 0));
+		try {
+			sendBSLString(String.format("S*,%02X%02X\r\n", test, 0));
+		} catch (Exception e) {	/*ignore*/ }
+		
+		Log.d("Blumote OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, test));
+		try {
+			sendBSLString(String.format("S*,%02X%02X\r\n", test, test));
+		} catch (Exception e) {	/*ignore*/ }
+		
+		Log.d("Blumote OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", rst, 0));
+		try {
+			sendBSLString(String.format("S*,%02X%02X\r\n", rst, 0));
+		} catch (Exception e) {	/*ignore*/ }
+		
+		Log.d("Blumote OUT_ENTER_BSL", String.format("S*,%02X%02X\r\n", test, 0));
+		try {
+			sendBSLString(String.format("S*,%02X%02X\r\n", test, 0));
+		} catch (Exception e) {	/*ignore*/ }
+				 
 		// step 3, set to 9600 baud
-		sendBSLString("U,9600,E\r\n");
-		Log.d("OUT_ENTER_BSL", "U,9600,E\r\n");
-		testStr = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_ENTER_BSL", testStr); 
-		clearPodData();
+		Log.d("Blumote OUT_ENTER_BSL", "U,9600,E\r\n");
+		try {
+			sendBSLString("U,9600,E\r\n");
+		} catch (Exception e) {	/*ignore*/ }
+				 
 	}
 
 	/**
@@ -1072,143 +1180,180 @@ class Pod {
 	 *            flag = 1 when we want to inhibit the automatic reset of the
 	 *            RN42
 	 */
-	static void startBSL(int flag) throws BslException {
-		Pod.BSL_FINISHED = false;
+	void startBSL(int flag) throws BslException {
+		BSL_FINISHED = false;
 		
-		final int retryTime = 300; // 30 seconds
-		final int timeOut = 1000; // 1 minute
+		//final int retryTime = 300; // 30 seconds
+		//final int timeOut = 1000; // 1 minute
 		int timer = 0;
-		if (flag == ENABLE_RESET) {
-			// reset the RN42 module
+//		if (flag == ENABLE_RESET) {
+		Log.d("BluMote", "resetting RN42 from startBSL()");
+		try {
 			resetRn42();
-			// connection will drop eventually, then need to reconnect....
-			while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// Auto-generated catch block
-					e.printStackTrace();
-				}
-				timer++;
-				if (timer == retryTime) {
-					Log.v("BSL", "Trying to reset again");
-					resetRn42();
-				}
-				if (timer > timeOut) {
-					// give up, indicate the reset failed which means user
-					// should try a power cycle of pod
-					throw new BslException(
-							"Timed out waiting for RN42 to reset",
-							BslException.RESET_FAILED);
-				}
-			}
-		} else {
-			while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (timer > 200) {
-					// give up, indicate the reset failed which means user
-					// should try a power cycle of pod
-					throw new BslException(
-							"Timed out waiting for Bluetooth connection to drop",
-							BslException.RESET_FAILED);
-				}
-			}
+		} catch (Exception e) {
+			// no action required, throws exception if not connected
 		}
+//			// connection will drop eventually, then need to reconnect....
+//			while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
+//				try {
+//					Thread.sleep(100);
+//				} catch (InterruptedException e) {
+//					// Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				timer++;
+//				if (timer == retryTime) {
+//					Log.v("blumote_bsl", "Trying to reset again");
+//					resetRn42();
+//				}
+//				if (timer > timeOut) {
+//					// give up, indicate the reset failed which means user
+//					// should try a power cycle of pod
+//					throw new BslException(
+//							"Timed out waiting for RN42 to reset",
+//							BslException.RESET_FAILED);
+//				}
+//			}
+//		} else {			
+//			while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
+//				try {
+//					Thread.sleep(100);
+//				} catch (InterruptedException e) {
+//					// Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				if (timer > 200) {
+//					// give up, indicate the reset failed which means user
+//					// should try a power cycle of pod
+//					throw new BslException(
+//							"Timed out waiting for Bluetooth connection to drop",
+//							BslException.RESET_FAILED);
+//				}
+//			}
+//		}
 
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			throw new BslException("wait thread ended prematurely");
+		}
+		Log.d("BluMote", "disconnecting pod connection from startBSL()");
+		
+		blumote.disconnectPod(); // ensure we start out disconnected
+		while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
+			// wait
+		}		
+		
 		// once we got here the connection dropped
 		// tell it to reconnect
-		if (blumote.getBluetoothState() == BluetoothChatService.STATE_NONE) {
-			blumote.connectPod();
+		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e) {
+			throw new BslException("wait thread ended prematurely");
 		}
+		blumote.connectPod();
+		Log.d("BluMote", "connectPod() called from startBSL()");
+		
 		timer = 0;
 		// wait until it reconnects
 		while (blumote.getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
+				throw new BslException("wait thread ended prematurely");
 			}
 			timer++;
-			if (timer == 100) {
+			if (timer == 200) {
 				// try again
-				Log.v("BSL", "Trying to connect again");
+				Log.v("blumote_bsl", "Trying to connect again");
+				if (blumote.getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
+					Log.d("BluMote", "timed out waiting for connection, trying again - in startBSL()");
+					blumote.connectPod();
+				}
+			}
+			if (timer == 300) {
+				// try again
+				Log.v("blumote_bsl", "Trying to connect again");
 				if (blumote.getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
 					blumote.connectPod();
 				}
 			}
-			if (timer >= 150) {
+			if (timer >= 450) {
 				// give up
+				Log.d("BluMote", "timed out waiting for connection, giving up - in startBSL()");
 				throw new BslException("Timed out waiting for RN42 to reset");
 			}
 		}
 
-		// step 1, enter the command mode
-		sendBSLString(BSL_CODES.CMD_MODE);
-		Log.d("OUT_BSL_CMD_MODE", BSL_CODES.CMD_MODE);
-		String response = new String(receiveResponse(BT_STATES.BSL));
-		Log.d("IN_BSL_CMD_MODE", response);
+		Log.d("BluMote", "Success reconnecting in startBSL(), now resuming bootloading process...");
 		
-		clearPodData();
+		// step 1, enter the command mode
+		Log.d("Blumote OUT_BSL_CMD_MODE", BSL_CODES.CMD_MODE);	
+		try {
+			sendBSLString(BSL_CODES.CMD_MODE);			
+			Log.d("Blumote IN_BSL_CMD_MODE", Util.byteArrayToString(pod_data));
+		} catch (BslException e) {
+			Log.e("Blumote BSL_ERROR", e.oopsMsg);
+		}
 
 		// step 2, enter the BSL
-		Log.d("BSL", "Entering the BSL");
+		Log.d("blumote_bsl", "Entering the BSL");
 		enterBsl();
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
+			throw new BslException("wait thread ended prematurely");
 		}
 		// step 3, sending Rx password
-		Log.d("BSL", "Sending Unlock Password");
-		sendPassword();
+		Log.d("blumote_bsl", "Sending Unlock Password");
+		try {
+			sendPassword();
+		} catch (BslException e) {
+			Log.e("Blumote BSL_ERROR", e.oopsMsg);
+		}
 		
-		if (flag == ENABLE_RESET && ORIGINAL_FW_LOCATION != null) {
+		if (flag == ENABLE_RESET && ORIGINAL_FW_LOCATION != null && BluMote.DEBUG) {
 			// if we get enable_reset it means we can talk to the pod
 			// so we should try to use the non-destructive memory clearing command
 			// step 4 send erase command
-			Log.d("BSL", "Clearing memory");
+			Log.d("blumote_bsl", "Clearing memory");
 			clearMemory();
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
+				throw new BslException("wait thread ended prematurely");
 			}
 		} else {
-			Log.d("BSL", "Destructive memory clear");
+			Log.d("blumote_bsl", "Destructive memory clear");
 			// step 4, sending Rx password
-			sendPassword();
+			try {
+				sendPassword();
+			} catch (BslException e) {
+				Log.e("Blumote BSL_ERROR", e.oopsMsg);
+			}
 		}
 
-		Log.d("BSL", "BSL routine finished, starting to flash");
-		Pod.BSL_FINISHED = true;
+		Log.d("blumote_bsl", "BSL routine finished, starting to flash");
+		BSL_FINISHED = true;
 		// after this is finished we are ready to start flashing the hex code to
 		// the pod
 	}
 	
-	static void clearMemory() throws BslException {
+	void clearMemory() throws BslException {
 		byte[] msg = {(byte)0x80, 0x16, 0x04, 0x04, 0x00, (byte)0xff , 0x04, (byte)0xA5};
 		final int main_erase_cycles = 12;
 		sync();		
 		msg = Util.concat(msg, calcChkSum(msg));
 		
 		for (int i=0; i < main_erase_cycles; i++) {			
-			blumote.sendMessage(msg);
 			Log.d("BSL_OUT_CLR_MEM", Util.byteArrayToString(msg));
+			sendMessage(msg, BT_STATES.BSL);			
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
+				throw new BslException("wait thread ended prematurely");
 			}
-			String returnStr = Util.byteArrayToString(receiveResponse(BT_STATES.BSL));
+			String returnStr = Util.byteArrayToString(receiveResponse());
 			Log.d("BSL_IN_CLR_MEM", returnStr);
 		}
 	}
@@ -1225,7 +1370,7 @@ class Pod {
 	 * @param fileLocation
 	 *            the location on flash for the downloaded firmware image
 	 */
-	static void calculatePassword(String fileLocation) {
+	void calculatePassword(String fileLocation) {
 		// re-initialize the private class passwd array to 0xFF for address
 		// range 0xFFE0 to 0xFFFF (32 bytes)
 		for (int i = 0; i < 32; i++) {
@@ -1239,10 +1384,11 @@ class Pod {
 		// then dump
 		// that value into the array at the appropriate index
 		FileInputStream f = null;
+		BufferedReader br = null;
 		try {
 			String strLine;
 			f = new FileInputStream(new File(fileLocation));
-			BufferedReader br = new BufferedReader(new InputStreamReader(f));
+			br = new BufferedReader(new InputStreamReader(f));
 			br = new BufferedReader(new InputStreamReader(f));
 
 			final int header = 3; // # chars
@@ -1273,13 +1419,15 @@ class Pod {
 			try {
 				if (f != null)
 					f.close();
+				if (br != null)
+					br.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	static void sendPassword() throws BslException {
+	void sendPassword() throws BslException {
 		byte[] msg;
 
 		sync();
@@ -1288,24 +1436,22 @@ class Pod {
 
 		msg = Util.concat(msg, passwd);
 		msg = Util.concat(msg, calcChkSum(msg));
-		blumote.sendMessage(msg);
 		Log.d("OUT_BSL_PASS", Util.byteArrayToString(msg));
-		String returnStr = Util.byteArrayToString(receiveResponse(BT_STATES.BSL));
+		sendMessage(msg, BT_STATES.BSL);
+		String returnStr = Util.byteArrayToString(receiveResponse());
 		Log.d("IN_BSL_PASSWORD", returnStr);
-		clearPodData();
 	}
 
 	/**
 	 * Sync's the loader program to the pod, requires a ACK/NAK to continue
 	 */
-	static void sync() throws BslException {
-		Log.d("BSL", "Sending Sync...");
+	void sync() throws BslException {
+		Log.d("blumote_bsl", "Sending Sync...");
 		sync_data = (byte) 0xFF;
-		BT_STATE = BT_STATES.SYNC;
 
 		// send sync byte
 		byte[] syncByte = { BSL_CODES.SYNC };
-		blumote.sendMessage(syncByte);
+		sendMessage(syncByte, BT_STATES.SYNC);
 
 		final BluMote.Wait waiter = new BluMote.Wait(100);
 
@@ -1325,12 +1471,12 @@ class Pod {
 
 		// process the data received, if it ever came
 		if ((waiter.waitTime >= waiter.maxWaitTime)) {
-			Log.d("BSL", "Sync timed out...failure");
+			Log.d("blumote_bsl", "Sync timed out...failure");
 			throw new BslException("Exceeded max wait time during sync");		
 		}
 
 		if (sync_data == (byte) 0xFF) {
-			Log.d("BSL", "Sync data failure...");
+			Log.d("blumote_bsl", "Sync data failure...");
 			throw new BslException("never received any data during sync");
 		}
 
@@ -1339,13 +1485,13 @@ class Pod {
 			return;
 
 		case BSL_CODES.DATA_NAK:
-			Log.d("BSL", "Sync returned NAK");
+			Log.d("blumote_bsl", "Sync returned NAK");
 			throw new BslException("Received NAK sync byte");
 
 		default:
-			Log.d("BSL", "Invalid sync data received");
-			throw new BslException("Received invalid sync byte "
-					+ Integer.toString(0x00FF & (byte) sync_data));
+			Log.d("blumote_bsl", "Invalid sync data received");
+//			throw new BslException("Received invalid sync byte "
+//					+ Integer.toString(0x00FF & (byte) sync_data));
 		}
 	}
 
@@ -1353,7 +1499,7 @@ class Pod {
 	 * 1 byte checksum (LSB) for intel hex files calculated by adding all the
 	 * fields then taking 2's complement
 	 */
-	private static byte hexChkSum(byte[] data) {
+	private byte hexChkSum(byte[] data) {
 		byte result = 0;
 
 		for (int i = 0; i < data.length; i++) {
@@ -1368,7 +1514,7 @@ class Pod {
 	/**
 	 * calculate the 2 byte checksum for transactions to Pod
 	 */
-	private static byte[] calcChkSum(byte[] data) {
+	private byte[] calcChkSum(byte[] data) {
 		byte[] result = { 0, 0 };
 
 		for (int i = 0; i < data.length; i++) {
@@ -1388,10 +1534,10 @@ class Pod {
 	/**
 	 * Sends a string to the pod in ascii format
 	 */
-	public static void sendBSLString(String code) throws BslException {
-		BT_STATE = BT_STATES.BSL;
+	public void sendBSLString(String code) throws BslException {
 		try {
-			blumote.sendMessage(code.getBytes("ASCII"));
+			sendMessage(code.getBytes("ASCII"), BT_STATES.BSL);
+			receiveResponse();
 		} catch (UnsupportedEncodingException e) {
 			throw new BslException("Encoding error while starting BSL");
 		}
@@ -1403,7 +1549,7 @@ class Pod {
 	 * @param line
 	 * @throws BslException
 	 */
-	public static void sendFwLine(String line) throws BslException {
+	public void sendFwLine(String line) throws BslException {
 		sync();
 		line = line.replace("\r\n", "");
 
@@ -1442,8 +1588,8 @@ class Pod {
 		byte[] data = new byte[LL];
 		int j = 0;
 		for (int i = 0; i < LL * 2; i += 2) {
-			data[j] = (byte) Integer
-					.parseInt(line.substring(i + 9, i + 11), 16);
+			data[j] = (byte) Integer.parseInt(
+					line.substring(i + 9, i + 11), 16);
 			j++;
 		}
 
@@ -1451,14 +1597,12 @@ class Pod {
 		msg = Util.concat(msg, calcChkSum(msg));
 
 		// send to Pod
-		blumote.sendMessage(msg);
-		byte[] returnData = receiveResponse(BT_STATES.BSL);
-		Log.d("OUT_BSL_FW_LINE", Util.byteArrayToString(msg));		
+		Log.d("Blumote", "sent a FW line");
+		sendMessage(msg, BT_STATES.BSL);
+		byte[] returnData = receiveResponse();	
 		String stringRet = Util.byteArrayToString(returnData);		
-		Log.d("IN_BSL_FW_LINE", stringRet);
 		if (stringRet.startsWith("a0")) {
 			throw new BslException("Got a NACK");
 		}
-		clearPodData();
 	}
 }

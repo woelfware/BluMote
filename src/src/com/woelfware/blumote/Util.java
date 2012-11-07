@@ -85,18 +85,36 @@ public class Util {
 		   return C;
 	}
 	
+	/** 
+	 * Appends a byte array to a byte array.
+	 * Returned array is C = B + A, where A is stored in lower index
+	 * @param A
+	 * @param B
+	 * @return
+	 */
+	public static byte[] appendBytes(byte[] A, byte[] B) {
+		   byte[] C= new byte[A.length+B.length];
+		   System.arraycopy(A, 0, C, 0, A.length);
+		   System.arraycopy(B, 0, C, A.length, B.length);		   
+		   return C;
+	}
+	
 	public static String byteArrayToString(byte[] array) {
 		Formatter formatter = new Formatter();
 		for (byte b : array) {
 			formatter.format("%02x", b);
 		}
-		return formatter.toString();
+		String returnString = formatter.toString();
+		formatter.close();
+		return returnString;
 	}
 	
 	public static String oneHexByteToString(byte b) {
 		Formatter formatter = new Formatter();		
 		formatter.format("%02x", b);
-		return formatter.toString();		
+		String returnString = formatter.toString();
+		formatter.close();
+		return returnString;		
 	}	
 
 	

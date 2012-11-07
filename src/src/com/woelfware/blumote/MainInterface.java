@@ -8,6 +8,8 @@ import java.util.HashMap;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.PorterDuffColorFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -318,26 +320,33 @@ public class MainInterface {
 			switch (INTERFACE_STATE) {
 			case MAIN:				
 				toplevel.setBackgroundResource(R.drawable.background_gry_scaled);
+				setButtonBackground(false);
 				break;
 
 			case ACTIVITY:
-				toplevel.setBackgroundResource(R.drawable.background_gry_scaled);
+				toplevel.setBackgroundResource(R.drawable.background_gry_scaled);				
+				setButtonBackground(false);
 				break;
 
 			case ACTIVITY_EDIT:
 				toplevel.setBackgroundResource(R.drawable.background_bl_scaled);
+				setButtonBackground(false);
 				break;
 
 			case ACTIVITY_INIT:				
 				toplevel.setBackgroundResource(R.drawable.background_bl_scaled);
+				setButtonBackground(false);
 				break;
 
 			case LEARN:
 				toplevel.setBackgroundResource(R.drawable.background_gr_scaled);
+				//TODO set button background colors for buttons with no button code
+				setButtonBackground(true);
 				break;
 
 			case RENAME_STATE:
 				toplevel.setBackgroundResource(R.drawable.background_gry_scaled);
+				setButtonBackground(false);
 				break;
 			}
 		} catch (Exception e) {}
@@ -349,8 +358,104 @@ public class MainInterface {
 		refreshInterfaceBackground();
 	}
 	
-	protected TYPE getInterfaceType() {
+	TYPE getInterfaceType() {
 		return ACTIVE_BTN_TYPE;
+	}
+	
+	/**
+	 * Sets a specific button resource ID to a colorized or regular state
+	 * @param butonID resource ID
+	 * @param setColor true if button to be colorized, false if not
+	 */
+	void setButtonBackground(boolean setColor, int buttonID) {
+		try {
+			View v = blumote.findViewById(buttonID);
+			
+			if (setColor == true) {			 
+				// mutate() to avoid changing all of the same drawable
+				v.getBackground().mutate().setColorFilter(
+					0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
+			} else {
+				v.getBackground().mutate().clearColorFilter();
+			}
+		} catch (Exception e) {
+			// a failure here is not critical
+		}		
+	}
+	
+	/**
+	 * Sets button background to RED if true and default if false
+	 * will iterate through all buttons on the interface
+	 * @param setColor
+	 */
+	void setButtonBackground(boolean setColor) {		
+		//TODO		
+		ButtonCreator interfaceInstance = null;
+		
+		if (ACTIVE_BTN_TYPE == TYPE.ACTIVITY) {
+			for (ACTIVITY_LAYOUTS i : ACTIVITY_LAYOUTS.values()) {
+				if (ACTIVE_BTN_CNFG.equals(i.getValue())) {
+					interfaceInstance = i.getInstance();
+					break;
+				}			
+			}
+		} else {
+			for (DEVICE_LAYOUTS i : DEVICE_LAYOUTS.values()) {
+				if (ACTIVE_BTN_CNFG.equals(i.getValue())) {
+					interfaceInstance = i.getInstance();
+					break;
+				}			
+			}
+		}
+
+		// iterate through buttons, those with no IR code attached get set background
+		// color if method param is set to true
+		//TODO
+		ButtonParameters[] buttons = interfaceInstance.getButtons(blumote);		 
+		byte[] btnData = null;
+		if (buttons != null) {
+			for (int i=0; i<buttons.length; i++) {
+				View v = buttons[i].getView();				
+				if (setColor == true) {
+					btnData = getButtonCode(buttons[i].getID());
+					if (btnData == null) { 
+						// mutate() to avoid changing all of the same drawable
+						v.getBackground().mutate().setColorFilter(
+							0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
+					} else {
+						v.getBackground().mutate().clearColorFilter();
+					}
+					
+				} else { // if false then clear color filter									
+					v.getBackground().clearColorFilter();
+					//v.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+				}								
+			}		
+		}
+	}
+	
+	/**
+	 * Pass in button resource ID and the byte[] IR code is returned otherwise returns null.
+	 * @param buttonID
+	 * @return
+	 */
+	byte[] getButtonCode(int buttonID) {		
+		if (blumote.buttons != null && blumote.buttons.length > 0) {
+			String buttonName = button_map.get(buttonID);
+			if (buttonName != null) {
+				for (int i=0; i < blumote.buttons.length; i++) {
+					if ( buttonName.equals(blumote.buttons[i].getButtonName()) ) {
+						// then extract the button data out to be sent, check if data is non-null
+						byte[] code = blumote.buttons[i].getButtonData();
+						if (code != null) {
+							return code;
+						}
+					}				 
+				}
+			}
+		}
+		
+		return null; // presumably the button code is not present
 	}
 	
 	/**
@@ -640,7 +745,7 @@ public class MainInterface {
 		} else {
 			setSpinnerErrorState();
 		}				
-	}		
+	}			
 	
 	/** 
 	 * This function renames all the misc buttons associated with the old name to the new name

@@ -34,6 +34,7 @@ public class Activities {
 
 	private MainInterface mainint = null;
 	private BluMote blumote = null;
+	private Pod pod = null;
 	ImageArrayAdapter mActivitiesArrayAdapter = null;
 	private String workingActivity = null;
 	
@@ -65,9 +66,10 @@ public class Activities {
 	 * @param blumote main BluMote object to reference
 	 * @param mainint MainInterface object to reference
 	 */
-	public Activities(BluMote blumote, MainInterface mainint) {
+	public Activities(BluMote blumote, MainInterface mainint, Pod pod) {
 		this.mainint = mainint;
 		this.blumote = blumote;
+		this.pod = pod;
 		
 		// Initialize array adapter
 		mActivitiesArrayAdapter = new ImageArrayAdapter(blumote, R.layout.activities_item);
@@ -645,7 +647,7 @@ public class Activities {
 					}
 					// execute button code
 					if (toSend != null) {					
-						Pod.sendButtonCode(toSend);
+						pod.sendButtonCode(toSend);
 					}
 				}
 			}				
@@ -670,7 +672,7 @@ public class Activities {
 	
 	public void nextPowerOffData() {
 		if (powerOffDataIndex < powerOffData.length) {
-			Pod.sendButtonCode(powerOffData[powerOffDataIndex].getButtonData());
+			pod.sendButtonCode(powerOffData[powerOffDataIndex].getButtonData());
 			powerOffDataIndex++;
 
 			if (powerOffDataIndex < powerOffData.length) {

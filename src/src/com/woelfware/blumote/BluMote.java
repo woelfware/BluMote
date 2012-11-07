@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -110,10 +111,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	private static final int FLASH_PROGRESS_DIALOG = 6;
 	private static final int DIALOG_WAIT_BSL = 7;
 	private static final int DIALOG_RESET_POD = 8;
-	private static final int WARN_BSL = 9;
+	//private static final int WARN_BSL = 9;
 	
 	// for firmware flashing process
 	ProgressDialog progressDialog2;
+	
+	EnterBSLTask bsl;
 	
 	// these are all in milli secs
 	private static int LONG_DELAY_TIME = 1000; // starts repeated button clicks
@@ -135,7 +138,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	// Local Bluetooth adapter
 	private BluetoothAdapter mBluetoothAdapter = null;
 	// Member object for the chat services
-	private BluetoothChatService mChatService = null;	
+	BluetoothChatService mChatService = null;	
 
 	// where to download the list of firmware updates from the web
 	private static String FW_IMAGE_URL;
@@ -144,6 +147,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	DeviceDB device_data;
 	// Shared preferences class - for storing config settings between runs
 	SharedPreferences prefs;
+	// for storing data we receive from bluetooth
+	private DataCache cache;
 
 	// This is the device database results for each button on grid
 	// Note that when we are working with an activity then this structure
@@ -158,7 +163,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	String cur_device;
 
 	// Currently selected button resource id (for training mode operations)
-	private int BUTTON_ID = 0;
+	private int LAST_PUSHED_BUTTON_ID = 0;
 	
 	// used to prevent the drop-down from changing the last device, unless we specifically
 	// selected a new device after the program is all set up, seems like when the interface
@@ -196,7 +201,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	Menu myMenu;		
 
 	private MainInterface mainScreen = null;
-	private Activities activities = null;		
+	private Activities activities;
+	private Pod pod;
 	
 	GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
@@ -234,10 +240,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		
 		FW_IMAGE_URL = getString(R.string.FW_URL);
 		
-		LOCK_LAST_DEVICE = true;		
-		
-		// set blumote reference for Pod helper class
-		Pod.setBluMoteRef(this);
+		LOCK_LAST_DEVICE = true;					
 		
 		// get preferences file
 		prefs = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
@@ -246,14 +249,20 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		device_data = new DeviceDB(this);
 		device_data.open();
 
+		pod = Pod.getInstance();
+		// set blumote reference for Pod instance
+		pod.setBluMoteRef(this);
+		
 		// instantiate button screen helper classes
-		mainScreen = new MainInterface(this);
+		mainScreen = new MainInterface(this);		
 		
 		// initialize the InterfaceLookup
 		lookup = new InterfaceLookup(prefs);
 		
 		// instantiate activities helper class
-		activities = new Activities(this, mainScreen);
+		activities = new Activities(this, mainScreen, pod);
+		
+		cache = DataCache.getInstance();
 		
 		// Get local Bluetooth adapter
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -327,7 +336,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
                 			// if we were doing a long press, 
 							// make sure that we exit repeat mode
                 			if (BUTTON_LOOPING) {  	
-                				Pod.abortTransmit();
+                				pod.abortTransmit();
                 				BUTTON_LOOPING = false;
                 			}
                 		}
@@ -411,7 +420,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 		// register broadcast receiver for BT state change
 		this.registerReceiver(connectionListener, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-		connectPod();
+		if ( !BluetoothChatService.BT_ENABLING )
+			connectPod();
 	}
 
 	int getBluetoothState() {
@@ -434,9 +444,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					}
 					if (!mBluetoothAdapter.isEnabled()) {
 						mChatService.enableBt();
-					} else {
-						reconnectPod();
-						waitForConnection();
+						Log.d("BluMote", "Turning on BT from connectPod()");
+					} else {						
+						reconnectPod(false);
+						waitForConnection(false);
 					}
 				} catch (Exception e) {
 					// do nothing
@@ -447,7 +458,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	
 	// called from connectPod() or after bluetooth is enabled, should
 	// not be called from anywhere else, use connectPod() instead.
-	void reconnectPod() {
+	void reconnectPod(boolean terminateBluetooth) {
 		// Performing this check covers the case in which BT was
 		// not enabled during onStart(), so we were paused to enable it...
 		// onResume() will be called when ACTION_REQUEST_ENABLE activity
@@ -458,13 +469,14 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			if (getBluetoothState() == BluetoothChatService.STATE_NONE) {
 				// Start the Bluetooth chat services
 				try {
-					mChatService.start();					
+					mChatService.start();			
+					Log.d("BluMote", "starting bt chat services from reconnectpod()");
 				} catch (Exception e) {
 					// do nothing
 				}
 			}
 		} 			
-
+		Log.d("BluMote", "checking if bluetooth enabled in reconnectPod()");
 		try {
 			// See if the bluetooth device is connected, if not try to connect
 			if (mBluetoothAdapter.isEnabled()) {
@@ -475,15 +487,23 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 						BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(connectingMAC);
 						// Attempt to connect to the device
 						mChatService.connect(device);
+						Log.d("BluMote", "attempting connection from reconnectPod()");
 					}
 				}
-			} 
+				else if (getBluetoothState() == BluetoothChatService.STATE_CONNECTING
+						&& terminateBluetooth) {
+					mChatService.disableBt();
+					Log.d("BluMote", "disabling BT from reconnectPod()");					
+				}
+			} else {
+				Log.d("BluMote", "error: bluetooth not enabled in reconnectPod()");
+			}
 		} catch (Exception e) {
-			// do nothing
+			Log.d("BluMote", "Exception caught in reconnectPod!");
 		}
 	}
 
-	private void waitForConnection() {
+	private void waitForConnection(final boolean terminateConnection) {
 		// Start a timer thread to ensure connection is established within a timeout
 		// if not then toggle the BT connection and retry.
 		new CountDownTimer(BluetoothChatService.BT_CONNECT_TIMEOUT, 1000) {
@@ -497,9 +517,13 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 		     public void onFinish() {
 		         if (getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
+		        	 Log.d("BluMote", "waitForConnection() timed out - going to disable BT");
 		        	 // close bluetooth connection
 		        	 if (mChatService != null) {
-		        		 mChatService.disableBt();
+		        		 if (terminateConnection) 
+		        			 mChatService.disableBt();
+		        		 else 
+		        			 reconnectPod(false);
 		        	 }
 		         }
 		     }
@@ -582,14 +606,14 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		} else {
 			BUTTON_LOOPING = false;
 			// send abort IR transmit command if button not being held any longer
-			Pod.abortTransmit();
+			pod.abortTransmit();
 		}
 	}
 	
 	/**
 	 * Execute the movement of a navigational button
-	 * THIS IS CURRENTLY DEPRACATED SINCE NAVIGATION BUTTONS WERE REMOVED FROM INTERFACE
 	 * @param buttonID the button name
+	 * @deprecated navigation buttons removed from interface so this function not used anymore
 	 */
 	public void executeNavigationButton(int buttonID) {
 		String buttonName = mainScreen.button_map.get(buttonID);
@@ -618,11 +642,11 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			BLOCK_TRANSMIT = false;
 			return;
 		}
-		BUTTON_ID = v.getId(); // save Button ID - besides this function, also referenced in storeButton()
+		LAST_PUSHED_BUTTON_ID = v.getId(); // save Button ID - besides this function, also referenced in storeButton()
 								// when a new button is learned	
 		String buttonName = null;
-		buttonName = mainScreen.button_map.get(BUTTON_ID); // convert ID to button name
-		if (mainScreen.isNavigationButton(BUTTON_ID)) {
+		buttonName = mainScreen.button_map.get(LAST_PUSHED_BUTTON_ID); // convert ID to button name
+		if (mainScreen.isNavigationButton(LAST_PUSHED_BUTTON_ID)) {
 			return;  // navigation buttons don't need an onClick handler
 		}
 		if (mainScreen.INTERFACE_STATE == MainInterface.INTERFACE_STATES.RENAME_STATE) {
@@ -647,14 +671,14 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 				mainScreen.setInterfaceState(MainInterface.INTERFACE_STATES.MAIN); // reset state in any case
 			}
 		} else if (mainScreen.INTERFACE_STATE == MainInterface.INTERFACE_STATES.ACTIVITY_EDIT) {
-			if (Activities.isValidActivityButton(BUTTON_ID)) {
+			if (Activities.isValidActivityButton(LAST_PUSHED_BUTTON_ID)) {
 				if (captureButton) {
 					// if we are in this mode then what we want to do is to associate the button that was
 					// pushed (from a device) with the original activity button
 
 					// activityButton holds the original activity button we want to associate to
 					//addActivityKeyBinding(String btnID, String device, String deviceBtn)
-					activities.addActivityKeyBinding(activityButton, cur_device, mainScreen.button_map.get(BUTTON_ID));
+					activities.addActivityKeyBinding(activityButton, cur_device, mainScreen.button_map.get(LAST_PUSHED_BUTTON_ID));
 					captureButton = false; 
 					// make sure to jump back to original activity and then re-show the drop-down				
 					mainScreen.setDropDown(activities.getWorkingActivity());					
@@ -676,7 +700,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 							// this device for the next step.  Also set the global flags for the button that
 							// we are working on and the flag that indicates we are waiting for a keypress
 							captureButton = true;
-							activityButton = mainScreen.button_map.get(BUTTON_ID);		
+							activityButton = mainScreen.button_map.get(LAST_PUSHED_BUTTON_ID);		
 							activities.setWorkingActivity(mainScreen.getCurrentDropDown());
 							// switch to the selected device
 							mainScreen.setInterfaceState(MainInterface.INTERFACE_STATES.MAIN); // setting drop-down only works in ACTIVITY/MAIN modes
@@ -695,21 +719,21 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			}
 		} else if (mainScreen.INTERFACE_STATE == MainInterface.INTERFACE_STATES.ACTIVITY_INIT) {
 			// store init entries by device, button-id
-			if (Activities.isValidActivityButton(BUTTON_ID)) {				
-				activityInit.add(new String[]{cur_device, mainScreen.button_map.get(BUTTON_ID)});
+			if (Activities.isValidActivityButton(LAST_PUSHED_BUTTON_ID)) {				
+				activityInit.add(new String[]{cur_device, mainScreen.button_map.get(LAST_PUSHED_BUTTON_ID)});
 				Toast.makeText(this, "Button press added to initialization list!",
 						Toast.LENGTH_SHORT).show();
 			} else {
 				Toast.makeText(this, "Invalid button!",	Toast.LENGTH_SHORT).show();
 			}
 		} else if (mainScreen.INTERFACE_STATE == MainInterface.INTERFACE_STATES.LEARN) {
-			Pod.requestLearn();
+			pod.requestLearn();
 			showDialog(DIALOG_LEARN_WAIT);
 			
 		} else { 
 			if (getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {				
 				if (BUTTON_LOOPING == false) {
-					sendButton(BUTTON_ID);
+					sendButton(LAST_PUSHED_BUTTON_ID);
 				}
 			} else {
 			Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
@@ -749,36 +773,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		}
 	}
 
-	/**
-	 * Sends the byte[] to the currently connected bluetooth device
-	 * @param message the byte[] to send
-	 */
-	boolean sendMessage(byte[] message) {
-		// Check that we're actually connected before trying anything
-		if (getBluetoothState() != BluetoothChatService.STATE_CONNECTED) {
-			Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
-					.show();
-			return false;
-		}
-		
-		// Check that there's actually something to send
-		if (message.length > 0) {
-			// Get the message bytes and tell the BluetoothChatService to
-			// write
-			byte[] send = message;
-			Log.d("BluMote", " Sent: "+Util.byteArrayToString(send));
-			Log.d("BluMote", " Sent Size: "+send.length);
-			Pod.LAST_PKT = send;
-			mChatService.write(send);
-			return true;
-		}		
-				
-		return false;
-	}
+	
 
 	/**
 	 * The Handler that gets information back from other activities/classes
 	 */
+	@SuppressLint("HandlerLeak")
 	private final Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -849,8 +849,16 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 			case MESSAGE_READ:
 				// arg1 is the # of bytes read
-				byte[] readBuf = (byte[]) msg.obj;
-				Pod.interpretResponse(readBuf, msg.arg1, msg.arg2);
+				//byte[] readBuf = (byte[]) msg.obj;
+				//pod.interpretResponse(readBuf, msg.arg1, msg.arg2);
+				cache.storeBluetoothData((byte[])msg.obj, msg.arg1, msg.arg2);		
+				Log.d("Blumote MESSAGE_READ #bytes", String.valueOf(msg.arg1));
+				// process the data that was returned
+				try {				
+					pod.interpretResponse();
+				} catch (Exception e) {
+					Log.e("Blumote", "Error in interpretResponse()");
+				}
 				break;
 
 			case MESSAGE_DEVICE_NAME:
@@ -870,6 +878,18 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			}
 		}
 	};	
+	
+	byte[] getDataReceived() {
+		return cache.getData();
+	}
+	
+	boolean hasData() {
+		return cache.hasData();
+	}
+	
+	void clearDataCache() {
+		cache.clearBluetoothData();
+	}
 	
 	// called when activities finish running and return to this activity,
 	// this is called BEFORE the onResume() function
@@ -994,22 +1014,23 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle return_bundle = data.getExtras();
 				if (return_bundle != null) {
-					Pod.FW_LOCATION = return_bundle.getString(FwUpdateActivity.FW_LOCATION);
+					pod.FW_LOCATION = return_bundle.getString(FwUpdateActivity.FW_LOCATION);
 					if (return_bundle.containsKey(FwUpdateActivity.ORIGINAL_FW_LOCATION) ) {
-						Pod.ORIGINAL_FW_LOCATION = 
+						pod.ORIGINAL_FW_LOCATION = 
 								return_bundle.getString(FwUpdateActivity.ORIGINAL_FW_LOCATION);						
 					} else {
-						Pod.ORIGINAL_FW_LOCATION = null;
+						pod.ORIGINAL_FW_LOCATION = null;
 					}	
 					boolean podWorking = return_bundle.getBoolean(FwUpdateActivity.POD_WORKING);
+					pod.setPodWorking(podWorking);
 					
-					if (Pod.ORIGINAL_FW_LOCATION == null && !podWorking) {
-						showDialog(WARN_BSL);
-					}
-					else if (podWorking) {					
+//					if (pod.ORIGINAL_FW_LOCATION == null && !podWorking) {
+//						showDialog(WARN_BSL);
+//					}
+					if (podWorking) {					
 						showDialog(DIALOG_WAIT_BSL);
-						EnterBSLTask bsl = new EnterBSLTask();
-						bsl.execute(Pod.ENABLE_RESET);
+						bsl = new EnterBSLTask();						
+						bsl.execute(pod.ENABLE_RESET);
 					} else {
 						showDialog(DIALOG_RESET_POD);
 					}
@@ -1051,7 +1072,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			} else { // use default menu (MAIN menu)
 				MenuInflater inflater = getMenuInflater();
 				inflater.inflate(R.menu.options_menu, menu);
-				if (Pod.isLearnState() ) {
+				if (pod.isLearnState() ) {
 					// if we are currently in learn mode, then offer up the 'cancel learn' item
 					menu.findItem(R.id.stop_learn).setVisible(true);
 					menu.findItem(R.id.learn_mode).setVisible(false);
@@ -1167,13 +1188,13 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			return true;
 
 		case R.id.get_info:
-			Pod.unlockDialog();
-			Pod.retrieveFwVersion();
+			pod.unlockDialog();
+			pod.retrieveFwVersion();
 			return true;
 			
 		case R.id.reset_pod:
 			try {
-				Pod.resetRn42();
+				pod.resetRn42();
 			} catch (Exception e) {
 				Toast.makeText(this, "Reset failed!", Toast.LENGTH_SHORT).show();
 			}
@@ -1197,7 +1218,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			// entering learn mode
 			if (mainScreen.getCurrentDropDown() != null) {
 				Toast.makeText(this, "Select button to train", Toast.LENGTH_SHORT).show();
-				Pod.setLearnState();
+				pod.setOperationalState(Pod.BT_STATES.LEARN);
 				mainScreen.setInterfaceState(MainInterface.INTERFACE_STATES.LEARN);
 				// disable drop-down
 				mainScreen.setDropDownVis(false);
@@ -1282,11 +1303,11 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	}
 	
 	void stopLearning() {
-		Pod.abortLearn();
-		Pod.setStopLearnState();
+		pod.abortLearn();
+		pod.setOperationalState(Pod.BT_STATES.ABORT_LEARN);
 		mainScreen.setInterfaceState(MainInterface.INTERFACE_STATES.MAIN);
 		mainScreen.setDropDownVis(true);
-		Pod.learn_state = Pod.LEARN_STATE.IDLE;
+		pod.learn_state = Pod.LEARN_STATE.IDLE;
 		// refresh buttons after done learning
 		mainScreen.fetchButtons();
 	}
@@ -1468,7 +1489,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 						byte[] code = buttons[i].getButtonData();
 						if (code != null) {
 							foundIt = true;
-							Pod.sendButtonCode(code);
+							pod.sendButtonCode(code);
 						}
 					}				 
 				}
@@ -1489,18 +1510,22 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	 */
 	protected void storeButton() {
 		String buttonName = null;
-		buttonName = mainScreen.button_map.get(BUTTON_ID);
+		buttonName = mainScreen.button_map.get(LAST_PUSHED_BUTTON_ID);
 
 		// make sure payload is not null and make sure we are in learn mode
 		if (buttonName != null && mainScreen.INTERFACE_STATE == MainInterface.INTERFACE_STATES.LEARN) {
 			device_data.insertButton(
 					cur_device, 
 					buttonName,
-					Pod.pod_data);
+					pod.pod_data);
 		}
 
 		Toast.makeText(this, "Button Code Received", Toast.LENGTH_SHORT).show();
 		mainScreen.fetchButtons();
+		// presumably we are in learn mode so need to refresh view of which buttons
+		// have codes and which don't (colorizing)
+		mainScreen.setButtonBackground(false, LAST_PUSHED_BUTTON_ID);
+		mainScreen.setButtonBackground(false, LAST_PUSHED_BUTTON_ID);
 	}	
 
 	@Override
@@ -1513,7 +1538,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			podData = new StringBuilder();
 			byte[] rev = Pod.getFwVersion();
 			if (rev != null) {
-				podData.append(Pod.componentMap.get(new Integer(rev[0])));
+				podData.append(pod.componentMap.get(Integer.valueOf(rev[0])));
 				podData.append(" Rev: ");
 				podData.append(rev[1] + ".");
 				podData.append(rev[2] + ".");
@@ -1636,6 +1661,16 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			bslWait.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			bslWait.setCancelable(false); // allow back button to cancel it
 			bslWait.setMessage("Resetting pod...this may take a minute");
+			bslWait.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int which) {
+			        try {
+			        	bsl.cancel(true);
+			        } catch (Exception e) {
+			        	// give up
+			        }
+			        dialog.dismiss();
+			    }
+			});
             return bslWait;
             			
 		case DIALOG_RESET_POD:
@@ -1647,8 +1682,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			    	   public void onClick(DialogInterface dialog, int id) {
 			    		   dialog.cancel();
 			    		   // launch another instance of EnterBslTask			    		   
-			    		   EnterBSLTask enterbsl = new EnterBSLTask();
-			    		   enterbsl.execute(Pod.INHIBIT_RESET);
+			    		   bsl = new EnterBSLTask();
+			    		   bsl.execute(pod.INHIBIT_RESET);
 			    		   showDialog(DIALOG_WAIT_BSL);
 			           }
 			       })
@@ -1664,28 +1699,28 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			       });
 			alert = builder.create();
 			return alert;
-			
-		case WARN_BSL:
-			builder = new AlertDialog.Builder(this);
-			builder.setMessage("Warning!  The pod is not responding and the original firmware on the pod could not be located. " +
-					"This can lead to loss of function to the pod.  It is recommended that the golden image be used if the pod becomes " +
-					"unresponsive after the FW update. \n" +
-					"Press OK to quit and try again (with the golden image), press cancel if you want to continue anyways.")
-			       .setCancelable(false)
-			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			    	   public void onClick(DialogInterface dialog, int id) {	
-			    		   dismissDialog(WARN_BSL);
-			    		   dialog.cancel();			    		   
-			           }
-			       })
-			       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			                dialog.cancel();
-			                showDialog(DIALOG_RESET_POD);
-			           }
-			       });
-			alert = builder.create();
-			return alert;
+//			
+//		case WARN_BSL:
+//			builder = new AlertDialog.Builder(this);
+//			builder.setMessage("Warning!  The pod is not responding and the original firmware on the pod could not be located. " +
+//					"This can lead to loss of function to the pod.  It is recommended that the golden image be used if the pod becomes " +
+//					"unresponsive after the FW update. \n" +
+//					"Press OK to quit and try again (with the golden image), press cancel if you want to continue anyways.")
+//			       .setCancelable(false)
+//			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//			    	   public void onClick(DialogInterface dialog, int id) {	
+//			    		   dismissDialog(WARN_BSL);
+//			    		   dialog.cancel();			    		   
+//			           }
+//			       })
+//			       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int id) {
+//			                dialog.cancel();
+//			                showDialog(DIALOG_RESET_POD);
+//			           }
+//			       });
+//			alert = builder.create();
+//			return alert;
             
 		default:
 			return alert;
@@ -1780,12 +1815,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			dismissDialog(DIALOG_FW_WAIT);
 			
 			// save the data we downloaded for the firmware process
-			Pod.setFirmwareRevision(result);
+			pod.setFirmwareRevision(result);
 			// get currently installed pod version
-			Pod.setFwVersion(null); // clear it out first
-			Pod.lockDialog(); // don't display pop-up
+			pod.setFwVersion(null); // clear it out first
+			pod.lockDialog(); // don't display pop-up
 			// time-out if we don't receive it
-			Pod.retrieveFwVersion();	
+			pod.retrieveFwVersion();	
 			waitForGetVersion(1000, 0); // 1 sec max wait time						
 			return;
 		}
@@ -1848,20 +1883,21 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 				try {
 					// need to extract the interrupt byte vector from the downloaded original FW 
 					// image so that we can enter the password correctly (to prevent wiping the flash)
-					if (flag[0] == Pod.ENABLE_RESET && Pod.ORIGINAL_FW_LOCATION != null) {
+					if (flag[0] == pod.ENABLE_RESET && pod.ORIGINAL_FW_LOCATION != null) {
 						// if the enable_reset is set then it means we were able to talk to the pod
 						// which implies we should be able to calculate the proper password
-						Pod.calculatePassword(Pod.ORIGINAL_FW_LOCATION);
+						pod.calculatePassword(pod.ORIGINAL_FW_LOCATION);
 					} 											
-					Pod.getCalibrationData();								
-					
-		 			Pod.setBslState();
-					if (flag[0] == Pod.INHIBIT_RESET) {
-						Pod.startBSL(Pod.INHIBIT_RESET);
+					pod.getCalibrationData();								
+
+					pod.setOperationalState(Pod.BT_STATES.BSL);
+		 			
+					if (flag[0] == pod.INHIBIT_RESET) {
+						pod.startBSL(pod.INHIBIT_RESET);
 					} else {						
-						Pod.startBSL(Pod.ENABLE_RESET);						
+						pod.startBSL(pod.ENABLE_RESET);						
 					}		 	
-					while (Pod.BSL_FINISHED == false) { 
+					while (pod.BSL_FINISHED == false) { 
 						// wait 
 					}					
 				} catch (BslException e) {
@@ -1895,20 +1931,23 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	 private class FlashFileToPodTask extends AsyncTask<Void, Integer, Integer> {
 		 	Exception e = null;
 		 	int byteCounter = 0;   
-
+		 	int count = 0;
+		 	
 		 	@Override 
 		 	protected Integer doInBackground(Void... voids) {
 		 		try {				
 		 			publishProgress(0); // start at 0															 			
 		 			
-		 			FileInputStream f = new FileInputStream(new File(Pod.FW_LOCATION));
+		 			FileInputStream f = new FileInputStream(new File(pod.FW_LOCATION));
 		 			BufferedReader br = new BufferedReader(new InputStreamReader(f));
 		 			String strLine;	
 
 		 			// count # of lines in the file (used for progress bar)
-		 			int count = 0;
 		 			while (br.readLine() != null) count++;
 
+		 			// set progress style
+					progressDialog2.setMax(count);
+		 			
 		 			f.getChannel().position(0); // reset to beginning of file
 		 			br = new BufferedReader(new InputStreamReader(f));					
 
@@ -1916,31 +1955,29 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		 			int lineCounter = 0;
 		 			while ((strLine = br.readLine()) != null)   {		 					
 		 				try { 
-		 					Pod.sendFwLine(strLine);		 				
+		 					pod.sendFwLine(strLine);		 				
 		 				} catch (BslException e) {
 		 					// retry once more
-		 					Pod.sendFwLine(strLine);		 					
+		 					pod.sendFwLine(strLine);		 					
 		 				}
 		 				lineCounter++;
-		 				publishProgress((int)((lineCounter / (float) count) * 100));
-		 				try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) { /* do nothing */	}
+		 				publishProgress(lineCounter);
 		 			}
-		 			f.close();	
+		 			f.close();
+		 			br.close();
 		 			
 		 			// Enter cmd mode and instruct Pod to exit BSL and reset FW
 		 			try {
-			 			Pod.sendBSLString("$$$");
-			 			Pod.receiveResponse(Pod.BT_STATES.BSL);
-			 			Pod.exitBsl();
+			 			pod.sendBSLString("$$$");
+			 			pod.receiveResponse();
+			 			pod.exitBsl();
 		 			} catch (Exception exception) {
 		 				// do nothing if BSL fails here
 		 			}		 				 			
 		 		} catch (Exception e) {		 			
 		 			this.e = e;
 		 		}
-				return new Integer(byteCounter);
+				return Integer.valueOf(byteCounter);
 			}
 
 			@Override
@@ -1953,7 +1990,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			protected void onPostExecute(Integer bytes) {
 				dismissDialog(FLASH_PROGRESS_DIALOG);
 				// when finished reset bluetooth state
-				Pod.setIdleState();
+				pod.setOperationalState(Pod.BT_STATES.IDLE);
 				
 				// tell user it was not successful
 				if (e != null) {
@@ -1978,6 +2015,9 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			}
 		}
 
+	 // Was using this to listen for loss of bluetooth and then restart the bluetooth and
+	 // attempt a reconnect.  The reconnectPod() method needs to be passed 'true' 
+	 // to enable this behavior.  
 	 private class ConnectivityListener extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -1993,7 +2033,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					connectPod();
 				} else if (state == BluetoothAdapter.STATE_ON) {
 					if (mChatService == null || mChatService.getState() != BluetoothChatService.STATE_CONNECTED)
-						reconnectPod();
+						reconnectPod(false);
 				}
 			}
 		}		 
