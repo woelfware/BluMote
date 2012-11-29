@@ -486,8 +486,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 					if (connectingMAC != null) {
 						BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(connectingMAC);
 						// Attempt to connect to the device
-						mChatService.connect(device);
 						Log.d("BluMote", "attempting connection from reconnectPod()");
+						mChatService.connect(device);
 					}
 				}
 				else if (getBluetoothState() == BluetoothChatService.STATE_CONNECTING
@@ -1880,14 +1880,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	 // call the FlashFileToPod task
 	 private class EnterBSLTask extends AsyncTask<Integer, Integer, String> {
 			protected String doInBackground(Integer... flag) {
-				try {
-					// need to extract the interrupt byte vector from the downloaded original FW 
-					// image so that we can enter the password correctly (to prevent wiping the flash)
-					if (flag[0] == pod.ENABLE_RESET && pod.ORIGINAL_FW_LOCATION != null) {
-						// if the enable_reset is set then it means we were able to talk to the pod
-						// which implies we should be able to calculate the proper password
-						pod.calculatePassword(pod.ORIGINAL_FW_LOCATION);
-					} 											
+				try {											
 					pod.getCalibrationData();								
 
 					pod.setOperationalState(Pod.BT_STATES.BSL);
@@ -1969,7 +1962,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		 			// Enter cmd mode and instruct Pod to exit BSL and reset FW
 		 			try {
 			 			pod.sendBSLString("$$$");
-			 			pod.receiveResponse();
+			 			pod.receiveResponse(1);
 			 			pod.exitBsl();
 		 			} catch (Exception exception) {
 		 				// do nothing if BSL fails here

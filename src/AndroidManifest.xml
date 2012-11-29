@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionCode="1"
-      package="com.woelfware.blumote" android:versionName="0.11.6.13"
+      package="com.woelfware.blumote" android:versionName="0.11.21.12"
       android:installLocation="preferExternal">
     
     <uses-sdk android:targetSdkVersion="8" android:minSdkVersion="8"></uses-sdk>
@@ -31,6 +31,6 @@
 		<activity android:theme="@android:style/Theme.Dialog" android:label="New Device" android:name="EnterDevice" android:screenOrientation="portrait"></activity>
 		<activity android:theme="@android:style/Theme.Dialog" android:label="New Activity" android:name="CreateActivity" android:screenOrientation="portrait"></activity>
 		<activity android:name="ActivityInitEdit" android:screenOrientation="portrait"></activity>
-		<activity android:name=".EnterName" android:theme="@android:style/Theme.Dialog" android:label="Rename Misc Button"></activity>				
+		<activity android:name=".EnterName" android:theme="@android:style/Theme.Dialog" android:label="Enter Name"></activity>				
 	</application>	
 </manifest> 

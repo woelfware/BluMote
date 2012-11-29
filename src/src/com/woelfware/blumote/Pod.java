@@ -225,7 +225,7 @@ class Pod {
 		offset = 0;
 		pod_data = new byte[returnLength - 1]; // exclude response code
 		sendMessage(message, state);
-		receiveResponse();
+		receiveResponse(total_bytes);
 		return pod_data;
 	}
 
@@ -270,7 +270,7 @@ class Pod {
 	}
 	
 	void saveCalibration() {
-		if (cal_data == null || cal_data.length == 0) {
+		if (cal_data == null || cal_data.length != 10) {
 			return;
 		}
 		File fileDir = blumote.getExternalFilesDir(null);
@@ -290,8 +290,12 @@ class Pod {
 	// flashed
 	void applyCalibration() {
 			
-		if (cal_data == null) {
+		if (cal_data == null || cal_data.length != 10) {
 			return; // skip if no data to apply
+		}
+		
+		if (Arrays.equals(cal_data, new byte[]{0,0,0,0,0,0,0,0,0,0})) {
+			return; // all 0's is invalid
 		}
 		
 		// parse the hex file and dump the cal_data information to it
@@ -352,7 +356,7 @@ class Pod {
 		message = new byte[] { Pod.Codes.READ_ADDRESS, address[0], address[1],
 				(byte) bytes };
 
-		return sendPodCommand(message, bytes + 1, BT_STATES.READ_ADDRESS);
+		return sendPodCommand(message, bytes, BT_STATES.READ_ADDRESS);
 	}
 
 	void setBluMoteRef(BluMote ref) {
@@ -628,13 +632,14 @@ class Pod {
 	/**
 	 * This function just makes sure data comes back from pod before continuing.
 	 * It is a blocking function so should be called from a non-GUI thread.
+	 * @param minBytes minimum # of bytes to receive before continuing
 	 */
-	byte[] receiveResponse() throws BslException {
+	byte[] receiveResponse(int minBytes) throws BslException {
 		final BluMote.Wait waiter = new BluMote.Wait(500);
 
 		while (waiter.waitTime < waiter.maxWaitTime) {
 			// check if data was received yet from Pod
-			if ( pod_data != null ) { // pod_data will get defined in interpretResponse() after data rcvd
+			if ( pod_data != null && pod_data.length >= minBytes ) { // pod_data will get defined in interpretResponse() after data rcvd
 				break;
 			} else {
 				try {
@@ -656,6 +661,13 @@ class Pod {
 		if (pod_data == null) {		
 			throw new BslException(
 					"never received any data during receiveResponse");
+		}
+		
+		// wait a little longer to ensure all data collected
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// do nothing
 		}
 		
 		return pod_data;
@@ -851,8 +863,7 @@ class Pod {
 				} // end while loop
 			} catch (Exception e) { // something unexpected occurred....exit
 				Toast.makeText(blumote,
-						"Communication error, exiting learn mode",
-						Toast.LENGTH_SHORT).show();
+						"Communication error", Toast.LENGTH_SHORT).show();
 				BT_STATE = BT_STATES.IDLE;
 				return;
 			}
@@ -920,17 +931,18 @@ class Pod {
 							// create a dialog to display data to user
 							blumote.showDialog(BluMote.DIALOG_SHOW_INFO);
 						}
-						break;
+						
+						BT_STATE = BT_STATES.IDLE;
 					}
 				}
 			} catch (Exception e) {
 				Toast.makeText(blumote,
 						"Communication error, exiting learn mode",
 						Toast.LENGTH_SHORT).show();
+				info_state = INFO_STATE.IDLE;
 				BT_STATE = BT_STATES.IDLE;
 				return;
 			}
-			BT_STATE = BT_STATES.IDLE;
 			break;
 
 		case RESET_RN42:
@@ -940,8 +952,7 @@ class Pod {
 		case ABORT_LEARN:			
 			// fall through intentional
 		case IR_TRANSMIT:			
-			// release lock
-try {			
+			// release lock	
 			buttonLock = false;
 			while (bytes-- > 1) { // move index to last position
 				//index = (index + 1) % BluetoothChatService.buffer_size;
@@ -959,15 +970,11 @@ try {
 				sendMsgCounter = 0;
 				BT_STATE = BT_STATES.IDLE;							
 			}
-} catch (Exception e) {
-	Log.e("Blumote", "ERROR");
-}
 			break;		
 
 		case BSL:
 			// Just log the messages we get from the Pod during BSL
 //			Log.v("blumote_bsl_received", response.toString());
-try {
 			i = 0;
 			byte[] new_data = new byte[bytes];
 			while (bytes > 0) {
@@ -978,10 +985,6 @@ try {
 			}
 			BT_STATE = BT_STATES.IDLE;
 			pod_data = new_data;
-} catch (Exception e ) {
-	Log.e("Blumote", "ERROR");
-	return;
-}
 			break;
 
 		case SYNC:
@@ -999,6 +1002,7 @@ try {
 						pod_data = null;
 						break;
 					}
+					pod_data = new byte[10]; // 10 bytes expected
 					data_index++;
 					bytes--;
 					index++;
@@ -1193,15 +1197,15 @@ try {
 		} catch (Exception e) {
 			// no action required, throws exception if not connected
 		}
-//			// connection will drop eventually, then need to reconnect....
-//			while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
-//				try {
-//					Thread.sleep(100);
-//				} catch (InterruptedException e) {
-//					// Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				timer++;
+			// connection will drop eventually, then need to reconnect....
+			while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// Auto-generated catch block
+					e.printStackTrace();
+				}
+				timer++;
 //				if (timer == retryTime) {
 //					Log.v("blumote_bsl", "Trying to reset again");
 //					resetRn42();
@@ -1213,7 +1217,7 @@ try {
 //							"Timed out waiting for RN42 to reset",
 //							BslException.RESET_FAILED);
 //				}
-//			}
+			}
 //		} else {			
 //			while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
 //				try {
@@ -1237,12 +1241,12 @@ try {
 		} catch (InterruptedException e) {
 			throw new BslException("wait thread ended prematurely");
 		}
-		Log.d("BluMote", "disconnecting pod connection from startBSL()");
-		
-		blumote.disconnectPod(); // ensure we start out disconnected
-		while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
-			// wait
-		}		
+//		Log.d("BluMote", "disconnecting pod connection from startBSL()");
+//		
+//		blumote.disconnectPod(); // ensure we start out disconnected
+//		while (blumote.getBluetoothState() == BluetoothChatService.STATE_CONNECTED) {
+//			// wait
+//		}		
 		
 		// once we got here the connection dropped
 		// tell it to reconnect
@@ -1353,7 +1357,7 @@ try {
 			} catch (InterruptedException e) {
 				throw new BslException("wait thread ended prematurely");
 			}
-			String returnStr = Util.byteArrayToString(receiveResponse());
+			String returnStr = Util.byteArrayToString(receiveResponse(1));
 			Log.d("BSL_IN_CLR_MEM", returnStr);
 		}
 	}
@@ -1438,7 +1442,7 @@ try {
 		msg = Util.concat(msg, calcChkSum(msg));
 		Log.d("OUT_BSL_PASS", Util.byteArrayToString(msg));
 		sendMessage(msg, BT_STATES.BSL);
-		String returnStr = Util.byteArrayToString(receiveResponse());
+		String returnStr = Util.byteArrayToString(receiveResponse(1));
 		Log.d("IN_BSL_PASSWORD", returnStr);
 	}
 
@@ -1537,7 +1541,7 @@ try {
 	public void sendBSLString(String code) throws BslException {
 		try {
 			sendMessage(code.getBytes("ASCII"), BT_STATES.BSL);
-			receiveResponse();
+			receiveResponse(1);
 		} catch (UnsupportedEncodingException e) {
 			throw new BslException("Encoding error while starting BSL");
 		}
@@ -1599,9 +1603,10 @@ try {
 		// send to Pod
 		Log.d("Blumote", "sent a FW line");
 		sendMessage(msg, BT_STATES.BSL);
-		byte[] returnData = receiveResponse();	
+		byte[] returnData = receiveResponse(1);	
 		String stringRet = Util.byteArrayToString(returnData);		
 		if (stringRet.startsWith("a0")) {
+			Log.e("Blumote","GOT A NACK"); 
 			throw new BslException("Got a NACK");
 		}
 	}

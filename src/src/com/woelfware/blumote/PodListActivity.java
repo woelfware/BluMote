@@ -349,7 +349,7 @@ public class PodListActivity extends Activity {
 			pod_rename = mPairedDevicesArrayAdapter.getItem((int)info.id);
 			pod_rename = pod_rename.split("\n")[0]; // store only the name
 			// Launch the function to ask for a name for device
-        	Intent i = new Intent(this, EnterDevice.class);
+        	Intent i = new Intent(this, EnterName.class);
             startActivityForResult(i, POD_NAME);
 			return true;
 		}
