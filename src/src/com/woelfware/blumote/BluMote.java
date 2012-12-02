@@ -1525,7 +1525,6 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		// presumably we are in learn mode so need to refresh view of which buttons
 		// have codes and which don't (colorizing)
 		mainScreen.setButtonBackground(false, LAST_PUSHED_BUTTON_ID);
-		mainScreen.setButtonBackground(false, LAST_PUSHED_BUTTON_ID);
 	}	
 
 	@Override

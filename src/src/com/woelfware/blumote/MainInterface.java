@@ -375,8 +375,10 @@ public class MainInterface {
 				// mutate() to avoid changing all of the same drawable
 				v.getBackground().mutate().setColorFilter(
 					0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
+				v.invalidate();
 			} else {
 				v.getBackground().mutate().clearColorFilter();
+				v.invalidate();
 			}
 		} catch (Exception e) {
 			// a failure here is not critical
@@ -422,8 +424,10 @@ public class MainInterface {
 						// mutate() to avoid changing all of the same drawable
 						v.getBackground().mutate().setColorFilter(
 							0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
+						v.invalidate();
 					} else {
 						v.getBackground().mutate().clearColorFilter();
+						v.invalidate();
 					}
 					
 				} else { // if false then clear color filter									
