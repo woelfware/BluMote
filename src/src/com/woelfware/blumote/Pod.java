@@ -1184,6 +1184,7 @@ class Pod {
 	 *            flag = 1 when we want to inhibit the automatic reset of the
 	 *            RN42
 	 */
+	@SuppressWarnings("unused")
 	void startBSL(int flag) throws BslException {
 		BSL_FINISHED = false;
 		

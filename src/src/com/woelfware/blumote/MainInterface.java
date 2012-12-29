@@ -5,11 +5,10 @@ package com.woelfware.blumote;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
-import android.graphics.PorterDuffColorFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -216,6 +215,7 @@ public class MainInterface {
 	 * deviceLayouts[] or activityLayouts[]
 	 * @param type the type of interface which is a member of the local enum TYPE
 	 */
+	@SuppressLint("UseSparseArrays")
 	public void initializeInterface(String buttonConfig, TYPE type) {			
 		if (buttonConfig == null) {
 			// then set a blank screen....

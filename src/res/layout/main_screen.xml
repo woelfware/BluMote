@@ -84,8 +84,8 @@
 				android:layout_gravity="center"
 				android:layout_weight="1"
 				android:weightSum="3.0">
-				<Button android:layout_width="fill_parent" android:id="@+id/disc_btn" android:text="Disc Menu" style="@style/CustomBtnText"></Button>	
-				<Button android:layout_width="fill_parent" android:id="@+id/info_btn" android:text="Info/ Display" style="@style/CustomBtnText" android:textSize="13sp"></Button>						
+				<Button android:layout_width="fill_parent" android:id="@+id/disc_btn" android:text="Disc\nMenu" style="@style/CustomBtnText"></Button>	
+				<Button android:layout_width="fill_parent" android:id="@+id/info_btn" android:text="Info/\nDisplay" style="@style/CustomBtnText" android:textSize="13sp"></Button>						
 				<ImageButton android:layout_width="fill_parent" style="@style/CustomImageBtnText" android:src="@drawable/audio_volume_muted" android:id="@+id/mute_btn"></ImageButton>				    	    
 			</LinearLayout>
 			<LinearLayout

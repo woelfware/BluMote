@@ -67,6 +67,7 @@ import com.woelfware.database.DeviceDB;
  * @author keusej
  *
  */
+@SuppressLint("HandlerLeak")
 public class BluMote extends Activity implements OnClickListener,OnItemClickListener,OnItemSelectedListener
 {
 	// Debugging
@@ -1635,7 +1636,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			aboutDialog.append("\nSW Revision: ");
 			String versionName = "";
 			try {
-				versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+				versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;				
 			} catch (NameNotFoundException e) {
 				e.printStackTrace();				
 			}
@@ -1659,7 +1660,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			ProgressDialog bslWait = new ProgressDialog(BluMote.this);
 			bslWait.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			bslWait.setCancelable(false); // allow back button to cancel it
-			bslWait.setMessage("Resetting pod...this may take a minute");
+			bslWait.setMessage("Resetting pod...this may take a minute\n" +
+					"If it takes more than a minute remove and reconnect power to the pod");
 			bslWait.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int which) {
 			        try {
@@ -2002,7 +2004,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			        .setMessage(R.string.fw_installed)
 			        .setPositiveButton(R.string.OK, null)
 			        .show();	
-				disconnectPod(); // Disconnect after successful load
+				//TODO - testing removing this...
+				//disconnectPod(); // Disconnect after successful load
 				return;
 			}
 		}
