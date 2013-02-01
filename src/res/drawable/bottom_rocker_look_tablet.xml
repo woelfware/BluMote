@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" 
+    	  android:state_pressed="false" 
+    	  android:drawable="@drawable/rocker_green_pushed_bottom_tablet" />
+    <item android:state_focused="true" 
+    	  android:state_pressed="true"
+    	  android:drawable="@drawable/rocker_green_pushed_bottom_tablet" />
+    <item android:state_focused="false" 
+    	  android:state_pressed="true"
+	  	  android:drawable="@drawable/rocker_green_pushed_bottom_tablet" />
+    <item android:drawable="@drawable/rocker_black_bottom_tablet" />
+</selector>
