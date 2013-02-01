@@ -9,6 +9,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -35,7 +38,7 @@ import com.woelfware.blumote.screens.RokuDevice;
  *
  */
 public class MainInterface {
-	
+
 	// this keeps track of what state the interface is in
 	// this is useful for how to setup the options menus
 	// and what actions buttons should take when pressed
@@ -63,17 +66,20 @@ public class MainInterface {
 	// all the device button layouts
 	public enum DEVICE_LAYOUTS {
 		// "name of interface", layout id, number of screens in layout, button class
-		BLANK("blank", R.layout.blank_interface, 2, Blank.class),
-		MAIN("main", R.layout.main_interface, 3, Main.class), 
-		ROKU("roku", R.layout.rokud_interface, 2, RokuDevice.class); // need to change to RokuDevice.class
+		BLANK("blank", R.layout.blank_interface, 2, 2, Blank.class),
+		MAIN("main", R.layout.main_interface, 3, 2, Main.class), 
+		ROKU("roku", R.layout.rokud_interface, 2, 2, RokuDevice.class); // need to change to RokuDevice.class
 		private final String field;
 		private final int layout;
-		private final int screens;
+		private final int phoneScreens;
+		private final int tabletScreens;
 		private Class<? extends ButtonCreator> type;
-		DEVICE_LAYOUTS(String field, int layout, int screens, Class<? extends ButtonCreator> type) {
+		DEVICE_LAYOUTS(String field, int layout, int phoneScreens, 
+				int tabletScreens, Class<? extends ButtonCreator> type) {
 			this.field = field;
 			this.layout = layout;
-			this.screens = screens;
+			this.phoneScreens = phoneScreens;
+			this.tabletScreens = tabletScreens;
 			this.type = type;
 		}
 		public String getValue() {
@@ -82,8 +88,11 @@ public class MainInterface {
 		public int getLayout() {
 			return layout;
 		}
-		public int getScreens() {
-			return screens;
+		public int getPhoneScreens() {
+			return phoneScreens;
+		}
+		public int getTabletScreens() {
+			return tabletScreens;
 		}
 		public ButtonCreator getInstance() {
 			try {
@@ -101,16 +110,19 @@ public class MainInterface {
 	// all the activity button layouts - in case they ever differ from devices
 	public enum ACTIVITY_LAYOUTS {
 		// "name of interface", layout id, number of screens in layout, button class
-		MAIN("main", R.layout.main_interface, 3, Main.class), 
-		ROKU("roku", R.layout.rokua_interface, 2, RokuActivity.class);
+		MAIN("main", R.layout.main_interface, 3, 2, Main.class), 
+		ROKU("roku", R.layout.rokua_interface, 2, 2, RokuActivity.class);
 		private final String field;
 		private final int layout;
-		private final int screens;
+		private final int phoneScreens;
+		private final int tabletScreens;
 		private Class<? extends ButtonCreator> type;
-		ACTIVITY_LAYOUTS(String field, int layout, int screens, Class<? extends ButtonCreator> type) {
+		ACTIVITY_LAYOUTS(String field, int layout, int phoneScreens, 
+				int tabletScreens, Class<? extends ButtonCreator> type) {
 			this.field = field;
 			this.layout = layout;
-			this.screens = screens;
+			this.phoneScreens = phoneScreens;
+			this.tabletScreens = tabletScreens;
 			this.type = type;
 		}
 		public String getValue() {
@@ -119,8 +131,11 @@ public class MainInterface {
 		public int getLayout() {
 			return layout;
 		}
-		public int getScreens() {
-			return screens;
+		public int getPhoneScreens() {
+			return phoneScreens;
+		}
+		public int getTabletScreens() {
+			return tabletScreens;
 		}
 		public ButtonCreator getInstance() {
 			try {
@@ -233,12 +248,44 @@ public class MainInterface {
 			button_map = new HashMap<Integer,String>();	
 
 			ButtonCreator instance = null;
-
-			if (type == TYPE.ACTIVITY) {
+			
+//			Testing the tablet detection code 
+			/**
+			 * 
+				And here are some of stats you get:
+				Samsung Nexus: 	10-23 20:54:16.598: D/Enter(14861): Width: 1196 Height: 720 DPI: 320 Density: 2.0
+				Droid: 			10-24 07:12:42.436: D/Enter(1823):  Width: 854  Height: 480 DPI: 240 Density: 1.5
+				Nexus 7: 		10-23 20:55:06.405: D/Enter(15663): Width: 1280 Height: 736 DPI: 213 Density: 1.33125
+				Samsung 10.1 	10-23 21:10:49.180: D/Enter(3263):  Width: 1280 Height: 752 DPI: 160 Density: 1.0
+				
+				
+				These equate to the following:
+				Galaxy Nexus = 4.3
+				Droid = 4.08
+				Nexus 7 = 6.9
+				Samsug 10.1 = 9.2
+			 */
+			DisplayMetrics metrics = new DisplayMetrics();
+	        blumote.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+	        double inches = Math.sqrt((metrics.widthPixels * metrics.widthPixels) + (metrics.heightPixels * metrics.heightPixels)) / metrics.densityDpi;
+	        boolean isTablet = false;
+	        Resources res = blumote.getResources();
+	        int TABLET_SIZE = res.getInteger(R.integer.tablet_size);
+	        if (inches > TABLET_SIZE) {	        
+	        	isTablet = true;
+	        	blumote.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+	        } else {
+	        	blumote.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	        }	        
+	        if (type == TYPE.ACTIVITY) {
 				for (ACTIVITY_LAYOUTS i : ACTIVITY_LAYOUTS.values()) {
 					if (buttonConfig.equals(i.getValue())) {
 						blumote.setContentView(i.getLayout());
-						NUM_SCREENS = i.getScreens();
+						if (isTablet) {
+							NUM_SCREENS = i.getTabletScreens();
+				        } else {
+				        	NUM_SCREENS = i.getPhoneScreens();
+				        }						
 						instance = i.getInstance();
 						break;
 					}			
@@ -247,7 +294,11 @@ public class MainInterface {
 				for (DEVICE_LAYOUTS i : DEVICE_LAYOUTS.values()) {
 					if (buttonConfig.equals(i.getValue())) {
 						blumote.setContentView(i.getLayout());
-						NUM_SCREENS = i.getScreens();
+						if (isTablet) {
+							NUM_SCREENS = i.getTabletScreens();
+				        } else {
+				        	NUM_SCREENS = i.getPhoneScreens();
+				        }						
 						instance = i.getInstance();
 						break;
 					}			

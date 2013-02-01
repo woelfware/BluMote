@@ -17,20 +17,19 @@
 		<meta-data android:name="com.google.android.backup.api_key"	android:value="AEdPqrEAAAAIysP9ZYx7oeCaJyRBh-DjWkeBNhMVBgadedpcGQ" />
 		
         <activity android:name="BluMote"
-                  android:label="@string/app_name"
-                  android:screenOrientation="portrait">
+                  android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<activity android:name="MyPreferences" android:screenOrientation="portrait"/>
-		<activity android:name="PodListActivity" android:screenOrientation="portrait"/>    
-		<activity android:name="ManageDevices" android:screenOrientation="portrait"/>
-		<activity android:name="FwUpdateActivity" android:screenOrientation="portrait"/>
-		<activity android:theme="@android:style/Theme.Dialog" android:label="New Device" android:name="EnterDevice" android:screenOrientation="portrait"></activity>
-		<activity android:theme="@android:style/Theme.Dialog" android:label="New Activity" android:name="CreateActivity" android:screenOrientation="portrait"></activity>
-		<activity android:name="ActivityInitEdit" android:screenOrientation="portrait"></activity>
+		<activity android:name="MyPreferences"/>
+		<activity android:name="PodListActivity"/>    
+		<activity android:name="ManageDevices"/>
+		<activity android:name="FwUpdateActivity"/>
+		<activity android:theme="@android:style/Theme.Dialog" android:label="New Device" android:name="EnterDevice"></activity>
+		<activity android:theme="@android:style/Theme.Dialog" android:label="New Activity" android:name="CreateActivity"></activity>
+		<activity android:name="ActivityInitEdit"></activity>
 		<activity android:name=".EnterName" android:theme="@android:style/Theme.Dialog" android:label="Enter Name"></activity>				
 	</application>	
 </manifest> 
