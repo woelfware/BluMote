@@ -622,7 +622,6 @@ public class Activities {
 				byte[] toSend = null;
 
 				String buttonSource = item[0];
-				buttonSource = blumote.lookup.getName(buttonSource);
 				// if buttonSource is null that means the device/activity was deleted, so just skip over this item
 				if (buttonSource != null) {
 					// need to determine if this is an activity (A)_ 
