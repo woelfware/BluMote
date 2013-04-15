@@ -13,8 +13,10 @@ import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.backup.BackupManager;
 import android.bluetooth.BluetoothAdapter;
@@ -74,6 +76,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	private static final String TAG = "BlueMote";
 	static final boolean DEBUG = false; // for debugging only, set to false for production		
 
+	private boolean isRunning = false;
+	
 	// Preferences file for this application
 	static final String PREFS_FILE = "BluMoteSettings";
 	
@@ -88,6 +92,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	static final int ACTIVITY_INIT_EDIT = 8;
 	private static final int PREFERENCES = 9;
 	static final int UPDATE_FW = 10;
+	
+	//AlarmManager intent string
+	public static final String ACTION_ALARM_DISCONNECT =
+			"com.woelfware.ACTION_ALARM_TIMEOUT_DISCONNECT";
 	
 	// Message types sent from the BluetoothChatService Handler
 	static final int MESSAGE_STATE_CHANGE = 1;
@@ -151,6 +159,11 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	// for storing data we receive from bluetooth
 	private DataCache cache;
 
+	// reference to alarmmanager pendingintent
+	PendingIntent alarmIntent;
+	
+	boolean alarmSet = false;
+	
 	// This is the device database results for each button on grid
 	// Note that when we are working with an activity then this structure
 	// is updated for the button mappings but must be refreshed with getActivityButtons()
@@ -230,8 +243,11 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
     // for cloud backups
     BackupManager mBackupManager;
     
-    // Broadcast reciever for BT state change
+    // Broadcast receiver for BT state change
     ConnectivityListener connectionListener;
+    
+    // Broadcast receiver for Screen state changes
+    BroadcastReceiver screenReceiver;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
@@ -362,13 +378,33 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 		connectionListener = new ConnectivityListener();
 		
+		screenReceiver = new ScreenReceiver();
+		
 		mBackupManager = new BackupManager(this);
 	}		
+	
+	private void setRunning(boolean status) {		
+		isRunning = status;
+	}
+	
+	private boolean getRunning() {
+		return isRunning;
+	}
+	
+	private void setTimerArmed(boolean status) {
+		alarmSet = status;
+	}
+	
+	private boolean getTimerArmed() {
+		return alarmSet;
+	}
 	
 	@Override
 	protected void onStart() {		
 		super.onStart();
 		Log.v("BluMote_State", "In onStart");
+		
+		setRunning(true);
 		
 		if (mChatService == null) { // then first time this was called
 			// Initialize the BluetoothChatService to perform bluetooth
@@ -403,6 +439,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			
 			// context menu on array list
 			registerForContextMenu(findViewById(R.id.activities_list));
+
 		}
 	}
 	
@@ -420,9 +457,28 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		device_data.open(); // make sure database open
 
 		// register broadcast receiver for BT state change
-		this.registerReceiver(connectionListener, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+		//this.registerReceiver(connectionListener, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 		if ( !BluetoothChatService.BT_ENABLING )
 			connectPod();
+		
+		// register broadcast receiver for AlarmManager triggers
+		this.registerReceiver(connectionListener, new IntentFilter(BluMote.ACTION_ALARM_DISCONNECT));
+		
+		// register broadcast receiver for Screen State changes
+		// initialize receiver
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);        
+		this.registerReceiver(screenReceiver, filter);
+		
+		if (alarmIntent != null) { 
+			Log.v("BLUMOTE", "Stopping Alarm");
+			// Get a reference to the Alarm Manager
+		    AlarmManager alarmManager = 
+		     (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		    alarmManager.cancel(alarmIntent);
+		}
+		
+		setTimerArmed(false);	
 	}
 
 	int getBluetoothState() {
@@ -536,7 +592,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		super.onPause();
 		Log.v("BluMote_State", "In onPause");
 		// unregister broadcast receiver for BT state change
-		this.unregisterReceiver(connectionListener);
+//		this.unregisterReceiver(connectionListener);
+		
 	}
 
 	@Override
@@ -546,6 +603,10 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		
 		// close sqlite database connection
 		device_data.close();
+		
+		setRunning(false);
+		
+		setAlarm(); 
 	}
 
 	@Override
@@ -562,7 +623,44 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		super.onRestart();
 		Log.v("BluMote_State", "In onRestart");
 		
-		device_data.open();
+		device_data.open();				
+	}
+	
+	private void setAlarm() {
+		// 150 minutes = 9,000,000 ms
+		// 120 minutes = 7,200,000 ms
+	    // 60 minutes = 3600 seconds = 3,600,000 ms
+	    // 30 minutes = 1,800,000 ms
+		// 10 minutes = 600,000 ms
+	    ////long timeOrLengthofWait = 600000;
+	    //DEBUG 30 seconds = 30000;
+	    long timeOrLengthofWait = 9000000;
+	    
+		// Check if user disabled this feature
+		SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean disconnectPref = myprefs.getBoolean("disconnectInactivity", true);			
+		if (!disconnectPref) {
+			Log.v("Blumote", "Alarm not enabled in prefs");
+			return; // return if user disabled the disconnection timeout feature
+		}
+		
+		if ( getTimerArmed() ) {
+			Log.v("Blumote", "Alarm already armed..canceling");
+			return; // don't re-arm if already armed.
+		}
+		
+	    // Get a reference to the Alarm Manager
+	    AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+	    
+	    Log.v("BLUMOTE", "Setting Alarm");
+	  
+	    Intent intent = new Intent(BluMote.ACTION_ALARM_DISCONNECT);
+	    alarmIntent = PendingIntent.getBroadcast(this, 0,intent, 0);
+	  
+	    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+	        + timeOrLengthofWait, alarmIntent);
+	    
+	    setTimerArmed(true);
 	}
 	
 	@Override
@@ -788,7 +886,9 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 				switch (msg.arg1) {
 				case BluetoothChatService.STATE_CONNECTED:
 					mTitle.setText(R.string.title_connected_to);
-					mTitle.append(mConnectedDeviceName);
+					if (mConnectedDeviceName != null) {
+						mTitle.append(mConnectedDeviceName);
+					}
 					// Store the address of connecting device to preferences for
 					// re-connect on resume
 					// this global gets setup in onActivityResult()
@@ -865,9 +965,15 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			case MESSAGE_DEVICE_NAME:
 				// save the connected device's name
 				mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-				// see if there is a user-defined name attached to this device name
-				mConnectedDeviceName = PodListActivity.translatePodName(
-						mConnectedDeviceName, prefs);
+				if (mConnectedDeviceName != null) {					
+					// see if there is a user-defined name attached to this device name
+					String translatedName = PodListActivity.translatePodName(
+							mConnectedDeviceName, prefs);
+					if (translatedName != null) {
+						mConnectedDeviceName = translatedName;
+					}
+					
+				}
 				break;
 
 			case MESSAGE_TOAST:
@@ -1297,6 +1403,11 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			try {
 				mChatService.stop();
 				mChatService = null; 
+				if (DEBUG) {
+					Toast.makeText(this, "Disconnected from pod",
+							Toast.LENGTH_LONG).show();
+				}
+						
 			} catch (Exception e) {
 				Log.d(TAG, "Error closing bluetooth connection");
 			}
@@ -2004,8 +2115,6 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			        .setMessage(R.string.fw_installed)
 			        .setPositiveButton(R.string.OK, null)
 			        .show();	
-				//TODO - testing removing this...
-				//disconnectPod(); // Disconnect after successful load
 				return;
 			}
 		}
@@ -2013,12 +2122,20 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	 // Was using this to listen for loss of bluetooth and then restart the bluetooth and
 	 // attempt a reconnect.  The reconnectPod() method needs to be passed 'true' 
 	 // to enable this behavior.  
-	 private class ConnectivityListener extends BroadcastReceiver {
+	 public class ConnectivityListener extends BroadcastReceiver {
+		 
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			
 			String action = intent.getAction();
-
+			Log.v("BLUMOTE", "Received broadcast intent");
 			if(action.equalsIgnoreCase(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+				/**
+				 * Depracated functionality
+				 * NOTE - if we decide to re-enable this receiver then we will need to be careful
+				 * that unregisterReceiver() is not called on the same object that is used to 
+				 * catch the Alarm disconnect (or it will stop both from working when app is minimized)
+				 */
 				int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
 
 				if (LOCK_RECONNECT) {
@@ -2031,6 +2148,32 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 						reconnectPod(false);
 				}
 			}
+			// disconnect if receive alarm and the screen is off or app is not running
+			if(action.equalsIgnoreCase(BluMote.ACTION_ALARM_DISCONNECT) && 
+					( !((ScreenReceiver)screenReceiver).screenOn ) || !getRunning() ) {
+				Log.v("BLUMOTE", "Received Action Alarm Disconnect");
+				disconnectPod();
+
+			}
 		}		 
 	 }
+	 
+	 public class ScreenReceiver extends BroadcastReceiver {
+
+		    private boolean screenOn = true;
+		   
+		    @Override
+		    public void onReceive(final Context context, final Intent intent) {
+		        if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+		            // do whatever you need to do here
+		            screenOn = false;
+		            Log.d("BluMote", "Screen off, enabling alarm");
+		            setAlarm();
+		        } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+		            // and do whatever you need to do here
+		            screenOn = true;
+		        }
+		    }
+
+		}
 }

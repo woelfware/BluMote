@@ -10,5 +10,10 @@
 	 	android:title="Bluetooth Insecure Mode" 
 	 	android:key="htcInsecure" 
 	 	android:defaultValue="true" 
-	 	android:summary="Toggle insecure bluetooth connection mode"/>	 	 
+	 	android:summary="Toggle insecure bluetooth connection mode"/>
+	 <CheckBoxPreference 
+	 	android:title="Disconnect after inactivity" 
+	 	android:key="disconnectInactivity" 
+	 	android:defaultValue="true" 
+	 	android:summary="Disconnect after a period of inactivity to prevent bluetooth connection issues on some phones."/>		 	 
 </PreferenceScreen>
