@@ -84,7 +84,12 @@
 		android:paddingRight="5dp"
 		android:layout_weight="1">
 			<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/red" android:id="@+id/red_btn" android:scaleType="centerInside"></ImageButton>
-			<Button android:id="@+id/btn_exit" android:text="Exit" style="@style/CustomBtnText"></Button>
+
+			<Button
+			    android:id="@+id/btn_exit"
+			    style="@style/CustomBtnText"
+			    android:text="Back" >
+</Button>
 			<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/go_down" android:id="@+id/down_btn" android:scaleType="centerInside"></ImageButton>						     	     
  			<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/go_home" android:id="@+id/btn_home"></ImageButton>
  			<ImageButton style="@style/CustomImageBtnText" android:src="@drawable/yellow" android:id="@+id/yellow_btn" android:scaleType="centerInside"></ImageButton>

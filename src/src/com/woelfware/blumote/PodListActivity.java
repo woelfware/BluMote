@@ -11,7 +11,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -140,7 +143,22 @@ public class PodListActivity extends Activity {
         }
     	
     }
-
+    
+    @Override
+	protected void onStart() {		
+		super.onStart();
+    	DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        double inches = Math.sqrt((metrics.widthPixels * metrics.widthPixels) + (metrics.heightPixels * metrics.heightPixels)) / metrics.densityDpi;
+        Resources res = getResources();
+        int TABLET_SIZE = res.getInteger(R.integer.tablet_size);
+        if (inches > TABLET_SIZE) {
+        	this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+        	this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+    
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -301,7 +319,7 @@ public class PodListActivity extends Activity {
 //    }
     
     private static String convertToPodKey(String podName) {
-    	if (podName.startsWith(POD_PREFIX)) {
+    	if (podName != null && podName.startsWith(POD_PREFIX)) {
     		return podName;    		
     	} else {
     		return POD_PREFIX + podName;

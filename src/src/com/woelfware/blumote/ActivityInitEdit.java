@@ -10,7 +10,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -127,6 +130,21 @@ public class ActivityInitEdit extends Activity {
         i.putExtra("returnStr", ""); // return empty string indicating no RED requested
         setResult(RESULT_OK,i);       
 	}
+	
+	@Override
+	protected void onStart() {		
+		super.onStart();
+    	DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        double inches = Math.sqrt((metrics.widthPixels * metrics.widthPixels) + (metrics.heightPixels * metrics.heightPixels)) / metrics.densityDpi;
+        Resources res = getResources();
+        int TABLET_SIZE = res.getInteger(R.integer.tablet_size);
+        if (inches > TABLET_SIZE) {
+        	this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+        	this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
 
 	/**
 	 * Populate the display with all the activity initialization steps

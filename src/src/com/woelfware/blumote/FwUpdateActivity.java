@@ -17,9 +17,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,6 +129,21 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
     	setResult(RESULT_CANCELED,i);        
 	}
 
+    @Override
+	protected void onStart() {		
+		super.onStart();
+    	DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        double inches = Math.sqrt((metrics.widthPixels * metrics.widthPixels) + (metrics.heightPixels * metrics.heightPixels)) / metrics.densityDpi;
+        Resources res = getResources();
+        int TABLET_SIZE = res.getInteger(R.integer.tablet_size);
+        if (inches > TABLET_SIZE) {
+        	this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+        	this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+    
 	/**
 	 * Populate the display with all the fw images
 	 */
@@ -460,7 +478,7 @@ public class FwUpdateActivity extends Activity implements OnItemClickListener {
 				}				
 												
 			} catch (Exception e) {}
-			return new Integer(byteCounter);
+			return Integer.valueOf(byteCounter);
 		}
 
 		@Override
