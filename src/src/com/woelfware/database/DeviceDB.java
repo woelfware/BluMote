@@ -3,6 +3,7 @@
 package com.woelfware.database;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
@@ -132,7 +133,7 @@ public class DeviceDB {
 			// iterate through cursor to load up buttons array
 			for (int i= 0; i < buttons.length; i++) {
 				try {
-					buttons[i] = new ButtonData(0, c.getString(1), c.getBlob(2));
+					buttons[i] = new ButtonData(0, c.getString(1), c.getBlob(2), curTable);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -414,6 +415,14 @@ public class DeviceDB {
         return debug;
     }
     
+    
+    public void enterRawTableData(String[] statements) {
+    	//TODO
+    	for(String sql : statements){
+    	    db.execSQL(sql);
+    	}
+    }
+    
     /**
      * Formats a name for usage as a table in a database, specifies that the table
      * should be used explicitly and puts '[ ]' around it. 
@@ -426,4 +435,51 @@ public class DeviceDB {
     	}
     	return "["+deviceName+"]";    		
     }
+    
+    /**
+     * Change the repeat count from the default to something specific (1-3)
+     * @param device name of the device
+     * @param repeat integer 1-3
+     */
+    public void changeRepeat(String device, int repeat) {
+    	//TODO    	
+    	try {
+			synchronized (DeviceDB.sDataLock) {
+				try {
+					ContentValues args = new ContentValues();
+			        args.put(Constants.DB_FIELDS.BUTTON_REPEAT_TIMES.getValue(), repeat);
+			        db.update(Constants.DEVICES_TABLE, args, 
+			        			Constants.DB_FIELDS.DEVICE_ID.getValue() + "='" + device +"'", null);
+				} catch (SQLiteException ex) {
+					Log.v("Remove from "+Constants.DEVICES_TABLE+" exception", ex.getMessage());
+				}	
+			}
+		} catch (Exception e) {
+			Log.e(TAG,e.getMessage());
+		}
+    }
+    
+	/**
+	 * Get the repeat count for the device (or default if nothing was set)
+	 * @param name name of device
+	 * @return the button repeat count
+	 */
+	public int getRepeatCount(String name) {
+		try {
+			synchronized (DeviceDB.sDataLock) {
+				Cursor c = db.query(Constants.DEVICES_TABLE, new String[] { 
+						Constants.DB_FIELDS.DEVICE_ID.getValue(), Constants.DB_FIELDS.BUTTON_REPEAT_TIMES.getValue()
+						}, Constants.DB_FIELDS.DEVICE_ID.getValue()+"='"+name+"'", null, null,null, null);
+				if (c != null && c.getCount() > 0) {
+					c.moveToFirst();			
+					return c.getInt(1); // return the button repeat count stored in DB
+				} else {
+					return 0; // else return default value
+				}
+			}
+		} catch (Exception e) {
+			Log.e(TAG,e.getMessage());
+			return 0;
+		}
+	}
 }

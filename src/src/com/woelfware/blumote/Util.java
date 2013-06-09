@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Formatter;
 
 public class Util {
@@ -119,6 +120,31 @@ public class Util {
 
 	
 	public static class FileUtils {
+		/**
+		 * Convert a InputStream to a String[]
+		 * @param is InputStream
+		 * @return String[]
+		 */
+		public static String[] convertStreamToStringArray(InputStream is) {
+			ArrayList<String> strings = new ArrayList<String>();
+		    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+		    String line = null;
+		    try {
+		        while ((line = reader.readLine()) != null) {
+		            strings.add(line);
+		        }
+		    } catch (IOException e) {
+		        return null;
+		    } finally {
+		        try {
+		            is.close();
+		        } catch (IOException e) {
+		            return null;
+		        }
+		    }
+		    return strings.toArray(new String[1]);
+		}
 		/**
 		 * Create a copy of of a file
 		 * @param fromFile file to copy from

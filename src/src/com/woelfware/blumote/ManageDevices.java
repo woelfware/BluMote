@@ -2,13 +2,18 @@
 
 package com.woelfware.blumote;
 
+import java.io.InputStream;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -19,6 +24,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.woelfware.database.DeviceDB;
 
@@ -34,6 +40,7 @@ public class ManageDevices extends Activity {
     private static final int ACTIVITY_RENAME=1;
     private static final int ID_DELETE = 0;
     private static final int ID_RENAME = 1;
+    private static final int CHANGE_REPEAT = 2;
     private Button add_config_btn;
     
     ListView devicesListView;
@@ -121,6 +128,16 @@ public class ManageDevices extends Activity {
         	this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
+	
+	private String[] convertTableName(String from, String to, String[] sourceData) {
+		String[] returnData = new String[sourceData.length];
+		int i=0;
+		for (String line : sourceData) {
+			returnData[i] = line.replaceAll(from, to);
+			i++;
+		}
+		return returnData;
+	}
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -137,6 +154,16 @@ public class ManageDevices extends Activity {
         		device_data.addDevice(return_string, button_config);
         		// create a new lookup ID for this item
         		lookup.addLookupId(return_string);
+        		//TODO - test this code!
+        		// if this is a ROKU device then populate default codes
+        		if (button_config.equals(MainInterface.DEVICE_LAYOUTS.ROKU.getValue())) {
+        			Log.v("BLUMOTE", "We got a new Roku device, populating defaults..");
+        			InputStream stream = getResources().openRawResource(R.raw.roku_codes);
+        			String[] data = Util.FileUtils.convertStreamToStringArray(stream);
+        			// convert table name to desired name
+        			data = convertTableName("Roku", return_string, data);
+        			device_data.enterRawTableData(data);        			
+        		}
     		}
         	// refresh the display of items
     		populateDisplay();    		
@@ -164,21 +191,38 @@ public class ManageDevices extends Activity {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
+		deviceName = mDevicesArrayAdapter.getItem((int)(info.id));
+		
 		switch(item.getItemId()) {
 		case ID_DELETE:
 			// need to remove this table and repopulate list
-			deviceName = mDevicesArrayAdapter.getItem((int)(info.id));
 			device_data.removeDevice(deviceName);
 			lookup.deleteLookupId(deviceName);
 			populateDisplay();
 			return true;
 		case ID_RENAME:
 			// need to remove this table and repopulate list
-			deviceName = mDevicesArrayAdapter.getItem((int)(info.id));
 			//launch window to get new name to use
 			Intent i = new Intent(this, EnterDevice.class);
             startActivityForResult(i, ACTIVITY_RENAME);
 			return true;
+		case CHANGE_REPEAT:
+			// pop up drop-down selection screen
+			// 1. Instantiate an AlertDialog.Builder with its constructor
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			// 2. Chain together various setter methods to set the dialog characteristics
+			builder.setTitle("Pick repeat count")
+					.setItems(R.array.repeat_counts, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+			            	// The 'which' argument contains the index position
+			            	// of the selected item
+							// TODO
+							device_data.changeRepeat(deviceName, which+1);
+						}
+					});
+			// 3. Get the AlertDialog from create()
+			AlertDialog dialog = builder.create();
+			dialog.show();
 		}
 		return super.onContextItemSelected(item);
 	}
@@ -191,6 +235,7 @@ public class ManageDevices extends Activity {
 			menu.setHeaderTitle("Menu");
 			menu.add(0, ID_DELETE, 0, "Delete");
 			menu.add(0, ID_RENAME, 0, "Rename");
+			menu.add(0, CHANGE_REPEAT, 0, "Repeat Number");
 		}
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}

@@ -620,7 +620,8 @@ public class Activities {
 				// extract value after the space
 				String buttonID = (item[1]); 
 				byte[] toSend = null;
-
+				String deviceName = null;
+				
 				String buttonSource = item[0];
 				// if buttonSource is null that means the device/activity was deleted, so just skip over this item
 				if (buttonSource != null) {
@@ -630,7 +631,8 @@ public class Activities {
 						try {
 							// Returns DeviceButton created from activity button and activity name
 							DeviceButton realDevice = new DeviceButton(buttonSource, buttonID);
-							toSend = blumote.device_data.getButton(realDevice.getDevice(), realDevice.getButton());
+							deviceName = realDevice.getDevice();
+							toSend = blumote.device_data.getButton(deviceName, realDevice.getButton());							
 						} catch (Exception e) {
 							// failed so don't send anything
 						}
@@ -640,13 +642,16 @@ public class Activities {
 						// 	otherwise we can just use getButton if it is a regular device
 						try {
 							toSend = blumote.device_data.getButton(buttonSource, buttonID);
+							deviceName = buttonSource;
 						} catch (Exception e) {
 							// failed so don't send anything
 						}
 					}
 					// execute button code
-					if (toSend != null) {					
-						pod.sendButtonCode(toSend);
+					if (toSend != null) {
+						//TODO consider caching this repeat count on device selection
+						int repeat = blumote.device_data.getRepeatCount(deviceName);
+						pod.sendButtonCode(toSend, repeat);
 					}
 				}
 			}				
@@ -671,7 +676,10 @@ public class Activities {
 	
 	public void nextPowerOffData() {
 		if (powerOffDataIndex < powerOffData.length) {
-			pod.sendButtonCode(powerOffData[powerOffDataIndex].getButtonData());
+			//TODO consider caching this repeat count on device selection
+			int repeat = blumote.device_data.getRepeatCount(
+					powerOffData[powerOffDataIndex].getSourceDevice());
+			pod.sendButtonCode(powerOffData[powerOffDataIndex].getButtonData(), repeat);
 			powerOffDataIndex++;
 
 			if (powerOffDataIndex < powerOffData.length) {
@@ -835,10 +843,12 @@ public class Activities {
 					deviceButtons[index] = new ButtonData(
 							0, activityButton.getActivityButton(), 
 							blumote.device_data.getButton(activityButton.getDeviceName(), 
-							activityButton.getDeviceButton()));
+							activityButton.getDeviceButton()),
+							activityButton.getDeviceName());
 				} catch (Exception e) {
 					// if the call the getButton() failed then lets just create a button with null for data
-					deviceButtons[index] = new ButtonData(0, activityButton.getActivityButton(),null);
+					deviceButtons[index] = new ButtonData(
+							0, activityButton.getActivityButton(), null, null);
 				}
 				
 			}
@@ -943,10 +953,12 @@ public class Activities {
 						// try to insert data from database if it exists
 						buttonData = blumote.device_data.getButton(devices[i], mainint.button_map.get(R.id.power_on_btn));
 						returnData[i] = new ButtonData( R.id.power_on_btn, 
-								mainint.button_map.get(R.id.power_on_btn),buttonData);
+								mainint.button_map.get(R.id.power_on_btn),buttonData,
+								devices[i]);
 					} catch (Exception e) {
 						// if the call the getButtion() failed then lets just create a button with null for data
-						returnData[i] = new ButtonData(0, mainint.button_map.get(R.id.power_on_btn),null);
+						returnData[i] = new ButtonData(
+								0, mainint.button_map.get(R.id.power_on_btn), null, null);
 					}
 				}
 				

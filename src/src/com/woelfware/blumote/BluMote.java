@@ -1575,6 +1575,9 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		activity = MainInterface.ACTIVITY_PREFIX + activity;
 		mainScreen.setDropDown(activity); // set drop down to selected item
 		
+		// move screen 1 to the right
+		mainScreen.moveRight();
+		
 	}
 
 	/**
@@ -1601,7 +1604,9 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 						byte[] code = buttons[i].getButtonData();
 						if (code != null) {
 							foundIt = true;
-							pod.sendButtonCode(code);
+							//TODO consider caching this repeat count on device selection
+							int repeat = device_data.getRepeatCount(cur_device);
+							pod.sendButtonCode(code, repeat);
 						}
 					}				 
 				}

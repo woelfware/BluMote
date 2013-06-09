@@ -679,7 +679,7 @@ class Pod {
 	 * @param code
 	 *            the IR code data to send
 	 */
-	void sendButtonCode(byte[] code) {
+	void sendButtonCode(byte[] code, int repeat) {
 		Log.v("POD_DEBUG", " Sent: "+Util.byteArrayToString(code));
 		
 		if (!buttonLock && code != null) { // make sure we have not recently
@@ -708,8 +708,8 @@ class Pod {
 			// is a long press or a short press of the button
 			if (BluMote.BUTTON_LOOPING) {
 				toSend[1] = REPEAT_IR_LONG; // long press
-			} else {
-				toSend[1] = 0; // short press
+			} else {				
+				toSend[1] = (byte)repeat; // short press
 			}
 			for (int j = 2; j < toSend.length; j++) {
 				toSend[j] = code[j - 2];
