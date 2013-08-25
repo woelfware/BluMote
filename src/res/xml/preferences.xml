@@ -7,6 +7,11 @@
 	 	android:defaultValue="true" 
 	 	android:summary="Buttons will give haptic feedback when pushed"/>
 	 <CheckBoxPreference 
+	 	android:title="Auto-connect last pod used" 
+	 	android:key="autoconnect" 
+	 	android:defaultValue="true" 
+	 	android:summary="Automatically connect to last used pod"/>
+	 <CheckBoxPreference 
 	 	android:title="Bluetooth Insecure Mode" 
 	 	android:key="htcInsecure" 
 	 	android:defaultValue="true" 

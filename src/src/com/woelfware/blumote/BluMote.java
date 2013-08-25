@@ -142,7 +142,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 	// connecting device name - temp storage
 	private String connectingDevice;
 	// connecting device MAC address - temp storage
-	private String connectingMAC;
+	private String connectingMAC = null;
 
 	// Local Bluetooth adapter
 	private BluetoothAdapter mBluetoothAdapter = null;
@@ -248,6 +248,8 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
     
     // Broadcast receiver for Screen state changes
     BroadcastReceiver screenReceiver;
+    
+    private boolean firstRun = true;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
@@ -364,7 +366,9 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		}; // END gestureListener										
 		
 		// Load the last pod that we connected to, onResume() will try to connect to this
-		connectingMAC = prefs.getString("lastPod", null);
+		SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean autoConnect = myprefs.getBoolean("autoconnect", true);
+		if (autoConnect) { connectingMAC = prefs.getString("lastPod", null); }
 		
 		// Set up the window layout
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -439,7 +443,19 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			
 			// context menu on array list
 			registerForContextMenu(findViewById(R.id.activities_list));
-
+			
+			// Launch the pod selection screen if preference not set for autoconnect
+//TODO
+			// Load the last pod that we connected to, onResume() will try to connect to this
+			SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
+			boolean autoConnect = myprefs.getBoolean("autoconnect", true);
+			if (!autoConnect && firstRun) {
+				firstRun = false;
+				// Launch the DeviceListActivity to see devices and do scan
+				Intent serverIntent = new Intent(this, PodListActivity.class);
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			}
+			firstRun = false; // not the first time onStart() has been called since onCreate()
 		}
 	}
 	
