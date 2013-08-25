@@ -249,8 +249,6 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
     // Broadcast receiver for Screen state changes
     BroadcastReceiver screenReceiver;
     
-    private boolean firstRun = true;
-    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
 		
@@ -369,6 +367,12 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean autoConnect = myprefs.getBoolean("autoconnect", true);
 		if (autoConnect) { connectingMAC = prefs.getString("lastPod", null); }
+		// Launch the pod selection screen if preference not set for autoconnect					
+		else if ( BluetoothChatService.BT_ENABLING != true ) {
+			// Launch the DeviceListActivity to see devices and do scan
+			Intent serverIntent = new Intent(this, PodListActivity.class);
+			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+		}
 		
 		// Set up the window layout
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -443,19 +447,6 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 			
 			// context menu on array list
 			registerForContextMenu(findViewById(R.id.activities_list));
-			
-			// Launch the pod selection screen if preference not set for autoconnect
-//TODO
-			// Load the last pod that we connected to, onResume() will try to connect to this
-			SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
-			boolean autoConnect = myprefs.getBoolean("autoconnect", true);
-			if (!autoConnect && firstRun) {
-				firstRun = false;
-				// Launch the DeviceListActivity to see devices and do scan
-				Intent serverIntent = new Intent(this, PodListActivity.class);
-				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-			}
-			firstRun = false; // not the first time onStart() has been called since onCreate()
 		}
 	}
 	
@@ -1043,6 +1034,14 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 
 			if (resultCode == Activity.RESULT_OK) {
 				// Bluetooth is now enabled
+				// Launch the DeviceListActivity to see devices and do scan
+				// if autoconnect disabled in prefs, then launch activity to view pods
+				SharedPreferences myprefs = PreferenceManager.getDefaultSharedPreferences(this);
+				boolean autoConnect = myprefs.getBoolean("autoconnect", true);
+				if (!autoConnect) {
+					Intent serverIntent = new Intent(this, PodListActivity.class);
+					startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+				}
 			} else {
 				// User did not enable Bluetooth or an error occured
 				Toast.makeText(this, R.string.bt_not_enabled_leaving,
