@@ -376,6 +376,7 @@ public class BluMote extends Activity implements OnClickListener,OnItemClickList
 		
 		// Set up the window layout
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		
 		setContentView(R.layout.blank_interface); // need this for title setup to work
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.custom_title);

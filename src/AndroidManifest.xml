@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      android:versionCode="1"
-      package="com.woelfware.blumote" android:versionName="12.12.5"
+      android:versionCode="4"
+      package="com.woelfware.blumote" android:versionName="13.10.9"
       android:installLocation="preferExternal">
     
     <uses-sdk android:targetSdkVersion="10" android:minSdkVersion="10"></uses-sdk>
@@ -13,10 +13,14 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>	
 	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 	
-    <application android:label="@string/app_name" android:icon="@drawable/bluemote" android:backupAgent=".MyBackupAgentHelper">
+    <application android:label="@string/app_name" 
+        android:icon="@drawable/bluemote" 
+        android:backupAgent=".MyBackupAgentHelper"
+        android:theme="@style/NoActionBar">
 		<meta-data android:name="com.google.android.backup.api_key"	android:value="AEdPqrEAAAAIysP9ZYx7oeCaJyRBh-DjWkeBNhMVBgadedpcGQ" />
-        <activity android:name="BluMote"
-                  android:label="@string/app_name" >
+        <activity 	android:theme="@style/NoActionBar"
+            		android:name="BluMote"
+                	android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,9 +40,9 @@
 		<activity android:name="PodListActivity"/>    
 		<activity android:name="ManageDevices"/>
 		<activity android:name="FwUpdateActivity"/>
+		<activity android:name="ActivityInitEdit"></activity>
 		<activity android:theme="@android:style/Theme.Dialog" android:label="New Device" android:name="EnterDevice"></activity>
 		<activity android:theme="@android:style/Theme.Dialog" android:label="New Activity" android:name="CreateActivity"></activity>
-		<activity android:name="ActivityInitEdit"></activity>
-		<activity android:name=".EnterName" android:theme="@android:style/Theme.Dialog" android:label="Enter Name"></activity>				
+		<activity android:theme="@android:style/Theme.Dialog" android:name=".EnterName" android:label="Enter Name"></activity>				
 	</application>	
 </manifest> 
