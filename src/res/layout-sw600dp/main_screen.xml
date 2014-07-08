@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Example to make a spacer button
+<!--
+     Example to make a spacer button
 	<View android:id="@+id/strut1"
         android:layout_width="0dp"
         android:layout_height="wrap_content" 
@@ -10,10 +11,11 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -25,43 +27,41 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp" >
 
-		<ImageButton
-		    android:id="@+id/power_on_btn"
-		    style="@style/CustomImageBtnText"
-		    android:layout_width="70dp"
-		    android:layout_height="70dp"
-		    android:layout_alignParentLeft="true"
-		    android:layout_centerVertical="true"
-		    android:adjustViewBounds="false"
-		    android:background="@drawable/round_btn_look"
-		    android:src="@drawable/pwr_grey" >
-</ImageButton>
+        <ImageButton
+            android:id="@+id/power_on_btn"
+            style="@style/CustomImageBtnText"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="false"
+            android:background="@drawable/round_btn_look"
+            android:src="@drawable/pwr_grey" >
+        </ImageButton>
 
-		<ImageButton
-		    android:id="@+id/power_off_btn"
-		    style="@style/CustomImageBtnText"
-		    android:layout_width="70dp"
-		    android:layout_height="70dp"
-		    android:layout_alignParentRight="true"
-		    android:layout_centerVertical="true"
-		    android:layout_marginLeft="20dp"
-		    android:adjustViewBounds="false"
-		    android:background="@drawable/round_btn_look"
-		    android:src="@drawable/pwr_dark" >
-</ImageButton>
+        <ImageButton
+            android:id="@+id/power_off_btn"
+            style="@style/CustomImageBtnText"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:adjustViewBounds="false"
+            android:background="@drawable/round_btn_look"
+            android:src="@drawable/pwr_dark" >
+        </ImageButton>
 
-		<Spinner
-		    android:id="@+id/device_spinner"
-		    android:layout_width="250dp"
-		    android:layout_height="50dp"
-		    android:layout_centerHorizontal="true"
-		    android:layout_centerVertical="true"
-		    android:background="@drawable/spinner_look"
-		    android:prompt="@string/spinner_prompt"
-		    android:textColor="#FFFFFF" />
-
-	</RelativeLayout>
-	
+        <Spinner
+            android:id="@+id/device_spinner"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/spinner_look"
+            android:prompt="@string/spinner_prompt"
+            android:textColor="#FFFFFF" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -76,466 +76,663 @@
         android:paddingTop="10dp"
         android:weightSum="10.0" >
 
-		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    android:layout_gravity="center"
-		    android:layout_weight="1"
-		    android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical" >
 
-			<ImageButton
-			    android:id="@+id/btn_volume_up"
-			    android:layout_width="fill_parent"
-			    android:layout_height="0dp"
-			    android:layout_marginRight="2dp"
-			    android:layout_weight="2"
-			    android:background="@drawable/top_rocker_look_tablet"
-			    android:src="@drawable/vol_plus" >
-</ImageButton> 		    				    
+            <ImageButton
+                android:id="@+id/btn_volume_up"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="2"
+                android:background="@drawable/top_rocker_look_tablet"
+                android:src="@drawable/vol_plus" >
+            </ImageButton>
 
-			<ImageButton
-			    android:id="@+id/btn_volume_down"
-			    android:layout_width="fill_parent"
-			    android:layout_height="0dp"
-			    android:layout_marginBottom="20dp"
-			    android:layout_marginRight="2dp"
-			    android:layout_weight="2"
-			    android:background="@drawable/bottom_rocker_look_tablet"
-			    android:src="@drawable/vol_minus" >
+            <ImageButton
+                android:id="@+id/btn_volume_down"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="2"
+                android:background="@drawable/bottom_rocker_look_tablet"
+                android:src="@drawable/vol_minus" >
+            </ImageButton>
 
-</ImageButton>
+            <ImageButton
+                android:id="@+id/mute_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:src="@drawable/audio_volume_muted" >
+            </ImageButton>
 
-			<ImageButton
-			    android:id="@+id/mute_btn"
-			    style="@style/CustomImageBtnText"
-			    android:layout_width="fill_parent"
-			    android:layout_height="0dp"
-			    android:layout_marginTop="2dp"
-			    android:layout_weight="1"
-			    android:src="@drawable/audio_volume_muted" >
-</ImageButton>	
-			<ImageButton style="@style/CustomImageBtnText"
-			    android:layout_height="0dp"
-			    android:layout_width="fill_parent"
-			    android:layout_weight="1" 
-			    android:src="@drawable/green" 
-			    android:id="@+id/green_btn" 
-			    android:scaleType="centerInside"></ImageButton>							  					    				    
-		</LinearLayout>	    
-		<LinearLayout
-				android:orientation="vertical"
-				android:layout_width="0dp" 
-				android:layout_height="fill_parent"
-				android:layout_gravity="center"
-				android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/green_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:src="@drawable/green" >
+            </ImageButton>
+        </LinearLayout>
 
-				<ImageButton
-				    android:id="@+id/btn_channel_up"
-				    android:layout_width="fill_parent"
-				    android:layout_height="0dp"
-				    android:layout_marginLeft="2dp"
-				    android:layout_weight="2"
-				    android:background="@drawable/top_rocker_look_tablet"
-				    android:src="@drawable/ch_plus" >
-				</ImageButton> 		    				    
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical" >
 
-				<ImageButton
-				    android:id="@+id/btn_channel_down"
-				    android:layout_width="fill_parent"
-				    android:layout_height="0dp"
-				    android:layout_marginBottom="20dp"
-				    android:layout_marginLeft="2dp"
-				    android:layout_weight="2"
-				    android:background="@drawable/bottom_rocker_look_tablet"
-				    android:src="@drawable/ch_minus" >
+            <ImageButton
+                android:id="@+id/btn_channel_up"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="2"
+                android:background="@drawable/top_rocker_look_tablet"
+                android:src="@drawable/ch_plus" >
+            </ImageButton>
 
-</ImageButton>	
+            <ImageButton
+                android:id="@+id/btn_channel_down"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="2"
+                android:background="@drawable/bottom_rocker_look_tablet"
+                android:src="@drawable/ch_minus" >
+            </ImageButton>
 
-				<Button
-				    android:id="@+id/btn_input"
-				    style="@style/CustomBtnText"
-				    android:layout_width="fill_parent"
-				    android:layout_height="0dp"
-				    android:layout_marginTop="2dp"
-				    android:layout_weight="1"
-				    android:text="Input" >
-</Button>	
-				<ImageButton style="@style/CustomImageBtnText"
-				    android:layout_height="0dp"
-				    android:layout_width="fill_parent"
-				    android:layout_weight="1" 
-				    android:src="@drawable/red" 
-				    android:id="@+id/red_btn" 
-				    android:scaleType="centerInside"></ImageButton>	    					
-		</LinearLayout>		
+            <Button
+                android:id="@+id/btn_input"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:text="Input" >
+            </Button>
 
-		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    android:layout_gravity="center"
-		    android:layout_marginLeft="10dp"
-		    android:layout_weight="3"
-		    android:orientation="vertical">			
-			<LinearLayout
-					android:orientation="horizontal"
-					android:layout_width="fill_parent" 
-					android:layout_height="0dp"
-					android:paddingLeft="5dp"
-					android:paddingRight="5dp"
-					android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/red_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:src="@drawable/red" >
+            </ImageButton>
+        </LinearLayout>
 
-					<ImageButton
-					    android:id="@+id/pgup_btn"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:src="@drawable/pg_plus" >
-					</ImageButton>
-					<ImageButton
-					    android:id="@+id/btn_up"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:scaleType="centerInside"
-					    android:src="@drawable/go_up" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="3"
+            android:orientation="vertical" >
 
-					<ImageButton
-					    android:id="@+id/pgdn_btn"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:src="@drawable/pg_minus" >
-					</ImageButton>
-			</LinearLayout>
-			<LinearLayout
-					android:orientation="horizontal"
-					android:layout_width="fill_parent" 
-					android:layout_height="0dp"
-					android:paddingLeft="5dp"
-					android:paddingRight="5dp"
-					android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
 
-					<ImageButton
-					    android:id="@+id/left_btn"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:layout_weight="1"
-					    android:scaleType="centerInside"
-					    android:src="@drawable/go_previous" >
-					</ImageButton>
+                <ImageButton
+                    android:id="@+id/pgup_btn"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/pg_plus"
+                    tools:ignore="Suspicious0dp" >
+                </ImageButton>
 
-					<Button
-					    android:id="@+id/btn_enter"
-					    style="@style/CustomBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:layout_weight="1"
-					    android:text="Enter" >
-					</Button>
+                <ImageButton
+                    android:id="@+id/btn_up"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/go_up"
+                    tools:ignore="Suspicious0dp" />
 
-					<ImageButton
-					    android:id="@+id/right_btn"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:layout_weight="1"
-					    android:scaleType="centerInside"
-					    android:src="@drawable/go_next" >
-					</ImageButton>
-			</LinearLayout>
-			<LinearLayout
-					android:orientation="horizontal"
-					android:layout_width="fill_parent" 
-					android:layout_height="0dp"
-					android:paddingLeft="5dp"
-					android:paddingRight="5dp"
-					android:layout_weight="1">
-					<ImageButton
-					    android:id="@+id/btn_home"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:layout_weight="1"
-					    android:src="@drawable/go_home" >
-					</ImageButton>
-					<ImageButton
-					    android:id="@+id/down_btn"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:layout_weight="1"
-					    android:scaleType="centerInside"
-					    android:src="@drawable/go_down" />
-					<ImageButton
-					    android:id="@+id/return_btn"
-					    style="@style/CustomImageBtnText"
-					    android:layout_width="0dp"
-					    android:layout_height="fill_parent"
-					    android:layout_weight="1"
-					    android:src="@drawable/go_return" >
-					</ImageButton>					
-			</LinearLayout>
-			<LinearLayout
-				android:orientation="horizontal"
-				android:layout_width="fill_parent" 
-				android:layout_height="0dp"
-				android:paddingLeft="5dp"
-				android:paddingRight="5dp"
-				android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/pgdn_btn"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/pg_minus"
+                    tools:ignore="Suspicious0dp" >
 
-				<Button
-				    android:id="@+id/btn_exit"
-				    style="@style/CustomBtnText"
-				    android:layout_width="0dp"
-				    android:layout_height="fill_parent"
-				    android:text="Exit" >
-</Button>
-				<!-- Unused button exit_btn -->
-				<Button android:id="@+id/exit_btn" 
-					android:text="Exit" style="@style/CustomBtnText"
-					android:layout_width="0dp"
-					android:visibility="gone"
-					android:layout_height="wrap_content"></Button>
+                </ImageButton>
+            </LinearLayout>
 
-				<Button
-				    android:id="@+id/btn_misc1"
-				    style="@style/CustomBtnText"
-				    android:layout_width="0dp"
-				    android:layout_height="fill_parent"
-				    android:text="Misc 1" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
 
-				<Button
-				    android:id="@+id/btn_misc2"
-				    style="@style/CustomBtnText"
-				    android:layout_width="0dp"
-				    android:layout_height="fill_parent"
-				    android:text="Misc 2" >
-</Button>
-			</LinearLayout>
-			<LinearLayout
-				android:orientation="horizontal"
-				android:layout_width="fill_parent" 
-				android:layout_height="0dp"
-				android:paddingLeft="5dp"
-				android:paddingRight="5dp"
-				android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/left_btn"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/go_previous" >
+                </ImageButton>
 
-				<Button
-				    android:id="@+id/btn_misc3"
-				    style="@style/CustomBtnText"
-				    android:layout_width="0dp"
-				    android:layout_height="fill_parent"
-				    android:text="Misc 3" />
+                <Button
+                    android:id="@+id/btn_enter"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Enter" >
+                </Button>
 
-				<Button
-				    android:id="@+id/btn_misc4"
-				    style="@style/CustomBtnText"
-				    android:layout_width="0dp"
-				    android:layout_height="fill_parent"
-				    android:text="Misc 4" >
-</Button>
+                <ImageButton
+                    android:id="@+id/right_btn"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/go_next" >
+                </ImageButton>
+            </LinearLayout>
 
-				<Button
-				    android:id="@+id/btn_misc5"
-				    style="@style/CustomBtnText"
-				    android:layout_width="0dp"
-				    android:layout_height="fill_parent"
-				    android:text="Misc 5" >
-</Button>
-			</LinearLayout>
-		</LinearLayout>
-				
-		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    android:layout_gravity="center"
-		    android:layout_marginLeft="10dp"
-		    android:layout_weight="1"
-		    android:orientation="vertical">
-		    	<Button android:id="@+id/btn_n1" 
-		    	    android:text="1" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-		    	<Button android:id="@+id/btn_n4" 
-		    	    android:text="4" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>	
-				<Button android:id="@+id/btn_n7" 
-		    	    android:text="7" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-				<Button android:id="@+id/btn_dash" 
-		    	    android:text="-" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>	
-		    	<Button android:id="@+id/disc_btn" 
-		    	    android:text="Disc\nMenu" 
-		    	    style="@style/CustomBtnText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-		    	<Button android:id="@+id/btn_misc6" 
-				    android:text="Misc 6" 
-				    style="@style/CustomBtnText"
-				    android:layout_height="0dp"
-					android:layout_width="fill_parent"></Button>				
-		</LinearLayout>
-		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    android:layout_gravity="center"
-		    android:layout_weight="1"
-		    android:orientation="vertical">
-     			<Button android:id="@+id/btn_n2" 
-		    	    android:text="2" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-		    	<Button android:id="@+id/btn_n5" 
-		    	    android:text="5" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>	
-				<Button android:id="@+id/btn_n8" 
-		    	    android:text="8" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-				<Button android:id="@+id/btn_n0" 
-		    	    android:text="0" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>	
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
 
-		    	<Button
-		    	    android:id="@+id/info_btn"
-		    	    style="@style/CustomBtnText"
-		    	    android:layout_width="fill_parent"
-		    	    android:layout_height="0dp"
-		    	    android:text="Info/\nDisplay" >
-</Button>	
-		    	<Button android:id="@+id/btn_misc7" 
-				    android:text="Misc 7" 
-				    style="@style/CustomBtnText"
-				    android:layout_height="0dp"
-					android:layout_width="fill_parent"></Button>
-		</LinearLayout>
-		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    android:layout_gravity="center"
-		    android:layout_weight="1"
-		    android:orientation="vertical">     
-				<Button android:id="@+id/btn_n3" 
-		    	    android:text="3" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-		    	<Button android:id="@+id/btn_n6" 
-		    	    android:text="6" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>	
-				<Button android:id="@+id/btn_n9" 
-		    	    android:text="9" style="@style/CustomNumbersText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-				<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/emblem_favorite" 
-				    android:id="@+id/fav_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>		
-		    	<Button android:id="@+id/guide_btn" 
-		    	    android:text="Guide" 
-		    	    style="@style/CustomBtnText"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-		    	<Button android:id="@+id/btn_misc8" 
-				    android:text="Misc 8" 
-				    style="@style/CustomBtnText"
-				    android:layout_height="0dp"
-					android:layout_width="fill_parent"></Button>		
-		</LinearLayout>
+                <ImageButton
+                    android:id="@+id/btn_home"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/go_home" >
+                </ImageButton>
 
-		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    android:layout_gravity="center"
-		    android:layout_marginLeft="10dp"
-		    android:layout_weight="1"
-		    android:orientation="vertical">
-		    	<ImageButton style="@style/CustomImageBtnText" 
-		    	    android:src="@drawable/media_playback_start" 
-		    	    android:id="@+id/play_btn"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton> 				
-				<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/media_playback_stop" 
-				    android:id="@+id/stop_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>				
-				<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/media_seek_backward" 
-				    android:id="@+id/back_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>				
-				<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/media_skip_backward" 
-				    android:id="@+id/back_skip_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>
-				<Button android:id="@+id/btn_last" 
-				    android:text="Last" style="@style/CustomBtnText"
-					android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></Button>
-				<ImageButton style="@style/CustomImageBtnText"
-				    android:layout_height="0dp"
-				    android:layout_width="fill_parent"
-				    android:src="@drawable/yellow" 
-				    android:id="@+id/yellow_btn" 
-				    android:scaleType="centerInside"></ImageButton>
-		</LinearLayout>
-		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    android:layout_gravity="center"
-		    android:layout_weight="1"
-		    android:orientation="vertical">     
-				<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/media_playback_pause" 
-				    android:id="@+id/pause_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>	
-				<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/media_eject" 
-				    android:id="@+id/eject_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>
-				<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/media_seek_forward" 
-				    android:id="@+id/forward_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>	
-		    	<ImageButton style="@style/CustomImageBtnText" 
-				    android:src="@drawable/media_skip_forward" 
-				    android:id="@+id/skip_forward_btn"
-				    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>
-		    	<ImageButton style="@style/CustomImageBtnText" 
-		    	    android:src="@drawable/media_record" 
-		    	    android:id="@+id/record_btn"
-		    	    android:layout_height="0dp"
-		    	    android:layout_width="fill_parent" ></ImageButton>
-		    	<ImageButton style="@style/CustomImageBtnText"
-				    android:layout_height="0dp"
-				    android:layout_width="fill_parent"
-				    android:src="@drawable/blue" 
-				    android:id="@+id/blue_btn" 
-				    android:scaleType="centerInside"></ImageButton>
-		</LinearLayout>
-	</LinearLayout>
+                <ImageButton
+                    android:id="@+id/down_btn"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/go_down" />
 
-	<ImageView
-	    android:layout_width="40dp"
-	    android:layout_height="40dp"
-	    android:layout_gravity="center_horizontal"
-	    android:layout_marginTop="5dp"
-	    android:scaleType="fitXY"
-	    android:src="@drawable/middle_circle"
-	    android:visibility="invisible" >
-	</ImageView> 
+                <ImageButton
+                    android:id="@+id/return_btn"
+                    style="@style/CustomImageBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/go_return" >
+                </ImageButton>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
+
+                <Button
+                    android:id="@+id/btn_exit"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="Exit"
+                    tools:ignore="Suspicious0dp" >
+
+                </Button>
+                <!-- Unused button exit_btn -->
+
+                <Button
+                    android:id="@+id/exit_btn"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Exit"
+                    android:visibility="gone"
+                    tools:ignore="Suspicious0dp" >
+
+                </Button>
+
+                <Button
+                    android:id="@+id/btn_misc1"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="Misc 1"
+                    tools:ignore="Suspicious0dp" />
+
+                <Button
+                    android:id="@+id/btn_misc2"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="Misc 2"
+                    tools:ignore="Suspicious0dp" >
+
+                </Button>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
+
+                <Button
+                    android:id="@+id/btn_misc3"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="Misc 3"
+                    tools:ignore="Suspicious0dp" />
+
+                <Button
+                    android:id="@+id/btn_misc4"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="Misc 4"
+                    tools:ignore="Suspicious0dp" >
+
+                </Button>
+
+                <Button
+                    android:id="@+id/btn_misc5"
+                    style="@style/CustomBtnText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:text="Misc 5"
+                    tools:ignore="Suspicious0dp" >
+
+                </Button>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/btn_n1"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="1"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_n4"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="4"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_n7"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="7"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_dash"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="-"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/disc_btn"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="Disc\nMenu"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_misc6"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="Misc 6"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/btn_n2"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="2"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_n5"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="5"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_n8"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="8"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_n0"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="0"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/info_btn"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="Info/\nDisplay"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_misc7"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="Misc 7"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/btn_n3"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="3"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_n6"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="6"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_n9"
+                style="@style/CustomNumbersText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="9"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <ImageButton
+                android:id="@+id/fav_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/emblem_favorite"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <Button
+                android:id="@+id/guide_btn"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="Guide"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_misc8"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="Misc 8"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/play_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_playback_start"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/stop_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_playback_stop"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/back_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_seek_backward"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/back_skip_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_skip_backward"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <Button
+                android:id="@+id/btn_last"
+                style="@style/CustomBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:text="Last"
+                tools:ignore="Suspicious0dp" >
+
+            </Button>
+
+            <ImageButton
+                android:id="@+id/yellow_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/yellow"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/pause_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_playback_pause"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/eject_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_eject"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/forward_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_seek_forward"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/skip_forward_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_skip_forward"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/record_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/media_record"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/blue_btn"
+                style="@style/CustomImageBtnText"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/blue"
+                tools:ignore="Suspicious0dp" >
+
+            </ImageButton>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/middle_circle"
+        android:visibility="invisible" >
+    </ImageView>
+
 </LinearLayout>

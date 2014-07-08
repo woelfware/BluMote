@@ -58,7 +58,7 @@ class Pod {
 	private boolean buttonLock = false;
 
 	// these are all in ms (milli-seconds)
-	private final int LOCK_RELEASE_TIME = 500; // timeout to release IR
+	final int LOCK_RELEASE_TIME = 500; // timeout to release IR
 												// transmit lock if pod
 												// doesn't send us an ACK
 

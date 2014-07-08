@@ -582,7 +582,7 @@ public class Activities {
 	 */
 	void nextActivityInitSequence() {
 		String[] item;
-		while (initItems != null && initItemsIndex < initItems.size()) {
+		if (initItems != null && initItemsIndex < initItems.size()) {
 			// use initItemIndex to deal with getting through all the items
 			// if run into a delay item then need to spawn CountDownTimer and then CountDownTimer
 			// will call this method after it finishes...			
@@ -609,7 +609,6 @@ public class Activities {
 							nextActivityInitSequence(); // continue on the quest to finish the initItems
 						}
 					}.start();					
-					break; // exit while loop while we are waiting for Delay to finish
 				} catch (Exception e) {
 					// failed, skip and go to next item in this case.
 					Log.e(TAG, "Failed to execute an initialization delay!");
@@ -654,8 +653,26 @@ public class Activities {
 						pod.sendButtonCode(toSend, repeat);
 					}
 				}
-			}				
-		} // end while	
+			}
+		}
+		// prevent flooding pod with commands so after each action is taken we wait a fixed amount
+		try {
+			int delayTime = 2*pod.LOCK_RELEASE_TIME;
+			//need to start a wait timer for this period of time
+			new CountDownTimer(delayTime, delayTime) {
+				public void onTick(long millisUntilFinished) {
+					// no need to use this function
+				}
+
+				public void onFinish() {
+					// called when timer expired
+					nextActivityInitSequence(); // continue on the quest to finish the initItems
+				}
+			}.start();								
+		} catch (Exception e) {
+			// failed, skip and go to next item in this case.
+			Log.e(TAG, "Failed to execute an initialization delay!");
+		}
 		// check if we are done processing, if so dismiss the progress dialog
 		if (initItems == null || initItemsIndex >= initItems.size()) {
 			blumote.dismissDialog(BluMote.DIALOG_INIT_PROGRESS);
@@ -684,7 +701,8 @@ public class Activities {
 
 			if (powerOffDataIndex < powerOffData.length) {
 				//need to start a wait timer for this period of time
-				new CountDownTimer(BluMote.DELAY_TIME, BluMote.DELAY_TIME) {
+				int delayTime = 2*pod.LOCK_RELEASE_TIME;
+				new CountDownTimer(delayTime, delayTime) {
 					public void onTick(long millisUntilFinished) {
 						// no need to use this function
 					}
